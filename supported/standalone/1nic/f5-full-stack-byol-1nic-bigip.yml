@@ -8,15 +8,17 @@ resources:
 - name: bigip-1nic-setup
   type: f5-full-stack-byol-1nic-bigip.py
   properties:
-   availabilityZone1: us-west1-a
-   ### zone to deploy big-ip and supporting resources
-   licenseKey1: JIGDU-RENQQ-ISWLT-IZDCY-PGZHZQD
+   availabilityZone1: <your_zone>
+   ### zone to deploy big-ip and supporting resources, exmaple us-west1-a
+   licenseKey1: <your_lic_key>
    ### big-ip license key
    imageName: f5-byol-bigip-13-0-0-0-0-177-best-jan-23-2017-10-28am
    ### Bigip build to use
    instanceType: n1-standard-2
    ### instance type assigned to big-ip
-   subnet1: dewpt
+   subnet1: <your_subnet_name>
    ### Network BIGIP is added
    manGuiPort: '8443'
-   bigipDns: '4.4.4.4'
+   ### BIGIP Managment Port - default 8443
+   bigipDns: '<your_server>'
+   ### DNS Server, example 4.4.4.4, not required.
