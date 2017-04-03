@@ -1,0 +1,22 @@
+# Copyright 2016 F5 Networks All rights reserved.
+#
+# Add copyright info here
+
+imports:
+- path: f5-full-stack-byol-1nic-bigip.py
+resources:
+- name: bigip-1nic-setup
+  type: f5-full-stack-byol-1nic-bigip.py
+  properties:
+   availabilityZone1: us-west1-a
+   ### zone to deploy big-ip and supporting resources
+   licenseKey1: JIGDU-RENQQ-ISWLT-IZDCY-PGZHZQD
+   ### big-ip license key
+   imageName: f5-byol-bigip-13-0-0-0-0-177-best-jan-23-2017-10-28am
+   ### Bigip build to use
+   instanceType: n1-standard-2
+   ### instance type assigned to big-ip
+   subnet1: dewpt
+   ### Network BIGIP is added
+   manGuiPort: '8443'
+   bigipDns: '4.4.4.4'
