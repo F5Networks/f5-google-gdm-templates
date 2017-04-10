@@ -1,4 +1,4 @@
-# Deploying the BIG-IP in AWS - Single NIC
+# Deploying the BIG-IP in Google Cloud - Single NIC
 
 [![Slack Status](https://f5cloudsolutions.herokuapp.com/badge.svg)](https://f5cloudsolutions.herokuapp.com)
 
