@@ -3,34 +3,34 @@
 [![Slack Status](https://f5cloudsolutions.herokuapp.com/badge.svg)](https://f5cloudsolutions.herokuapp.com)
 
 ## Introduction
-This solution uses a CloudFormation Template to launch a single NIC deployment a BIG-IP VE in an Amazon Virtual Private Cloud. Traffic flows from the BIG-IP VE to the application servers.  This is the standard Cloud design where the compute instance of
+This solution uses a Google Deployment Manger Template to launch a single NIC deployment a BIG-IP VE in an Google Virtual Private Cloud. Traffic flows from the BIG-IP VE to the application servers.  This is the standard Cloud design where the compute instance of
 F5 is running with a single interface, which processes both management and data plane traffic.  This is a traditional model in the cloud where the deployment is considered one-armed.
  
-The **existing stack** CloudFormation template incorporates an existing Virtual Private Cloud (VPC). If you would like to run a *full stack* which creates and configures the BIG-IP, the AWS infrastructure, as well as a backend webserver, see the templates located in the *learning-stacks* folder in the **experimental** directory.
+The **existing stack** Google Deployment Manager template incorporates an existing Networking. If you would like to run a *full stack* which creates and configures the BIG-IP, the Google Cloud infrastructure, as well as a backend webserver, see the templates located in the *learning-stacks* folder in the **experimental** directory.
 
 See the **[Configuration Example](#config)** section for a configuration diagram and more information for this solution.
 
 ## Prerequisites
-The following are prerequisites for the F5 single NIC CFT:
-  - An AWS VPC with one subnet
-  - Key pair for SSH access to BIG-IP VE (you can create or import in AWS)
-  - An AWS Security Group with the following inbound rules:
+The following are prerequisites for the F5 single NIC GDM template:
+  - A network with one subnet
+  - Key pair for SSH access to BIG-IP VE (you can create or import in Google Cloud)
+  - An Google Firewall rule with the following inbound rules:
     - Port 22 for SSH access to the BIG-IP VE
     - Port 8443 (or other port) for accessing the BIG-IP web-based Configuration utility
     - A port for accessing your applications via the BIG-IP virtual server
   - This solution uses the SSH key to enable access to the BIG-IP system. If you want access to the BIG-IP web-based Configuration utility, you must first SSH into the BIG-IP VE using the SSH key you provided in the template.  You can then create a user account with admin-level permissions on the BIG-IP VE to allow access if necessary.
   
 ## Security
-This CloudFormation template downloads helper code to configure the BIG-IP system. If your organization is security conscious and you want to verify the integrity of the template, you can open the CFT and ensure the following lines are present. See [Security Detail](#securitydetail) for the exact code in each of the following sections.
+This GDM template downloads helper code to configure the BIG-IP system. If your organization is security conscious and you want to verify the integrity of the template, you can open the GDM template and ensure the following lines are present. See [Security Detail](#securitydetail) for the exact code in each of the following sections.
   - In the */config/verifyHash* section: **script-signature** and then a hashed signature
   - In the */config/installCloudLibs.sh* section **"tmsh load sys config merge file /config/verifyHash"**
   
-  Additionally, F5 provides checksums for all of our supported Amazon Web Services CloudFormation templates. For instructions and the checksums to compare against, see https://devcentral.f5.com/codeshare/checksums-for-f5-supported-cft-and-arm-templates-on-github-1014.
+  Additionally, F5 provides checksums for all of our supported Google Deployment Manager templates. For instructions and the checksums to compare against, see https://devcentral.f5.com/codeshare/checksums-for-f5-supported-cft-and-arm-templates-on-github-1014.
   
 ## Supported instance types and hypervisors
-  - For a list of supported AWS instance types for this solutions, see the **Amazon EC2 instances for BIG-IP VE** section of https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/bigip-ve-setup-amazon-ec2-13-0-0/1.html
+  - For a list of supported Google Cloud instance types for this solutions, see the **Amazon EC2 instances for BIG-IP VE** section of https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/bigip-ve-setup-amazon-ec2-13-0-0/1.html
 
-  - For a list versions of the BIG-IP Virtual Edition (VE) and F5 licenses that are supported on specific hypervisors and AWS, see https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ve-supported-hypervisor-matrix.html.
+  - For a list versions of the BIG-IP Virtual Edition (VE) and F5 licenses that are supported on specific hypervisors and Google Cloud, see https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ve-supported-hypervisor-matrix.html.
 
 ### Help 
 Because this template has been created and fully tested by F5 Networks, it is fully supported by F5. This means you can get assistance if necessary from F5 Technical Support.
