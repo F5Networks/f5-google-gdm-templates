@@ -3,10 +3,10 @@
 # Add copyright info here
 
 imports:
-- path: f5-full-stack-byol-1nic-bigip.py
+- path: f5-existing-stack-byol-1nic-bigip.py
 resources:
 - name: bigip-1nic-setup
-  type: f5-full-stack-byol-1nic-bigip.py
+  type: f5-existing-stack-byol-1nic-bigip.py
   properties:
    availabilityZone1: <your_zone>
    ### zone to deploy big-ip and supporting resources, exmaple us-west1-a
@@ -17,8 +17,8 @@ resources:
    instanceType: n1-standard-2
    ### instance type assigned to big-ip
    subnet1: <your_subnet_name>
-   ### Network BIGIP is added
+   ### Network BIGIP should use
    manGuiPort: '8443'
-   ### BIGIP Managment Port - default 8443
+   ### BIGIP Management Port - default 8443
    bigipDns: '<your_server>'
-   ### DNS Server, example 4.4.4.4, not required.
+   ### DNS Server, example 4.4.4.4, currently required; subnet dhcp assigned dns also added.
