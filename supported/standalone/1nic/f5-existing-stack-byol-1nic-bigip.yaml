@@ -1,4 +1,4 @@
-# Copyright 2016 F5 Networks All rights reserved.
+# Copyright 2017 F5 Networks All rights reserved.
 #
 # Add copyright info here
 
@@ -9,16 +9,16 @@ resources:
   type: f5-existing-stack-byol-1nic-bigip.py
   properties:
    availabilityZone1: <your_zone>
-   ### zone to deploy big-ip and supporting resources, exmaple us-west1-a
+   ### Zone to deploy BIG-IP and supporting resources, for example us-west1-a
    licenseKey1: <your_lic_key>
-   ### big-ip license key
+   ### BIG-IP license key
    imageName: f5-byol-bigip-13-0-0-0-0-177-best-jan-23-2017-10-28am
-   ### Bigip build to use
+   ### BIG-IP build to use
    instanceType: n1-standard-2
-   ### instance type assigned to big-ip
+   ### Instance type assigned to BIG-IP
    subnet1: <your_subnet_name>
-   ### Network BIGIP should use
+   ### Network BIG-IP should use
    manGuiPort: '8443'
-   ### BIGIP Management Port - default 8443
+   ### BIG-IP Management Port, the default is 8443
    bigipDns: '<your_server>'
-   ### DNS Server, example 4.4.4.4, currently required; subnet dhcp assigned dns also added.
+   ### DNS Server, example 4.4.4.4, currently required; subnet DHCP assigned DNS also added.
