@@ -2,35 +2,44 @@
 
 [![Slack Status](https://f5cloudsolutions.herokuapp.com/badge.svg)](https://f5cloudsolutions.herokuapp.com)
 
+**Contents**
+
+ - [Introduction](#introduction) 
+ - [Prerequisites](#prerequisites-and-notes)
+ - [Security](#security)
+ - [Deploying the Template](#deploying-the-template)
+ - [Configuration Example](#config)
+ 
+ 
 ## Introduction
 This solution uses a Google Deployment Manger Template to launch a single NIC deployment a BIG-IP VE in an Google Virtual Private Cloud. Traffic flows from the BIG-IP VE to the application servers.  This is the standard Cloud design where the compute instance of
 F5 is running with a single interface, which processes both management and data plane traffic.  This is a traditional model in the cloud where the deployment is considered one-armed.
  
 The **existing stack** Google Deployment Manager template incorporates an existing Networking. If you would like to run a *full stack* which creates and configures the BIG-IP, the Google Cloud infrastructure, as well as a backend webserver, see the templates located in the *learning-stacks* folder in the **experimental** directory.
 
-See the **[Configuration Example](#config)** section for a configuration diagram and more information for this solution.
 
-## Prerequisites
-The following are prerequisites for the F5 single NIC GDM template:
+## Prerequisites and notes
+The following are prerequisites and configuration notes for the F5 single NIC GDM template:
+  - You just have installed the Google Cloud SDK (https://cloud.google.com/sdk/downloads)
+  - An F5 Networks BYOL license available
   - A network with one subnet
-  - Key pair for SSH access to BIG-IP VE (you can create or import in Google Cloud)
+  - Key pair for SSH access to BIG-IP VE (you can create or import this in Google Cloud)
   - An Google Firewall rule with the following inbound rules:
     - Port 22 for SSH access to the BIG-IP VE
     - Port 8443 (or other port) for accessing the BIG-IP web-based Configuration utility
     - A port for accessing your applications via the BIG-IP virtual server
   - This solution uses the SSH key to enable access to the BIG-IP system. If you want access to the BIG-IP web-based Configuration utility, you must first SSH into the BIG-IP VE using the SSH key you provided in the template.  You can then create a user account with admin-level permissions on the BIG-IP VE to allow access if necessary.
+  - You must use a BIG-IP instance that has at least 2 vCPU and 4 GB memory. For each additional vCPU, add at least 2 GB of memory. Note: Because of this requirement, the *n1-highcpu* instance types are not supported.
+
   
-## Security
-This GDM template downloads helper code to configure the BIG-IP system. If your organization is security conscious and you want to verify the integrity of the template, you can open the GDM template and ensure the following lines are present. See [Security Detail](#securitydetail) for the exact code in each of the following sections.
+### Security
+This GDM template downloads helper code to configure the BIG-IP system. If your organization is security conscious and you want to verify the integrity of the template, you can open the GDM template (**f5-existing-stack-byol-1nic-bigip.py**) and ensure the following lines are present. See [Security Detail](#securitydetail) for the exact code in each of the following sections.
   - In the */config/verifyHash* section: **script-signature** and then a hashed signature
   - In the */config/installCloudLibs.sh* section **"tmsh load sys config merge file /config/verifyHash"**
   
   Additionally, F5 provides checksums for all of our supported Google Deployment Manager templates. For instructions and the checksums to compare against, see https://devcentral.f5.com/codeshare/checksums-for-f5-supported-cft-and-arm-templates-on-github-1014.
   
-## Supported instance types and hypervisors
-  - For a list of supported Google Cloud instance types for this solutions, see the **Amazon EC2 instances for BIG-IP VE** section of https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/bigip-ve-setup-amazon-ec2-13-0-0/1.html
 
-  - For a list versions of the BIG-IP Virtual Edition (VE) and F5 licenses that are supported on specific hypervisors and Google Cloud, see https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ve-supported-hypervisor-matrix.html.
 
 ### Help 
 Because this template has been created and fully tested by F5 Networks, it is fully supported by F5. This means you can get assistance if necessary from F5 Technical Support.
@@ -39,75 +48,75 @@ We encourage you to use our [Slack channel](https://f5cloudsolutions.herokuapp.c
 
 
 
-## Installation using the AWS Launch Stack buttons
-The easiest way to deploy one of the CloudFormation templates is to use the appropriate Launch Stack button.<br>
-**Important**: You may have to select the AWS region in which you want to deploy after clicking the Launch Stack button.
+## Deploying the template
+This solution uses a YAML file for containing the parameters necessary to deploy the BIG-IP instance in Google Cloud.  The YAML file (**f5-existing-stack-byol-1nic-bigip.yaml**) resides in this repository.  You ***must edit the YAML file*** to include information for your deployment before using the file to launch the BIG-IP VE instance.
+1. Make sure you have completed all of the [prerequisites](#prerequisites). 
+2. [Edit the parameters](#edit-the-yaml-file) in the **f5-existing-stack-byol-1nic-bigip.yaml** YAML file in this repository as described in this section.
+3. [Save the YAML file](#save-the-yaml-file).
+4. [Deploy the BIG-IP VE](#deploy-the-big-ip-ve) from the command line. 
 
- - Hourly, which uses pay-as-you-go hourly billing
- - [BYOL](#byol) (bring your own license), which allows you to use an existing BIG-IP license.
-<br><br>
+### Edit the YAML file
+After completing the prerequisites, edit the YAML file.  You must replace the following parameters with the appropriate values:
 
-**Hourly deploy button**
 
-Use this button to deploy the **hourly** template: 
+| Parameter | Description |
+| --- | --- |
+| availabilityZone1 | The availability zone where you want to deploy the BIG-IP VE instance, such as **us-west1-a** |
+| licenseKey1 | Your F5 BIG-IP BYOL license key |
+| instanceType | The BIG-IP instance type you want to use, such as **n1-standard-2** |
+| subnet1 | The name of your subnet |
+| bigipDns | The IP address of the DNS Server, example 4.4.4.4, currently required; subnet DHCP assigned DNS also added. |
 
-<a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=BigIp-1nic-Hourly&templateURL=https://s3.amazonaws.com/f5-cft/f5-existing-stack-hourly-1nic-bigip.template">
-    <img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png"/>
-</a>
+Example of the YAML file:
+
+
+```yaml 
+imports:
+- path: f5-existing-stack-byol-1nic-bigip.py
+resources:
+- name: bigip-1nic-setup
+  type: f5-existing-stack-byol-1nic-bigip.py
+  properties:
+   availabilityZone1: <your_zone>
+   ### Zone to deploy BIG-IP and supporting resources, for example us-west1-a
+   licenseKey1: <your_lic_key>
+   ### BIG-IP license key
+   imageName: f5-byol-bigip-13-0-0-0-0-177-best-jan-23-2017-10-28am
+   ### BIG-IP build to use
+   instanceType: n1-standard-2
+   ### Instance type assigned to BIG-IP
+   subnet1: <your_subnet_name>
+   ### Network BIG-IP should use
+   manGuiPort: '8443'
+   ### BIG-IP Management Port, the default is 8443
+   bigipDns: '<your_server>'
+   ### DNS Server, example 4.4.4.4, currently required; subnet DHCP assigned DNS also added.
+```
+
+### Save the YAML file
+After you have edited the YAML file with the appropriate values, save the YAML file in a location accessible from the gcloud command line.
+
+### Deploy the BIG-IP VE
+The final task is to deploy the BIG-IP VE by running the following command from the **gcloud** command line:
+
+```gcloud deployment-manager deployments create <your-deployment-name> --config <your-file-name.yaml>```
+
+Keep in mind the following:  
++ *your-deployment-name*<br>This name must be unique.<br> 
++ *your-file-name.yaml*<br>  If your file is not in the same directory as the Google SDK, include the full file path in the command.
+
+
 <br>
-<br>
-
-**Hourly Parameters**<br>
-After clicking the Launch button, you must specify the following parameters.
-
-
-| Parameter | Required | Description |
-| --- | --- | --- |
-| bigipExternalSecurityGroup | x | Public or External Security Group ID |
-| imageName | x | F5 BIG-IP Performance Type |
-| instanceType | x | BIG-IP virtual instance type |
-| managementGuiPort | x | Port to use for the management port GUI |
-| restrictedSrcAddress | x | The IP address range that can be used to SSH to the EC2 instances |
-| sshKey | x | Name of an existing EC2 KeyPair to enable SSH access to the instance |
-| subnet1Az1 | x | Public or External subnet ID |
-| Vpc | x | Common VPC for the deployment |
-
-<br>
-<a name="byol"></a>**BYOL deploy button**
-
-Use this button to deploy the **BYOL** template: 
-
-<a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=BigIp-1nic-BYOL&templateURL=https://s3.amazonaws.com/f5-cft/f5-existing-stack-byol-1nic-bigip.template">
-    <img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png"/>
-</a>
-
-<br>
-<br>
-**BYOL Parameters**<br>
-After clicking the Launch button, you must specify the following parameters.
-
-| Parameter | Required | Description |
-| --- | --- | --- |
-| bigipExternalSecurityGroup | x | Public or External Security Group ID |
-| imageName | x | F5 BIG-IP Performance Type |
-| instanceType | x | BIG-IP virtual instance type |
-| licenseKey1 | x | Type or paste your F5 BYOL regkey here |
-| managementGuiPort | x | Port to use for the management port GUI |
-| restrictedSrcAddress | x | The IP address range that can be used to SSH to the EC2 instances |
-| sshKey | x | Name of an existing EC2 KeyPair to enable SSH access to the instance |
-| subnet1Az1 | x | Public or External subnet ID |
-| Vpc | x | Common VPC for the deployment |
 
 
 
 ## Configuration Example <a name="config"></a>
 
 The following is a simple configuration diagram for this single NIC deployment. In this scenario, all access to the BIG-IP VE appliance is through the same IP address and virtual network interface (vNIC).  This interface processes both management and data plane traffic.
-This solution uses the BIG-IP v13.0 AMI image.
 
-![Single NIC configuration example](images/AWS-1nic.png)
+![Single NIC configuration example](images/google_setup.png)
 ### Documentation
-The ***BIG-IP Virtual Edition and Amazon Web Services: Single NIC Setup*** guide (https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/bigip-ve-setup-amazon-ec2-12-1-0.html) details how to create the configuration manually without using the CloudFormation template.  This document also describes the configuration in more detail.
+The ***BIG-IP Virtual Edition and Google Cloud Platform: Setup*** guide (https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/bigip-ve-setup-google-cloud-platform-13-0-0.html) details how to create the configuration manually without using the template.  This document also describes the configuration in more detail.
 
 
 ## Security Details <a name="securitydetail"></a>
