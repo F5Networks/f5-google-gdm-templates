@@ -79,10 +79,8 @@ def GenerateConfig(context):
                                     'echo expanding f5-cloud-libs.tar.gz\n',
                                     'tar xvfz /config/cloud/f5-cloud-libs.tar.gz -C /config/cloud/gce/node_modules\n',
                                     'touch /config/cloud/cloudLibsReady\n',
-                                    'EOF\n',
-                                    
-                                    'cat <<EOF > /config/verifyHash\n',
-                                    '\''
+                                    'EOF\n',                                   
+                                    'cat <<\'EOF\' > /config/verifyHash\n',
                                     'cli script /Common/verifyHash {\n',
                                     '    proc script::run {} {\n',
                                     '        if {[catch {\n',
@@ -122,8 +120,7 @@ def GenerateConfig(context):
                                     '    signing-key /Common/f5-irule\n',
                                     '}\n',
                                     '\n',
-                                    '\'',
-                                    'EOF',
+                                    'EOF\n',
                                     'cat <<EOF > /config/waitThenRun.sh\n',
                                     '#!/bin/bash\n',
                                     'while true; do echo \"waiting for cloud libs install to complete\"\n',
