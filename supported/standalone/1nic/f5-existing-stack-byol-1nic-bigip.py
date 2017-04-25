@@ -80,7 +80,9 @@ def GenerateConfig(context):
                                     'tar xvfz /config/cloud/f5-cloud-libs.tar.gz -C /config/cloud/gce/node_modules\n',
                                     'touch /config/cloud/cloudLibsReady\n',
                                     'EOF\n',
+                                    
                                     'cat <<EOF > /config/verifyHash\n',
+                                    '\''
                                     'cli script /Common/verifyHash {\n',
                                     '    proc script::run {} {\n',
                                     '        if {[catch {\n',
@@ -119,8 +121,9 @@ def GenerateConfig(context):
                                     '    script-signature TfKrOEqc87cScx2may5bKnQQ5/TdygM6935wXkUnsf0/119c3C0WPjXQ1X86JMiInrjQ9oZjEkDejA41nwf46eWljvF0YTqdUU37XVpLi0plAOUyVCwjegra6vmY7F3DOKVC2b32SllF6rpBHECj6gAnSr6K/UQo044TEf1bXk/AHx8vw3+kuySMrutkIMHPlmxvsYyvWinjHAk5bdXepH+xspynZwLlOYuRYlTt2XVwSUyjzi1O1BLzm/oa3p4XkTkpDK0IYDTGFE/uFUyUaeNJQvBEDs6G+pQHgTIF67Zl3Ij0w/Pu6IoOkVjygmrQkz3BFlOrCyMtOIUmFItxiQ==\n',
                                     '    signing-key /Common/f5-irule\n',
                                     '}\n',
-                                    '\n',                                   
-                                    'EOF\n',
+                                    '\n',
+                                    '\'',
+                                    'EOF',
                                     'cat <<EOF > /config/waitThenRun.sh\n',
                                     '#!/bin/bash\n',
                                     'while true; do echo \"waiting for cloud libs install to complete\"\n',
