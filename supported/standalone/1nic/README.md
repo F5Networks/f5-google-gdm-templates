@@ -20,9 +20,9 @@ The **existing stack** Google Deployment Manager template incorporates an existi
 
 ## Prerequisites and notes
 The following are prerequisites and configuration notes for the F5 single NIC GDM template:
-  - You just have installed the Google Cloud SDK (https://cloud.google.com/sdk/downloads)
-  - An F5 Networks BYOL license available
-  - A network with one subnet
+  - You must have installed the Google Cloud SDK (https://cloud.google.com/sdk/downloads)
+  - An F5 Networks BYOL license (Bring Your Own License) available
+  - A Google Cloud Platform (GCP) network with one subnet
   - Key pair for SSH access to BIG-IP VE (you can create or import this in Google Cloud)
   - An Google Firewall rule with the following inbound rules:
     - Port 22 for SSH access to the BIG-IP VE
@@ -37,7 +37,7 @@ The following are prerequisites and configuration notes for the F5 single NIC GD
 
   
 ### Security
-This GDM template downloads helper code to configure the BIG-IP system. If your organization is security conscious and you want to verify the integrity of the template, you can open the GDM template (**f5-existing-stack-byol-1nic-bigip.py**) and ensure the following lines are present. See [Security Detail](#securitydetail) for the exact code in each of the following sections.
+This GDM template downloads helper code to configure the BIG-IP system. If you want to verify the integrity of the template, you can open the GDM template (**f5-existing-stack-byol-1nic-bigip.py**) and ensure the following lines are present. See [Security Detail](#securitydetail) for the exact code in each of the following sections.
   - In the */config/verifyHash* section: **script-signature** and then a hashed signature
   - In the */config/installCloudLibs.sh* section **"tmsh load sys config merge file /config/verifyHash"**
   
