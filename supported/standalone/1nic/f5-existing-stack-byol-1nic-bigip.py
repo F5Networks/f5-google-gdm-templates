@@ -96,6 +96,7 @@ def GenerateConfig(context):
                                     '            set hashes(deploy_waf.sh) 4db3176b45913a5e7ccf42ab9c7ac9d7de115cdbd030b9e735946f92456b6eb433087ed0e98ac4981c76d475cd38f4de49cd98c063e13d50328a270e5b3daa4a\n',
                                     '            set hashes(f5.policy_creator.tmpl) 54d265e0a573d3ae99864adf4e054b293644e48a54de1e19e8a6826aa32ab03bd04c7255fd9c980c3673e9cd326b0ced513665a91367add1866875e5ef3c4e3a\n',
                                     'EOF\n',
+                                    'echo "\n" >> /config/verifyHash\n',
                                     'cat <<\'EOF\' >> /config/verifyHash\n',
                                     '\n',
                                     '            set file_path [lindex $tmsh::argv 1]\n',
