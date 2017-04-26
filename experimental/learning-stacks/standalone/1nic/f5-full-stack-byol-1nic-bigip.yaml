@@ -1,21 +1,22 @@
-# Copyright 2016 F5 Networks All rights reserved.
+# Copyright 2017 F5 Networks All rights reserved.
 #
 # Add copyright info here
 
-
+imports:
+- path: f5-full-stack-byol-1nic-bigip.py
 resources:
-- name: compute-engine-setup
-  type: gs://f5-gdt/compute-engine-template.py
+- name: bigip-1nic-setup
+  type: f5-full-stack-byol-1nic-bigip.py
   properties:
-   zone: us-west1-a
-   ### zone to deploy big-ip and supporting resources
-   licKey1: UOFDS-RVZFP-NTJOD-OOFDQ-JRFGWQF
-   ### big-ip license key
-   adminUsername: admin2
-   ### big-ip admin username to create
-   adminPassword: admin2
-   ### password for account
-   build: f5-byol-bigip-13-0-0-0-0-177-best-jan-23-2017-10-28am
-   ### Bigip build to use
-   machineType: n1-standard-2
-   ### instance type assigned to big-ip   
+   availabilityZone1: us-west1-a
+   ### Zone to deploy BIG-IP and supporting resources, for example us-west1-a
+   licenseKey1: EJNEA-YHUMW-RNFSJ-PUMDP-CWGETIT
+   ### BIG-IP license key
+   imageName: f5-byol-bigip-13-0-0-0-0-177-best-jan-23-2017-10-28am
+   ### BIG-IP build to use
+   instanceType: n1-standard-2
+   ### Instance type assigned to BIG-IP
+   manGuiPort: '8443'
+   ### BIG-IP Management Port, the default is 8443
+   bigipDns: '4.4.4.4'
+   ### DNS Server, example 4.4.4.4, currently required; subnet DHCP assigned DNS also added.   
