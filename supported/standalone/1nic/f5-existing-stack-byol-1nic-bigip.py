@@ -1,6 +1,7 @@
 # Copyright 2016 F5 Networks All rights reserved.
 #
 # Add copyright info here
+# Version v1.0.0 
 
 """Creates BIG-IP"""
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
@@ -136,7 +137,7 @@ def GenerateConfig(context):
                                     '        sleep 10\n',
                                     '    fi\n',
                                     'done\n',
-                                    '\"\$@\"\n',
+                                    '\"$@\"\n',
                                     'EOF\n',
                                     'cat <<\'EOF\' > /config/cloud/gce/custom-config.sh\n',
                                     '#!/bin/bash\n',
