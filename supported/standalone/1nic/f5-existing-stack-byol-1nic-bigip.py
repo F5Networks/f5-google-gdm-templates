@@ -65,7 +65,7 @@ def GenerateConfig(context):
                                     '    exit\n',
                                     'fi\n',
                                     'echo loaded verifyHash\n',
-                                    'declare -a filesToVerify=(\"/config/cloud/f5-cloud-libs.tar.gz\" \"/config/cloud/f5-cloud-libs-aws.tar.gz\")\n',
+                                    'declare -a filesToVerify=(\"/config/cloud/f5-cloud-libs.tar.gz\")\n',
                                     'for fileToVerify in \"${filesToVerify[@]}\"\n',
                                     'do\n',
                                     '    echo verifying \"$fileToVerify\"\n',
