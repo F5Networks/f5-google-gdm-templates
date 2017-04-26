@@ -160,6 +160,7 @@ def GenerateConfig(context):
                                     'chmod 755 /config/installCloudLibs.sh\n',
                                     'chmod 755 /config/waitThenRun.sh\n',
                                     'chmod 755 /config/cloud/gce/custom-config.sh\n',
+                                    'chmod 755 /config/cloud/gce/rm-password.sh\n',
                                     'nohup /config/installCloudLibs.sh &>> /var/log/cloudlibs-install.log < /dev/null &\n',
                                     'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/f5-cloud-libs/scripts/runScript.js --signal PASSWORD_CREATED --file f5-rest-node --cl-args \'/config/cloud/gce/node_modules/f5-cloud-libs/scripts/generatePassword --file /config/cloud/gce/.adminPassword\' --log-level verbose -o /var/log/generatePassword.log &>> /var/log/cloudlibs-install.log < /dev/null &\n',
                                     'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/f5-cloud-libs/scripts/runScript.js --wait-for PASSWORD_CREATED --signal ADMIN_CREATED --file /config/cloud/gce/node_modules/f5-cloud-libs/scripts/createUser.sh --cl-args \'--user admin --password-file /config/cloud/gce/.adminPassword\' --log-level debug -o /var/log/createUser.log &>> /var/log/cloudlibs-install.log < /dev/null &\n',
