@@ -28,7 +28,8 @@ def GenerateConfig(context):
           }],
           'networkInterfaces': [{
               'network': ''.join([COMPUTE_URL_BASE, 'projects/',
-                                  context.env['project'], '/global/networks/',
+                                  context.env['project'], '/regions/',
+                                  context.properties['availabilityZone1'], '/subnetworks/'
                                   context.properties['subnet1']]),
               'accessConfigs': [{
                   'name': 'External NAT',
