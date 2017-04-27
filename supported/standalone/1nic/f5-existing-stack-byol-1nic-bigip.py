@@ -1,6 +1,5 @@
-# Copyright 2016 F5 Networks All rights reserved.
+# Copyright 2017 F5 Networks All rights reserved.
 #
-# Add copyright info here
 # Version v1.0.0 
 
 """Creates BIG-IP"""
@@ -21,7 +20,7 @@ def GenerateConfig(context):
               'boot': True,
               'autoDelete': True,
               'initializeParams': {
-                  'sourceImage': ''.join([COMPUTE_URL_BASE, 'projects/f5-networks-gce-dev',
+                  'sourceImage': ''.join([COMPUTE_URL_BASE, 'projects/f5-7626-networks-public',
                                           '/global/images/',
                                           context.properties['imageName'],
                                          ])
