@@ -148,7 +148,7 @@ def GenerateConfig(context):
                                     'echo \'starting tmsh config\'\n',
                                     'tmsh save /sys config\n',
                                     'date\n',
-                                    '### START CUSTOM TMSH CONFIGURTION\n',
+                                    '### START CUSTOM TMSH CONFIGURATION\n',
                                     '### END CUSTOM TMSH CONFIGURATION\n',
                                     'EOF\n',
                                     'cat <<\'EOF\' > /config/cloud/gce/rm-password.sh\n',
