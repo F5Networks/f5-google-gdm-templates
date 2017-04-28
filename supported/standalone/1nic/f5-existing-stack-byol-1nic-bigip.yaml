@@ -10,7 +10,7 @@ resources:
   properties:
    region: <region>
    ### Google Region to deploy BIG-IP, for example us-west1
-   availabilityZone1: <availibility zone>
+   availabilityZone1: <availability zone>
    ### Google Zone in specified region to deploy BIG-IP, for example us-west1-a
    network: <network>
    ### Network name to deploy BIG-IP

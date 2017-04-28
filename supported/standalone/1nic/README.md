@@ -75,26 +75,34 @@ Example of the YAML file:
 
 
 ```yaml 
+# Copyright 2017 F5 Networks All rights reserved.
+#
+# Version v1.0.0
+
 imports:
 - path: f5-existing-stack-byol-1nic-bigip.py
 resources:
 - name: bigip-1nic-setup
   type: f5-existing-stack-byol-1nic-bigip.py
   properties:
-   availabilityZone1: <your_zone>
-   ### Zone to deploy BIG-IP and supporting resources, for example us-west1-a
-   licenseKey1: <your_lic_key>
+   region: <region>
+   ### Google Region to deploy BIG-IP VE, for example us-west1
+   availabilityZone1: <availability zone>
+   ### Google Zone in specified region to deploy BIG-IP, for example us-west1-a
+   network: <network>
+   ### Network name to deploy BIG-IP
+   subnet1: <subnet>
+   ### Subnet of Network BIG-IP should use
+   licenseKey1: <lic key>
    ### BIG-IP license key
    imageName: f5-byol-bigip-13-0-0-0-0-177-best-jan-23-2017-10-28am
-   ### BIG-IP build to use
-   instanceType: n1-standard-2
+   ### BIG-IP image to use
+   instanceType: n1-standard-4
    ### Instance type assigned to BIG-IP
-   subnet1: <your_subnet_name>
-   ### Network BIG-IP should use
    manGuiPort: '8443'
    ### BIG-IP Management Port, the default is 8443
-   bigipDns: '<your_server>'
-   ### DNS Server, example 4.4.4.4, currently required; subnet DHCP assigned DNS also added.
+   bigipDns: '<dns server>'
+   ### DNS Server, example 8.8.8.8, required; subnet DHCP assigned DNS also added.
 ```
 
 ### Save the YAML file
