@@ -20,7 +20,7 @@ def GenerateConfig(context):
               'boot': True,
               'autoDelete': True,
               'initializeParams': {
-                  'sourceImage': ''.join([COMPUTE_URL_BASE, 'projects/f5-7626-networks-public',
+                  'sourceImage': ''.join([COMPUTE_URL_BASE, 'projects/f5-networks-gce-dev',
                                           '/global/images/',
                                           context.properties['imageName'],
                                          ])
@@ -28,9 +28,12 @@ def GenerateConfig(context):
           }],
           'networkInterfaces': [{
               'network': ''.join([COMPUTE_URL_BASE, 'projects/',
+                                  context.env['project'], '/global/networks/',
+                                  context.properties['network']]),
+              'subnetwork': ''.join([COMPUTE_URL_BASE, 'projects/',
                                   context.env['project'], '/regions/',
-                                  context.properties['availabilityZone1'], '/subnetworks/',
-                                  context.properties['subnet1']]),
+                                  context.properties['region'], '/subnetworks/',
+                                  context.properties['subnet1']]),                    
               'accessConfigs': [{
                   'name': 'External NAT',
                   'type': 'ONE_TO_ONE_NAT'
