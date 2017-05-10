@@ -65,11 +65,14 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 
 | Parameter | Description |
 | --- | --- |
+| region | oogle Region to deploy BIG-IP, such as **us-west1** |
 | availabilityZone1 | The availability zone where you want to deploy the BIG-IP VE instance, such as **us-west1-a** |
-| licenseKey1 | Your F5 BIG-IP BYOL license key |
-| instanceType | The BIG-IP instance type you want to use, such as **n1-standard-2** |
+| network | Network name to deploy BIG-IP |
 | subnet1 | The name of your subnet |
-| bigipDns | The IP address of the DNS Server, example 4.4.4.4, currently required; subnet DHCP assigned DNS also added. |
+| licenseKey1 | Your F5 BIG-IP BYOL license key |
+| imageName | BIG-IP image, valid choices include: **f5-byol-bigip-13-0-0-2-3-1671-good**, **f5-byol-bigip-13-0-0-2-3-1671-better**, **f5-byol-bigip-13-0-0-2-3-1671-best** |
+| instanceType | The BIG-IP instance type you want to use, such as **n1-standard-2** |
+| bigipDns | The IP address of the DNS Server, example 4.4.4.4, required; subnet DHCP assigned DNS also added. |
 
 Example of the YAML file:
 
