@@ -20,7 +20,7 @@ def GenerateConfig(context):
               'boot': True,
               'autoDelete': True,
               'initializeParams': {
-                  'sourceImage': ''.join([COMPUTE_URL_BASE, 'projects/f5-networks-gce-dev',
+                  'sourceImage': ''.join([COMPUTE_URL_BASE, 'projects/f5-7626-networks-public',
                                           '/global/images/',
                                           context.properties['imageName'],
                                          ])
