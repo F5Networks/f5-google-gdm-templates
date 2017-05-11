@@ -18,7 +18,7 @@ Descriptions for each template, including how the templates are generated and as
 ## Current F5 Google Deployment Manager templates
 The following is a list of the current *supported* F5 GDM templates. Click the link to view the README file which includes information on how to deploy the template in Google Cloud.
 <br>
-  - [**Standalone BIG-IP VE - Single NIC**](https://github.com/F5Networks/f5-google-gdm-templates/tree/master/supported/standalone/1nic)
+  - [**Standalone BIG-IP VE - Single NIC**](https://github.com/F5Networks/f5-google-gdm-templates/tree/master/supported/standalone/1nic)</a>
   
 <br> 
 
