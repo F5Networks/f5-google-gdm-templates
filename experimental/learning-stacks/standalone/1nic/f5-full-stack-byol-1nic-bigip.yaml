@@ -8,15 +8,20 @@ resources:
 - name: bigip-1nic-setup
   type: f5-full-stack-byol-1nic-bigip.py
   properties:
-   availabilityZone1: <your zone>
+   availabilityZone1: <availability zone>
    ### Zone to deploy BIG-IP and supporting resources, for example us-west1-a
-   licenseKey1: <your_lic_key>
+   licenseKey1: '<lic key>'
    ### BIG-IP license key
-   imageName: f5-byol-bigip-13-0-0-1-0-1688-best
-   ### BIG-IP build to use
+   imageName: f5-byol-bigip-13-0-0-2-3-1671-best
+   ### BIG-IP image, valid choices include:
+   ### f5-byol-bigip-13-0-0-2-3-1671-good
+   ### f5-byol-bigip-13-0-0-2-3-1671-better
+   ### f5-byol-bigip-13-0-0-2-3-1671-best
    instanceType: n1-standard-4
    ### Instance type assigned to BIG-IP
    manGuiPort: '8443'
    ### BIG-IP Management Port, the default is 8443
-   bigipDns: '<your_server>'
-   ### DNS Server, example 8.8.8.8, required; subnet DHCP assigned DNS also added.   
+   serviceAccount: '<google service account>'
+   ### This learning stack utilizes service discovery, enter google service account to use for discovery. Leave single quotes with nothing between when not using service discovery.
+   allowUsageAnalytics: 'yes'
+   ### This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent.

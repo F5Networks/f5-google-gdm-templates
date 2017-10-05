@@ -33,6 +33,7 @@ The following are prerequisites and configuration notes for the F5 single NIC GD
     - Good: minimum – **n1-standard-1**; default – **n1-standard-2**
     - Better: minimum – **n1-standard-2**;  default – **n1-standard-4**
     - Best: minimum – **n1-standard-2**;  default – **n1-standard-4**
+  - This template supports service discovery.  See the [Service Discovery section](#service-discovery) for details.
 
 
   
@@ -46,7 +47,7 @@ This GDM template downloads helper code to configure the BIG-IP system. If you w
 
 
 ### Help 
-Because this template has been created and fully tested by F5 Networks, it is fully supported by F5. This means you can get assistance if necessary from F5 Technical Support.
+While this template has been created by F5 Networks, it is in the experimental directory and therefore has not completed full testing and is subject to change. F5 Networks does not offer technical support for templates in the experimental directory. For supported templates, see the templates in the supported directory.
 
 We encourage you to use our [Slack channel](https://f5cloudsolutions.herokuapp.com) for discussion and assistance on F5 cloud templates.  This channel is typically monitored Monday-Friday 9-5 PST by F5 employees who will offer best-effort support. 
 
@@ -68,13 +69,15 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | region | The Google region in which you want to deploy BIG-IP, for example **us-west1** |
 | availabilityZone1 | The availability zone where you want to deploy the BIG-IP VE instance, such as **us-west1-a** |
 | network | Network name in which you want to deploy BIG-IP  |
+| subnet1 | The name of your subnet |
 | licenseKey1 | Your F5 BIG-IP BYOL license key |
 | imageName | BIG-IP image you want to deploy |
 | instanceType | The BIG-IP instance type you want to use, such as **n1-standard-2** |
 | manGuiPort | BIG-IP management port.  The default is **8443** |
-| subnet1 | The name of your subnet |
+| serviceAccount | If using service discovery, enter Google service account to use for discovery. Leave single quotes with nothing between when not using service discovery. |
+| tagName | If using service discovery, enter tag name used on servers for discovery. Leave single quotes with nothing between if not using service discovery. |
+| tagValue | If using service discovery, enter tag value used on servers for discovery. Leave single quotes with nothing between if not using service discovery. |
 | allowUsageAnalytics | No | This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you select **No** statistics are not sent. |
-
 
 Example of the YAML file:
 
@@ -125,7 +128,25 @@ Keep in mind the following:
 
 <br>
 
+## Service Discovery
+Once you launch your BIG-IP instance using the GDM template, you can use the Service Discovery iApp template on the BIG-IP VE to automatically update pool members based on auto-scaled cloud application hosts.  In the iApp template, you enter information about your cloud environment, including the tag key and tag value for the pool members you want to include, and then the BIG-IP VE programmatically discovers (or removes) members using those tags.
 
+### Tagging
+In Google, you tag objects using the **labels** parameter within the virtual machine.  The Service Discovery iApp uses these tags to discover nodes with this tag. Note that you select public or private IP addresses within the iApp.
+  - *Tag a VM resource*<br>
+The BIG-IP VE will discover the primary public or private IP addresses for the primary NIC configured for the tagged VM.
+
+
+**Important**: Make sure the tags and IP addresses you use are unique. You should not tag multiple GDM nodes with the same key/tag combination if those nodes use the same IP address.
+
+To launch the template:
+  1.	From the BIG-IP VE web-based Configuration utility, on the Main tab, click **iApps > Application Services > Create**.
+  2.	In the **Name** field, give the template a unique name.
+  3.	From the **Template** list, select **f5.service_discovery**.  The template opens.
+  4.	Complete the template with information from your environment.  For assistance, from the Do you want to see inline help? question, select Yes, show inline help.
+  5.	When you are done, click the **Finished** button.
+
+If you want to verify the integrity of the template, from the BIG-IP VE Configuration utility click **iApps > Templates**. In the template list, look for **f5.service_discovery**. In the Verification column, you should see **F5 Verified**.
 
 ## Configuration Example <a name="config"></a>
 

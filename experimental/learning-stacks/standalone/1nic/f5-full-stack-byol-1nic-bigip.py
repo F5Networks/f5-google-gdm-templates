@@ -1,10 +1,17 @@
 # Copyright 2017 F5 Networks All rights reserved.
 #
-# Version v1.0.0 
+# Version v1.1.0
 
 """Creates BIG-IP"""
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
 def GenerateConfig(context):
+  ALLOWUSAGEANALYTICS = context.properties['allowUsageAnalytics']
+  if ALLOWUSAGEANALYTICS == "yes":
+      CUSTHASH = 'CUSTOMERID=`curl -s "http://metadata.google.internal/computeMetadata/v1/project/numeric-project-id" -H "Metadata-Flavor: Google" |sha512sum|cut -d " " -f 1`;\nDEPLOYMENTID=`curl -s "http://metadata.google.internal/computeMetadata/v1/instance/id" -H "Metadata-Flavor: Google"|sha512sum|cut -d " " -f 1`;\n'
+      SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['availabilityZone1'] + ',bigipVersion:13-0-0-2-3-1671,customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-full-stack-byol-1nic-bigip.py-rc1,templateVersion:v1.1.0,licenseType:byol"'
+  else:
+      CUSTHASH = ''
+      SENDANALYTICS = ''
   resources = [{
       'name': 'net-' + context.env['deployment'],
       'type': 'compute.v1.network',
@@ -26,6 +33,9 @@ def GenerateConfig(context):
       'name': 'webserver-' + context.env['deployment'],
       'type': 'compute.v1.instance',
       'properties': {
+          'labels': {
+              'f5servicediscovery': 'fullstack'
+          },
           'zone': context.properties['availabilityZone1'],
           'machineType': ''.join([COMPUTE_URL_BASE, 'projects/',
                                   context.env['project'], '/zones/',
@@ -75,6 +85,10 @@ def GenerateConfig(context):
                                   context.env['project'], '/zones/',
                                   context.properties['availabilityZone1'], '/machineTypes/',
                                   context.properties['instanceType']]),
+          'serviceAccounts': [{
+              'email': context.properties['serviceAccount'],
+              'scopes': ['https://www.googleapis.com/auth/compute.readonly']
+          }],
           'disks': [{
               'deviceName': 'boot',
               'type': 'PERSISTENT',
@@ -96,8 +110,6 @@ def GenerateConfig(context):
           }],
           'metadata': {
               'items': [{
-                  'key': 'output',
-                  'value': 'Testing',  
                   'key': 'startup-script',
                   'value': (''.join(['#!/bin/bash\n',
                                     'if [ -f /config/startupFinished ]; then\n',
@@ -137,15 +149,18 @@ def GenerateConfig(context):
                                     'mkdir -p /config/cloud/gce/node_modules\n',
                                     'echo expanding f5-cloud-libs.tar.gz\n',
                                     'tar xvfz /config/cloud/f5-cloud-libs.tar.gz -C /config/cloud/gce/node_modules\n',
+                                    'echo expanding f5-cloud-libs-gce.tar.gz\n',
+                                    'tar xvfz /config/cloud/f5-cloud-libs-gce.tar.gz -C /config/cloud/gce/node_modules/f5-cloud-libs/node_modules\n',
                                     'touch /config/cloud/cloudLibsReady\n',
-                                    'EOF\n',                                   
+                                    'EOF\n',
                                     'cat <<\'EOF\' > /config/verifyHash\n',
                                     'cli script /Common/verifyHash {\n',
-                                    '    proc script::run {} {\n',
+                                    'proc script::run {} {\n',
                                     '        if {[catch {\n',
-                                    '            set hashes(f5-cloud-libs.tar.gz) 862f7c19396088ab012fda7c2b262621c17f134b1d39d7a4d0b765eaf92f3ddc7354716a4f546fabb866df9876e1baed5799ae4a2c9d0ea6f01f79a38b9d3b3e\n',
-                                    '            set hashes(f5-cloud-libs-aws.tar.gz) 2566f515fb46d89f5a245079b0efdad60fd78327c352e567bd5d573eb2ee0093d167a2f054b2408bd7df49c5debc4218074fdb50cfe135bb80ccc6c303a03f72\n',
-                                    '            set hashes(f5-cloud-libs-azure.tar.gz) 9d4dc6779a5d25253832598d42681defa54c5f4521a70ba8e053179c262cdf0d5c8d6a3d458ea21da1d95212792b099bf2721ddbe175eed035cd1e00647124cf\n',
+                                    '            set hashes(f5-cloud-libs.tar.gz) 5b5035fe7e1d98260be409cc29d65da49bcaaa9becb4124b308023ce8790439356a2b85de4ce5a4433532967e1d5f13379e98eeadcf251b607032f47481d832f\n',
+                                    '            set hashes(f5-cloud-libs-aws.tar.gz) 279254b05d175df4ba1155fa810b3ea66a38e69198d7a6840ac9443ce730a5997e12c3b76af76ebadf13550d8bb0d45a5b09badfff4aac89e75d121bc166358d\n',
+                                    '            set hashes(f5-cloud-libs-azure.tar.gz) 3c52145334fe80da577f980cdfbb1ef71fa4284b2f7fb4fa6f241cf50528e9fdc8df088a8312c3f6b90d3db198c787f7c10739e4098efb071cc29bf0ed70437b\n',
+                                    '            set hashes(f5-cloud-libs-gce.tar.gz) 6ef33cc94c806b1e4e9e25ebb96a20eb1fe5975a83b2cd82b0d6ccbc8374be113ac74121d697f3bfc26bf49a55e948200f731607ce9aa9d23cd2e81299a653c1\n',
                                     '            set hashes(asm-policy-linux.tar.gz) 63b5c2a51ca09c43bd89af3773bbab87c71a6e7f6ad9410b229b4e0a1c483d46f1a9fff39d9944041b02ee9260724027414de592e99f4c2475415323e18a72e0\n',
                                     '            set hashes(f5.http.v1.2.0rc4.tmpl) 47c19a83ebfc7bd1e9e9c35f3424945ef8694aa437eedd17b6a387788d4db1396fefe445199b497064d76967b0d50238154190ca0bd73941298fc257df4dc034\n',
                                     '            set hashes(f5.http.v1.2.0rc6.tmpl) 811b14bffaab5ed0365f0106bb5ce5e4ec22385655ea3ac04de2a39bd9944f51e3714619dae7ca43662c956b5212228858f0592672a2579d4a87769186e2cbfe\n',
@@ -153,8 +168,9 @@ def GenerateConfig(context):
                                     '            set hashes(f5.aws_advanced_ha.v1.3.0rc1.tmpl) 9e55149c010c1d395abdae3c3d2cb83ec13d31ed39424695e88680cf3ed5a013d626b326711d3d40ef2df46b72d414b4cb8e4f445ea0738dcbd25c4c843ac39d\n',
                                     '            set hashes(f5.aws_advanced_ha.v1.4.0rc1.tmpl) de068455257412a949f1eadccaee8506347e04fd69bfb645001b76f200127668e4a06be2bbb94e10fefc215cfc3665b07945e6d733cbe1a4fa1b88e881590396\n',
                                     '            set hashes(asm-policy.tar.gz) 2d39ec60d006d05d8a1567a1d8aae722419e8b062ad77d6d9a31652971e5e67bc4043d81671ba2a8b12dd229ea46d205144f75374ed4cae58cefa8f9ab6533e6\n',
-                                    '            set hashes(deploy_waf.sh) 4db3176b45913a5e7ccf42ab9c7ac9d7de115cdbd030b9e735946f92456b6eb433087ed0e98ac4981c76d475cd38f4de49cd98c063e13d50328a270e5b3daa4a\n',
+                                    '            set hashes(deploy_waf.sh) 4c125f7cbc4d701cf50f03de479ebe99a08c2b2c3fa6aae3e229eb3f0bba98bb513d630368229c98e7c5c907e6a3168ece2f8f576267514bad4f6730ea14d454\n',
                                     '            set hashes(f5.policy_creator.tmpl) 54d265e0a573d3ae99864adf4e054b293644e48a54de1e19e8a6826aa32ab03bd04c7255fd9c980c3673e9cd326b0ced513665a91367add1866875e5ef3c4e3a\n',
+                                    '            set hashes(f5.service_discovery.tmpl) d4008a2c5a7f26cc42eb5cbe2171e15e6e95afb1b34fb03d04f6c1b80f154d896e6faaa2e04fbb85fd8e0e51b479dbfcd286357ce0967b162233cc57e0138b96\n',
                                     'EOF\n',
                                     'echo -e "" >> /config/verifyHash\n',
                                     'cat <<\'EOF\' >> /config/verifyHash\n',
@@ -182,11 +198,10 @@ def GenerateConfig(context):
                                     '            exit 1\n',
                                     '        }\n',
                                     '    }\n',
-                                    '    script-signature VwqAYsu1/TM/B7OPgCB2SXyiQ5s0MJH6qqzrypWaoZcRtXc9w9jNz8YwmqQyFn7TWTqCCLxmnMT4bmLzqNIYWesegv7w5KcBMwA8C0NTOebjHLkqKPzr2P68NiVzPN1/gxp3Y2i2e9zpnvy8PXcWRK3PkauO8lVSE7TJ07/uydvjg9t3GEjN449TUIZ+fx0NhqxS9VD6HDqv66FKgVcAeiomqrB2YQeawE4oShnbV2ULBP9IN8X/Rp9cb2gw1IPYZcLneP/rtgkMHOPmnzPV4u+tEowPzIjAo9mTV2J7e4z50peN3vdD7ThO1aPdcd5dfxbRqWZtlyV/pDPPHVVEdg==\n',
+                                    '    script-signature QyT1FQtNajuJkkmgI6ypFnbFu+JJw2UDV673xVwdt8LbE/aQ6JNS0QINerma90YU/uzj8ppThge5jttl3zSVYFkGXmHrvyDujdq50+/HfRnXBtieR+eW0Ro+4Kqfw83NLdebhsyRxJvfrzeAcJ/3VSnfmcERo/PKytcjtL5GFJpvUoaphfPz6YebbBg9VImBjfMBFczaWdKosLwriqG45Goh918lJLa6xYlLVRG+r+FJ9EXYaGty8jt/w4B0gl9oA4iqwmGPaB/GLBYgvek1tYeTl71wRRn/C8e0hsECqI0BAF6Yc7K06uzZcSYhTYQmMKIuebB/ckSdERzA3Mao+Q==\n',
                                     '    signing-key /Common/f5-irule\n',
                                     '}\n',
-                                    'EOF\n',                                    
-                                    'echo -e "" >> /config/verifyHash\n',
+                                    'EOF\n',
                                     'cat <<\'EOF\' > /config/waitThenRun.sh\n',
                                     '#!/bin/bash\n',
                                     'while true; do echo \"waiting for cloud libs install to complete\"\n',
@@ -200,13 +215,38 @@ def GenerateConfig(context):
                                     'EOF\n',
                                     'cat <<\'EOF\' > /config/cloud/gce/custom-config.sh\n',
                                     '#!/bin/bash\n',
+                                    'PROGNAME=$(basename $0)\n',
+                                    'function error_exit {\n',
+                                    'echo \"${PROGNAME}: ${1:-\\\"Unknown Error\\\"}\" 1>&2\n',
+                                    'exit 1\n',
+                                    '}\n',
+                                    'declare -a tmsh=()\n',
                                     'date\n',
-                                    'echo \'starting tmsh config\'\n',
-                                    'tmsh save /sys config\n',
+                                    'echo \'starting custom-config.sh\'\n',
+                                    'useServiceDiscovery=\'',
+                                    context.properties['serviceAccount'],
+                                    '\'\n',
+                                    'if [ -n "${useServiceDiscovery}" ];then\n',
+                                    '   tmsh+=(\n'
+                                    '   \'tmsh load sys application template /config/cloud/f5.service_discovery.tmpl\'\n',
+                                    '   \'tmsh create /sys application service serviceDiscovery template f5.service_discovery variables add { basic__advanced { value no } basic__display_help { value hide } cloud__cloud_provider { value gce }  cloud__gce_region { value \"/#default#\" } monitor_frequency { value 30 } monitor__http_method { value GET } monitor__http_verison { value http11 } monitor__monitor { value \"/#create_new#\"} monitor__response { value \"\" } monitor__uri { value / } pool__interval { value 60 } pool__member_conn_limit { value 0 } pool__member_port { value 80 } pool__pool_to_use { value \"/#create_new#\" } pool__public_private {value private} pool__tag_key { value f5servicediscovery',
+                                    ' } pool__tag_value { value fullstack } }\')\n',
+                                    'else\n',
+                                    '   tmsh+=(\n',
+                                    '   \'tmsh load sys application template /config/cloud/f5.service_discovery.tmpl\')\n',
+                                    'fi\n',
+                                    'tmsh+=(',
+                                    '\'tmsh save /sys config\')\n',
+                                    'for CMD in "${tmsh[@]}"\n',
+                                    'do\n',
+                                    '    if $CMD;then\n',
+                                    '        echo \"command $CMD successfully executed."\n',
+                                    '    else\n',
+                                    '        error_exit "$LINENO: An error has occurred while executing $CMD. Aborting!"\n',
+                                    '    fi\n',
+                                    'done\n',
                                     'date\n',
-                                    '### START CUSTOM TMSH CONFIGURTION\n',
-                                    'tmsh create ltm pool demo-pool members add { 10.0.0.3:80 } monitor http\n',
-                                    'tmsh create ltm virtual /Common/demp-80 { destination 10.0.0.2:80 ip-protocol tcp pool /Common/demo-pool profiles replace-all-with { tcp { } http { } }  source 0.0.0.0/0 source-address-translation { type automap } translate-address enabled translate-port enabled }\n',
+                                    '### START CUSTOM TMSH CONFIGURATION\n',
                                     '### END CUSTOM TMSH CONFIGURATION\n',
                                     'EOF\n',
                                     'cat <<\'EOF\' > /config/cloud/gce/rm-password.sh\n',
@@ -216,7 +256,9 @@ def GenerateConfig(context):
                                     'rm /config/cloud/gce/.adminPassword\n',
                                     'date\n',
                                     'EOF\n',
-                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs.tar.gz https://raw.githubusercontent.com/F5Networks/f5-cloud-libs/v3.0.2/dist/f5-cloud-libs.tar.gz\n',
+                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs.tar.gz https://raw.githubusercontent.com/F5Networks/f5-cloud-libs/v3.4.1/dist/f5-cloud-libs.tar.gz\n',
+                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs-gce.tar.gz https://raw.githubusercontent.com/F5Networks/f5-cloud-libs-gce/v1.0.0/dist/f5-cloud-libs-gce.tar.gz\n',
+                                    'curl -s -f --retry 20 -o /config/cloud/f5.service_discovery.tmpl https://raw.githubusercontent.com/F5Networks/f5-cloud-iapps/v1.1.1/f5-service-discovery/f5.service_discovery.tmpl\n',
                                     'chmod 755 /config/verifyHash\n',
                                     'chmod 755 /config/installCloudLibs.sh\n',
                                     'chmod 755 /config/waitThenRun.sh\n',
@@ -225,16 +267,17 @@ def GenerateConfig(context):
                                     'nohup /config/installCloudLibs.sh &>> /var/log/cloudlibs-install.log < /dev/null &\n',
                                     'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/f5-cloud-libs/scripts/runScript.js --signal PASSWORD_CREATED --file f5-rest-node --cl-args \'/config/cloud/gce/node_modules/f5-cloud-libs/scripts/generatePassword --file /config/cloud/gce/.adminPassword\' --log-level verbose -o /var/log/generatePassword.log &>> /var/log/cloudlibs-install.log < /dev/null &\n',
                                     'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/f5-cloud-libs/scripts/runScript.js --wait-for PASSWORD_CREATED --signal ADMIN_CREATED --file /config/cloud/gce/node_modules/f5-cloud-libs/scripts/createUser.sh --cl-args \'--user admin --password-file /config/cloud/gce/.adminPassword\' --log-level debug -o /var/log/createUser.log &>> /var/log/cloudlibs-install.log < /dev/null &\n',
+                                    CUSTHASH,
                                     'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/f5-cloud-libs/scripts/onboard.js --port 8443 --ssl-port ',
                                     context.properties['manGuiPort'],
-                                    ' --wait-for ADMIN_CREATED -o /var/log/onboard.log --log-level debug --no-reboot --host localhost --user admin --password-url file:///config/cloud/gce/.adminPassword --ntp 0.us.pool.ntp.org --ntp 1.us.pool.ntp.org --tz UTC --dns ',
-                                    context.properties['bigipDns'],
-                                    ' --module ltm:nominal --license ',
+                                    ' --wait-for ADMIN_CREATED -o /var/log/onboard.log --log-level debug --no-reboot --host localhost --user admin --password-url file:///config/cloud/gce/.adminPassword --ntp 0.us.pool.ntp.org --ntp 1.us.pool.ntp.org --tz UTC --module ltm:nominal --license ',
                                     context.properties['licenseKey1'],
-                                    ' --ping &>> /var/log/cloudlibs-install.log < /dev/null &\n',                                   
+                                    SENDANALYTICS,
+                                    ' --ping &>> /var/log/cloudlibs-install.log < /dev/null &\n',
                                     'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/custom-config.sh --cwd /config/cloud/gce -o /var/log/custom-config.log --log-level debug --wait-for ONBOARD_DONE --signal CUSTOM_CONFIG_DONE &>> /var/log/cloudlibs-install.log < /dev/null &\n',
-                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/rm-password.sh --cwd /config/cloud/gce -o /var/log/rm-password.log --log-level debug --wait-for CUSTOM_CONFIG_DONE --signal PASSWORD_REMOVED &>> /var/log/cloudlibs-install.log < /dev/null &\n',        
+                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/rm-password.sh --cwd /config/cloud/gce -o /var/log/rm-password.log --log-level debug --wait-for CUSTOM_CONFIG_DONE --signal PASSWORD_REMOVED &>> /var/log/cloudlibs-install.log < /dev/null &\n',
                                     'touch /config/startupFinished\n',
+
                                     ])
                             )
               }]

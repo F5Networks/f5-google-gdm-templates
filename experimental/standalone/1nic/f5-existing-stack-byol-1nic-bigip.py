@@ -1,6 +1,6 @@
 # Copyright 2017 F5 Networks All rights reserved.
 #
-# Version v1.1.0
+# Version v1.1.0rc1
 
 """Creates BIG-IP"""
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
@@ -21,6 +21,10 @@ def GenerateConfig(context):
                                   context.env['project'], '/zones/',
                                   context.properties['availabilityZone1'], '/machineTypes/',
                                   context.properties['instanceType']]),
+          'serviceAccounts': [{
+              'email': context.properties['serviceAccount'],
+              'scopes': ['https://www.googleapis.com/auth/compute.readonly']
+          }],
           'disks': [{
               'deviceName': 'boot',
               'type': 'PERSISTENT',
@@ -48,8 +52,6 @@ def GenerateConfig(context):
           }],
           'metadata': {
               'items': [{
-                  'key': 'output',
-                  'value': 'Testing',  
                   'key': 'startup-script',
                   'value': (''.join(['#!/bin/bash\n',
                                     'if [ -f /config/startupFinished ]; then\n',
@@ -89,8 +91,10 @@ def GenerateConfig(context):
                                     'mkdir -p /config/cloud/gce/node_modules\n',
                                     'echo expanding f5-cloud-libs.tar.gz\n',
                                     'tar xvfz /config/cloud/f5-cloud-libs.tar.gz -C /config/cloud/gce/node_modules\n',
+                                    'echo expanding f5-cloud-libs-gce.tar.gz\n',
+                                    'tar xvfz /config/cloud/f5-cloud-libs-gce.tar.gz -C /config/cloud/gce/node_modules/f5-cloud-libs/node_modules\n',
                                     'touch /config/cloud/cloudLibsReady\n',
-                                    'EOF\n',
+                                    'EOF\n',                                   
                                     'cat <<\'EOF\' > /config/verifyHash\n',
                                     'cli script /Common/verifyHash {\n',
                                     'proc script::run {} {\n',
@@ -161,6 +165,21 @@ def GenerateConfig(context):
                                     'declare -a tmsh=()\n',
                                     'date\n',
                                     'echo \'starting custom-config.sh\'\n',
+                                    'useServiceDiscovery=\'',
+                                    context.properties['tagValue'],
+                                    '\'\n',
+                                    'if [ -n "${useServiceDiscovery}" ];then\n',
+                                    '   tmsh+=(\n'
+                                    '   \'tmsh load sys application template /config/cloud/f5.service_discovery.tmpl\'\n',
+                                    '   \'tmsh create /sys application service serviceDiscovery template f5.service_discovery variables add { basic__advanced { value no } basic__display_help { value hide } cloud__cloud_provider { value gce }  cloud__gce_region { value \"/#default#\" } monitor_frequency { value 30 } monitor__http_method { value GET } monitor__http_verison { value http11 } monitor__monitor { value \"/#create_new#\"} monitor__response { value \"\" } monitor__uri { value / } pool__interval { value 60 } pool__member_conn_limit { value 0 } pool__member_port { value 80 } pool__pool_to_use { value \"/#create_new#\" } pool__public_private {value private} pool__tag_key { value ',
+                                    context.properties['tagName'],
+                                    ' } pool__tag_value { value ',
+                                    context.properties['tagValue'],
+                                    ' } }\')\n',
+                                    'else\n',
+                                    '   tmsh+=(\n',
+                                    '   \'tmsh load sys application template /config/cloud/f5.service_discovery.tmpl\')\n',
+                                    'fi\n',
                                     'tmsh+=(',
                                     '\'tmsh save /sys config\')\n',
                                     'for CMD in "${tmsh[@]}"\n',
@@ -201,7 +220,7 @@ def GenerateConfig(context):
                                     SENDANALYTICS,
                                     ' --ping &>> /var/log/cloudlibs-install.log < /dev/null &\n',
                                     'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/custom-config.sh --cwd /config/cloud/gce -o /var/log/custom-config.log --log-level debug --wait-for ONBOARD_DONE --signal CUSTOM_CONFIG_DONE &>> /var/log/cloudlibs-install.log < /dev/null &\n',
-                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/rm-password.sh --cwd /config/cloud/gce -o /var/log/rm-password.log --log-level debug --wait-for CUSTOM_CONFIG_DONE --signal PASSWORD_REMOVED &>> /var/log/cloudlibs-install.log < /dev/null &\n',
+                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/rm-password.sh --cwd /config/cloud/gce -o /var/log/rm-password.log --log-level debug --wait-for CUSTOM_CONFIG_DONE --signal PASSWORD_REMOVED &>> /var/log/cloudlibs-install.log < /dev/null &\n',        
                                     'touch /config/startupFinished\n',
                                     ])
                             )
@@ -211,6 +230,6 @@ def GenerateConfig(context):
   }]
   outputs = [{
       'name': 'bigipIP',
-      'value': ''.join(['$(ref.' + context.env['name'] + '-' + context.env['deployment'] + '.bigipIP)'])
-  }] 
+      'value': ''.join(['$(ref.' + context.env['name'] + '-' + context.env['deployment'] + '.bigipIP)']),
+  }]
   return {'resources': resources}

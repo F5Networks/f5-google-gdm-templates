@@ -27,5 +27,11 @@ resources:
    ### Instance type assigned to BIG-IP
    manGuiPort: '8443'
    ### BIG-IP Management Port, the default is 8443
+   serviceAccount: '<google service account>'
+   ### If using service discovery, enter google service account to use for discovery. Leave single quotes with nothing between when not using service discovery.
+   tagName: '<tag name>'
+   ### If using service discovery, enter tag name used on servers for discovery. Leave single quotes with nothing between if not using service discovery.
+   tagValue: '<tag value>'
+   ### If using service discovery, enter tag value used on servers for discovery. Leave single quotes with nothing between if not using service discovery.
    allowUsageAnalytics: 'yes'
    ### This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent.
