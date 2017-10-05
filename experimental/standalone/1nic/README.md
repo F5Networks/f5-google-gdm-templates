@@ -77,7 +77,7 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | serviceAccount | If using service discovery, enter Google service account to use for discovery. Leave single quotes with nothing between when not using service discovery. |
 | tagName | If using service discovery, enter tag name used on servers for discovery. Leave single quotes with nothing between if not using service discovery. |
 | tagValue | If using service discovery, enter tag value used on servers for discovery. Leave single quotes with nothing between if not using service discovery. |
-| allowUsageAnalytics | No | This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you select **No** statistics are not sent. |
+| allowUsageAnalytics | This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you select **No** statistics are not sent. |
 
 Example of the YAML file:
 
@@ -85,7 +85,7 @@ Example of the YAML file:
 ```yaml 
 # Copyright 2017 F5 Networks All rights reserved.
 #
-# Version v1.0.0
+# Version v1.1.0
 
 imports:
 - path: f5-existing-stack-byol-1nic-bigip.py
@@ -94,23 +94,32 @@ resources:
   type: f5-existing-stack-byol-1nic-bigip.py
   properties:
    region: <region>
-   ### Google Region to deploy BIG-IP VE, for example us-west1
+   ### Google Region to deploy BIG-IP, for example us-west1
    availabilityZone1: <availability zone>
    ### Google Zone in specified region to deploy BIG-IP, for example us-west1-a
    network: <network>
    ### Network name to deploy BIG-IP
    subnet1: <subnet>
    ### Subnet of Network BIG-IP should use
-   licenseKey1: <lic key>
+   licenseKey1: '<lic key>'
    ### BIG-IP license key
-   imageName: f5-byol-bigip-13-0-0-0-0-177-best-jan-23-2017-10-28am
-   ### BIG-IP image to use
+   imageName: f5-byol-bigip-13-0-0-2-3-1671-best
+   ### BIG-IP image, valid choices include:
+   ### f5-byol-bigip-13-0-0-2-3-1671-good
+   ### f5-byol-bigip-13-0-0-2-3-1671-better
+   ### f5-byol-bigip-13-0-0-2-3-1671-best
    instanceType: n1-standard-4
    ### Instance type assigned to BIG-IP
    manGuiPort: '8443'
    ### BIG-IP Management Port, the default is 8443
-   bigipDns: '<dns server>'
-   ### DNS Server, example 8.8.8.8, required; subnet DHCP assigned DNS also added.
+   serviceAccount: '<google service account>'
+   ### If using service discovery, enter google service account to use for discovery. Leave single quotes with nothing between when not using service discovery.
+   tagName: '<tag name>'
+   ### If using service discovery, enter tag name used on servers for discovery. Leave single quotes with nothing between if not using service discovery.
+   tagValue: '<tag value>'
+   ### If using service discovery, enter tag value used on servers for discovery. Leave single quotes with nothing between if not using service discovery.
+   allowUsageAnalytics: 'yes'
+   ### This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent.
 ```
 
 ### Save the YAML file
