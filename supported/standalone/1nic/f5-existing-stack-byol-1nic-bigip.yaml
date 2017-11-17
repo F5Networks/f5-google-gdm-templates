@@ -1,6 +1,6 @@
 # Copyright 2017 F5 Networks All rights reserved.
 #
-# Version v1.1.0
+# Version v1.2.0
 
 imports:
 - path: f5-existing-stack-byol-1nic-bigip.py
@@ -18,11 +18,11 @@ resources:
    ### Subnet of Network BIG-IP should use
    licenseKey1: '<lic key>'
    ### BIG-IP license key
-   imageName: f5-byol-bigip-13-0-0-2-3-1671-best
+   imageName: f5-byol-bigip-13-0-0-3-0-1679-best
    ### BIG-IP image, valid choices include:
-   ### f5-byol-bigip-13-0-0-2-3-1671-good
-   ### f5-byol-bigip-13-0-0-2-3-1671-better
-   ### f5-byol-bigip-13-0-0-2-3-1671-best
+   ### f5-byol-bigip-13-0-0-3-0-1679-best
+   ### f5-byol-bigip-13-0-0-3-0-1679-better
+   ### f5-byol-bigip-13-0-0-3-0-1679-good 
    instanceType: n1-standard-4
    ### Instance type assigned to BIG-IP
    manGuiPort: '8443'
