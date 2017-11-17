@@ -103,11 +103,11 @@ resources:
    ### Subnet of Network BIG-IP should use
    licenseKey1: '<lic key>'
    ### BIG-IP license key
-   imageName: f5-byol-bigip-13-0-0-3-0-1679-best
+   imageName: f5-byol-bigip-13-0-0-2-3-1671-best
    ### BIG-IP image, valid choices include:
-   ### f5-byol-bigip-13-0-0-3-0-1679-best
-   ### f5-byol-bigip-13-0-0-3-0-1679-better
-   ### f5-byol-bigip-13-0-0-3-0-1679-good
+   ### f5-byol-bigip-13-0-0-2-3-1671-good
+   ### f5-byol-bigip-13-0-0-2-3-1671-better
+   ### f5-byol-bigip-13-0-0-2-3-1671-best
    instanceType: n1-standard-4
    ### Instance type assigned to BIG-IP
    manGuiPort: '8443'
