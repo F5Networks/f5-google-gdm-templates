@@ -3,6 +3,21 @@
 [![Releases](https://img.shields.io/github/release/f5networks/f5-google-gdm-templates.svg)](https://github.com/f5networks/f5-google-gdm-templates/releases)
 [![Issues](https://img.shields.io/github/issues/f5networks/f5-google-gdm-templates.svg)](https://github.com/f5networks/f5-google-gdm-templates/issues)
 
+<table>
+ <tr>
+  <td align=center>:warning: <strong>CRITICAL<strong> :warning:  </td>
+ </tr>
+ <tr>
+  <td>BIG-IP virtual servers configured with a Client SSL profile may be vulnerable to an Adaptive Chosen Ciphertext attack (AKA Bleichenbacher attack). For complete information on this vulnerability, see https://support.f5.com/csp/article/K21905460. <br>F5 has released hotfixes for all vulnerable releases. <br>  
+   <ul>
+    <li><em>If you have an existing BIG-IP VE deployment in Google Cloud</em>  <br>See the <a href="https://support.f5.com/csp/article/K21905460">Security Advisory</a>, which contains information about upgrading your BIG-IP VE to a non-vulnerable version.</li>
+    <li><em>For <strong>new</strong> BIG-IP VE deployments in Google Cloud</em><br> F5 has uploaded new, non-vulnerable BIG-IP versions into Google and they are available for immediate use. </li>
+    
+   </ul></td>
+ </tr>
+ </table>
+
+
 ## Introduction
  
 Welcome to the GitHub repository for F5's Google Cloud Deployment Manager (GDM) templates for deploying F5 instances in the Google cloud.  All of the templates in this repository have been developed by F5 Networks engineers. Across all branches in this repository, there are two directories: *supported* and *experimental*
