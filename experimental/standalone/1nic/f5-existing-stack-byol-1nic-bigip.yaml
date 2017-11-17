@@ -1,6 +1,6 @@
 # Copyright 2017 F5 Networks All rights reserved.
 #
-# Version v1.1.0
+# Version v1.2.0
 
 imports:
 - path: f5-existing-stack-byol-1nic-bigip.py
