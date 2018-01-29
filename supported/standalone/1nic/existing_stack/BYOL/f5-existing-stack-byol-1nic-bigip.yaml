@@ -1,6 +1,6 @@
-# Copyright 2017 F5 Networks All rights reserved.
+# Copyright 2018 F5 Networks All rights reserved.
 #
-# Version v1.2.0
+# Version v1.3.0
 
 imports:
 - path: f5-existing-stack-byol-1nic-bigip.py
@@ -18,14 +18,20 @@ resources:
    ### Subnet of Network BIG-IP should use
    licenseKey1: '<lic key>'
    ### BIG-IP license key
-   imageName: f5-byol-bigip-13-0-0-3-0-1679-best
+   imageName: <image name>
    ### BIG-IP image, valid choices include:
-   ### f5-byol-bigip-13-0-0-3-0-1679-best
-   ### f5-byol-bigip-13-0-0-3-0-1679-better
-   ### f5-byol-bigip-13-0-0-3-0-1679-good 
+   # f5-byol-bigip-13-1-0-2-0-6-best
+   # f5-byol-bigip-13-1-0-2-0-6-better
+   # f5-byol-bigip-13-1-0-2-0-6-good
    instanceType: n1-standard-4
-   ### Instance type assigned to BIG-IP
+   ### Instance type assigned to BIG-IP, example n1-standard-4.
    manGuiPort: '8443'
    ### BIG-IP Management Port, the default is 8443
+   serviceAccount: '<service account>'
+   ### If using service discovery, enter google service account to use for discovery. Leave single quotes with nothing between when not using service discovery.
+   tagName: '<tag>'
+   ### If using service discovery, enter tag name used on servers for discovery. Leave single quotes with nothing between if not using service discovery.
+   tagValue: '<value>'
+   ### If using service discovery, enter tag value used on servers for discovery. Leave single quotes with nothing between if not using service discovery.
    allowUsageAnalytics: 'yes'
    ### This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent.

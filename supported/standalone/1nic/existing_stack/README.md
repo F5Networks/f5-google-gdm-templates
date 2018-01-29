@@ -11,19 +11,21 @@
  - [Security](#security)
  - [Deploying the Template](#deploying-the-template)
  - [Configuration Example](#config)
- 
+ - [Service Discovery](#service-discovery)
  
 ## Introduction
 This solution uses a Google Deployment Manager Template to launch a single NIC deployment a BIG-IP VE in an Google Virtual Private Cloud. Traffic flows from the BIG-IP VE to the application servers.  This is the standard Cloud design where the compute instance of
-F5 is running with a single interface, which processes both management and data plane traffic.  This is a traditional model in the cloud where the deployment is considered one-armed.
+F5 is running with a single interface, which processes both management and data plane traffic.  This is a traditional model in the cloud where the deployment is considered one-armed.  
+
+The BIG-IP VE has the <a href="https://f5.com/products/big-ip/local-traffic-manager-ltm">Local Traffic Manager</a> (LTM) module enabled to provide advanced traffic management functionality. This means you can also configure the BIG-IP VE to enable F5's L4/L7 security features, access control, and intelligent traffic management.
  
 The **existing stack** Google Deployment Manager template incorporates existing networks. If you would like to run a *full stack* which creates and configures the BIG-IP, the Google Cloud infrastructure, as well as a backend webserver, see the templates located in the *learning-stacks* folder in the **experimental** directory.
 
 
-## Prerequisites and notes
-The following are prerequisites and configuration notes for the F5 single NIC GDM template:
+## Prerequisites
+The following are prerequisites for the F5 single NIC GDM template:
   - You must have installed the Google Cloud SDK (https://cloud.google.com/sdk/downloads)
-  - An F5 Networks BYOL license (Bring Your Own License) available
+  - BYOL licensing only: An F5 Networks BYOL license (Bring Your Own License) available
   - A Google Cloud Platform (GCP) network with one subnet.  The subnet requires a route and access to the Internet for the initial configuration to download the BIG-IP cloud library.
   - Key pair for SSH access to BIG-IP VE (you can create or import this in Google Cloud)
   - An Google Firewall rule with the following inbound rules:
@@ -31,15 +33,15 @@ The following are prerequisites and configuration notes for the F5 single NIC GD
     - Port 8443 (or other port) for accessing the BIG-IP web-based Configuration utility
     - A port for accessing your applications via the BIG-IP virtual server
   - This solution uses the SSH key to enable access to the BIG-IP system. If you want access to the BIG-IP web-based Configuration utility, you must first SSH into the BIG-IP VE using the SSH key you provided in the template.  You can then create a user account with admin-level permissions on the BIG-IP VE to allow access if necessary.
-  - You must use a BIG-IP instance that has at least 2 vCPU and 4 GB memory. For each additional vCPU, add at least 2 GB of memory. Note: Because of this requirement, the *n1-highcpu* instance types are not supported.  The following are the minimum and default Google Cloud Instance sizes:
-    - Good: minimum – **n1-standard-1**; default – **n1-standard-2**
-    - Better: minimum – **n1-standard-2**;  default – **n1-standard-4**
-    - Best: minimum – **n1-standard-2**;  default – **n1-standard-4**
+  - You must use a BIG-IP instance that has at least 2 vCPU and 4 GB memory. For each additional vCPU, add at least 2 GB of memory. Note: Because of this requirement, the *n1-highcpu* instance types are not supported.  
 
+## Important configuration notes
+  - This template supports service discovery.  See the [Service Discovery section](#service-discovery) for details.  
+  - F5 has created a matrix that contains all of the tagged releases of the F5 Google GDM templates, and the corresponding BIG-IP versions, license types and throughput levels available for a specific tagged release. See https://github.com/F5Networks/f5-google-gdm-templates/blob/master/google-bigip-version-matrix.md.
 
   
 ### Security
-This GDM template downloads helper code to configure the BIG-IP system. If you want to verify the integrity of the template, you can open the GDM template (**f5-existing-stack-byol-1nic-bigip.py**) and ensure the following lines are present. See [Security Detail](#securitydetail) for the exact code in each of the following sections.
+This GDM template downloads helper code to configure the BIG-IP system. If you want to verify the integrity of the template, you can open the GDM template and ensure the following lines are present. See [Security Detail](#securitydetail) for the exact code in each of the following sections.
   - In the */config/verifyHash* section: **script-signature** and then a hashed signature
   - In the */config/installCloudLibs.sh* section **"tmsh load sys config merge file /config/verifyHash"**
   
@@ -48,72 +50,46 @@ This GDM template downloads helper code to configure the BIG-IP system. If you w
 
 
 ### Help 
-Because this template has been created and fully tested by F5 Networks, it is fully supported by F5. This means you can get assistance if necessary from F5 Technical Support.
+**F5 Support**  
+Because this template has been created and fully tested by F5 Networks, it is fully supported by F5. This means you can get assistance if necessary from [F5 Technical Support](https://support.f5.com/csp/article/K25327565).
 
-We encourage you to use our [Slack channel](https://f5cloudsolutions.herokuapp.com) for discussion and assistance on F5 cloud templates.  This channel is typically monitored Monday-Friday 9-5 PST by F5 employees who will offer best-effort support. 
+**Community Support**  
+We encourage you to use our [Slack channel](https://f5cloudsolutions.herokuapp.com) for discussion and assistance on F5 Google GDM templates. There are F5 employees who are members of this community who typically monitor the channel Monday-Friday 9-5 PST and will offer best-effort assistance. This slack channel community support should **not** be considered a substitute for F5 Technical Support. See the [Slack Channel Statement](https://github.com/F5Networks/f5-aws-cloudformation/blob/master/slack-channel-statement.md) for guidelines on using this channel.
 
 
 
 ## Deploying the template
-This solution uses a YAML file for containing the parameters necessary to deploy the BIG-IP instance in Google Cloud.  The YAML file (**f5-existing-stack-byol-1nic-bigip.yaml**) resides in this repository.  You ***must edit the YAML file*** to include information for your deployment before using the file to launch the BIG-IP VE instance.
+This solution uses a YAML file for containing the parameters necessary to deploy the BIG-IP instance in Google Cloud.  The YAML file you use depends on whether you are using BYOL or PAYG (Pay As You Go) licensing:  
+  - BYOL: [**f5-existing-stack-byol-1nic-bigip.yaml**](https://github.com/F5Networks/f5-google-gdm-templates/blob/master/supported/standalone/1nic/existing_stack/BYOL/f5-existing-stack-byol-1nic-bigip.yaml)  
+  - PAYG: [**f5-existing-stack-payg-1nic-bigip.yaml**](https://github.com/F5Networks/f5-google-gdm-templates/blob/master/supported/standalone/1nic/existing_stack/PAYG/f5-existing-stack-byol-1nic-bigip.yaml)  
+
+
+You ***must edit the YAML file*** to include information for your deployment before using the file to launch the BIG-IP VE instance.
 1. Make sure you have completed all of the [prerequisites](#prerequisites). 
 2. [Edit the parameters](#edit-the-yaml-file) in the **f5-existing-stack-byol-1nic-bigip.yaml** YAML file in this repository as described in this section.
 3. [Save the YAML file](#save-the-yaml-file).
 4. [Deploy the BIG-IP VE](#deploy-the-big-ip-ve) from the command line. 
 
 ### Edit the YAML file
-After completing the prerequisites, edit the YAML file.  You must replace the following parameters with the appropriate values:
+After completing the prerequisites, edit the YAML file.  You must replace the following parameters with the appropriate values. For more information about the Service Discovery fields, see [Service Discovery section](#service-discovery).
 
 
 | Parameter | Description |
 | --- | --- |
-| region | Google Region to deploy BIG-IP, such as **us-west1** |
+| region | The Google region in which you want to deploy BIG-IP, for example **us-west1** |
 | availabilityZone1 | The availability zone where you want to deploy the BIG-IP VE instance, such as **us-west1-a** |
 | network | Network name in which you want to deploy BIG-IP  |
-| licenseKey1 | Your F5 BIG-IP BYOL license key |
+| licenseKey1 | BYOL only: Your F5 BIG-IP BYOL license key |
 | imageName | BIG-IP image you want to deploy |
 | instanceType | The BIG-IP instance type you want to use, such as **n1-standard-2** |
 | manGuiPort | BIG-IP management port.  The default is **8443** |
 | subnet1 | The name of your subnet |
+| serviceAccount | If using service discovery, enter Google service account to use for discovery. Leave single quotes with nothing between when not using service discovery. |
+| tagName | If using service discovery, enter tag name used on servers for discovery. Leave single quotes with nothing between if not using service discovery. |
+| tagValue | If using service discovery, enter tag value used on servers for discovery. Leave single quotes with nothing between if not using service discovery. |
 | allowUsageAnalytics | This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you select **No** statistics are not sent. |
 
 
-Example of the YAML file:
-
-
-```yaml 
-# Copyright 2017 F5 Networks All rights reserved.
-#
-# Version v1.1.0
-
-imports:
-- path: f5-existing-stack-byol-1nic-bigip.py
-resources:
-- name: bigip-1nic-setup
-  type: f5-existing-stack-byol-1nic-bigip.py
-  properties:
-   region: <region>
-   ### Google Region to deploy BIG-IP, for example us-west1
-   availabilityZone1: <availability zone>
-   ### Google Zone in specified region to deploy BIG-IP, for example us-west1-a
-   network: <network>
-   ### Network name to deploy BIG-IP
-   subnet1: <subnet>
-   ### Subnet of Network BIG-IP should use
-   licenseKey1: '<lic key>'
-   ### BIG-IP license key
-   imageName: f5-byol-bigip-13-0-0-3-0-1679-best
-   ### BIG-IP image, valid choices include:
-   ### f5-byol-bigip-13-0-0-3-0-1679-best
-   ### f5-byol-bigip-13-0-0-3-0-1679-better
-   ### f5-byol-bigip-13-0-0-3-0-1679-good
-   instanceType: n1-standard-4
-   ### Instance type assigned to BIG-IP
-   manGuiPort: '8443'
-   ### BIG-IP Management Port, the default is 8443
-   allowUsageAnalytics: 'yes'
-   ### This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent.
-```
 
 ### Save the YAML file
 After you have edited the YAML file with the appropriate values, save the YAML file in a location accessible from the gcloud command line.
@@ -137,6 +113,30 @@ Keep in mind the following:
 The following is a simple configuration diagram for this single NIC deployment. In this scenario, all access to the BIG-IP VE appliance is through the same IP address and virtual network interface (vNIC).  This interface processes both management and data plane traffic.
 
 ![Single NIC configuration example](images/google_setup.png)
+
+## Service Discovery
+This Google GDM template supports Service Discovery.  If you enable it in the YAML file, the template runs the Service Discovery iApp template on the BIG-IP VE. Once you have properly tagged the servers you want to include, and then entered the corresponding tags (**tagName** and **tagValue**) and Google service account in the YAML file, the BIG-IP VE programmatically discovers (or removes) members using those tags. See our [Service Discovery video](https://www.youtube.com/watch?v=ig_pQ_tqvsI) to see this feature in action.
+
+**Important**: Even if you don't plan on using the Service Discovery iApp initially, if you think you may want to use it in the future, you must specify the Google service account (**serviceAccount**) in the YAML file before deploying the template.
+
+### Tagging
+In Google, you tag objects using the **labels** parameter within the virtual machine.  The Service Discovery iApp uses these tags to discover nodes with this tag. Note that you select public or private IP addresses within the iApp.
+  - *Tag a VM resource*<br>
+The BIG-IP VE will discover the primary public or private IP addresses for the primary NIC configured for the tagged VM.
+
+
+**Important**: Make sure the tags and IP addresses you use are unique. You should not tag multiple GDM nodes with the same key/tag combination if those nodes use the same IP address.
+
+
+When enabled, the template runs the iApp template automatically.  If you need to modify the template after this initial configuration has taken place, use the following guidance.
+  1.	From the BIG-IP VE web-based Configuration utility, on the Main tab, click **iApps > Application Services**.
+  2.	From the list of application services, click **serviceDiscovery**.
+  4.	You can now modify the template settings as applicable.  For assistance, from the *Do you want to see inline help?* question, select **Yes, show inline help**.
+  5.	When you are done, click the **Finished** button.
+  
+If you want to verify the integrity of the template, from the BIG-IP VE Configuration utility click **iApps > Templates**. In the template list, look for **f5.service_discovery**. In the Verification column, you should see **F5 Verified**.
+
+
 ### Documentation
 The ***BIG-IP Virtual Edition and Google Cloud Platform: Setup*** guide (https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/bigip-ve-setup-google-cloud-platform-13-0-0.html) details how to create the configuration manually without using the template.  This document also describes the configuration in more detail.
 
@@ -236,20 +236,22 @@ Note the hashes and script-signature may be different in your template. The impo
 If you find an issue, we would love to hear about it. 
 You have a choice when it comes to filing issues:
   - Use the **Issues** link on the GitHub menu bar in this repository for items such as enhancement or feature requests and non-urgent bug fixes. Tell us as much as you can about what you found and how you found it.
-  - Contact F5 Technical support via your typical method for more time sensitive changes and other issues requiring immediate support.
+  - Contact us at [solutionsfeedback@f5.com](mailto:solutionsfeedback@f5.com?subject=GitHub%20Feedback) for general feedback or enhancement requests. 
+  - Use our [Slack channel](https://f5cloudsolutions.herokuapp.com) for discussion and assistance on F5 cloud templates. There are F5 employees who are members of this community who typically monitor the channel Monday-Friday 9-5 PST and will offer best-effort assistance.
+  - For templates in the **supported** directory, contact F5 Technical support via your typical method for more time sensitive changes and other issues requiring immediate support.
 
 
 
 ## Copyright
 
-Copyright 2014-2017 F5 Networks Inc.
+Copyright 2014-2018 F5 Networks Inc.
 
 
 ## License
 
 
-Apache V2.0
-~~~~~~~~~~~
+### Apache V2.0
+
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
 this file except in compliance with the License. You may obtain a copy of the
 License at
@@ -262,7 +264,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and limitations
 under the License.
 
-Contributor License Agreement
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### Contributor License Agreement
+
 Individuals or business entities who contribute to this project must have
-completed and submitted the `F5 Contributor License Agreement`
+completed and submitted the F5 Contributor License Agreement.
