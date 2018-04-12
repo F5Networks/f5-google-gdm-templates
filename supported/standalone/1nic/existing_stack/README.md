@@ -25,7 +25,7 @@ The **existing stack** Google Deployment Manager template incorporates existing 
 ## Prerequisites
 The following are prerequisites for the F5 single NIC GDM template:
   - You must have installed the Google Cloud SDK (https://cloud.google.com/sdk/downloads)
-  - BYOL licensing only: An F5 Networks BYOL license (Bring Your Own License) available
+  - If using BYOL licensing only: An F5 Networks BYOL license (Bring Your Own License) available.
   - A Google Cloud Platform (GCP) network with one subnet.  The subnet requires a route and access to the Internet for the initial configuration to download the BIG-IP cloud library.
   - Key pair for SSH access to BIG-IP VE (you can create or import this in Google Cloud)
   - An Google Firewall rule with the following inbound rules:

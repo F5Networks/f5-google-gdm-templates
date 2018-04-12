@@ -1,6 +1,6 @@
 # Copyright 2018 F5 Networks All rights reserved.
 #
-# Version v1.3.0
+# Version v1.3.1
 
 """Creates BIG-IP"""
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
@@ -8,7 +8,7 @@ def GenerateConfig(context):
   ALLOWUSAGEANALYTICS = context.properties['allowUsageAnalytics']
   if ALLOWUSAGEANALYTICS == "yes":
       CUSTHASH = 'CUSTOMERID=`curl -s "http://metadata.google.internal/computeMetadata/v1/project/numeric-project-id" -H "Metadata-Flavor: Google" |sha512sum|cut -d " " -f 1`;\nDEPLOYMENTID=`curl -s "http://metadata.google.internal/computeMetadata/v1/instance/id" -H "Metadata-Flavor: Google"|sha512sum|cut -d " " -f 1`;\n'
-      SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-existing-stack-payg-1nic-bigip.py,templateVersion:v1.3.0,licenseType:payg"'
+      SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-existing-stack-payg-1nic-bigip.py,templateVersion:v1.3.1,licenseType:payg"'
   else:
       CUSTHASH = ''
       SENDANALYTICS = ''
@@ -17,6 +17,7 @@ def GenerateConfig(context):
       'type': 'compute.v1.instance',
       'properties': {
           'zone': context.properties['availabilityZone1'],
+          'canIpForward': True,
           'machineType': ''.join([COMPUTE_URL_BASE, 'projects/',
                                   context.env['project'], '/zones/',
                                   context.properties['availabilityZone1'], '/machineTypes/',
