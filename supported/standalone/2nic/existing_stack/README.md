@@ -104,7 +104,7 @@ Keep in mind the following:
 ## Service Discovery
 This Google GDM template supports Service Discovery.  If you enable it in the YAML file, the template runs the Service Discovery iApp template on the BIG-IP VE. Once you have properly tagged the servers you want to include, and then entered the corresponding tags (**tagName** and **tagValue**) and Google service account in the YAML file, the BIG-IP VE programmatically discovers (or removes) members using those tags. See our [Service Discovery video](https://www.youtube.com/watch?v=ig_pQ_tqvsI) to see this feature in action.
 
-**Important**: Even if you don't plan on using the Service Discovery iApp initially, if you think you may want to use it in the future, you must specify the Google service account (**serviceAccount**) in the YAML file before deploying the template.
+**Important**: Even if you don't plan on using the Service Discovery iApp initially, if you think you may want to use it in the future, you must specify the Google service account (**serviceAccount**) in the YAML file before deploying the template. At a minimum, the service account requires "Compute Viewer" or "Compute Engine - Read Only" permissions and should be specified using FQDN account name.
 
 ### Tagging
 In Google, you tag objects using the **labels** parameter within the virtual machine.  The Service Discovery iApp uses these tags to discover nodes with this tag. Note that you select public or private IP addresses within the iApp.
