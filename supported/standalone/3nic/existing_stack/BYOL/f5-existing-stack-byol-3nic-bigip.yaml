@@ -20,14 +20,10 @@ resources:
    ### Specify Network name to for BIG-IP external application traffic
    subnet1: <subnet>
    ### Subnet of Network BIG-IP should use for externalapplication traffic
-   mask1: '<mask prefix>'
-   ### Mask used for specified external application traffic subnet using prefix notation. ie '24'
-   network2: dewpt3
+   network2: <network>
    ### Specify Network name to for BIG-IP internal application traffic
-   subnet2: subnet3
+   subnet2: <subnet>
    ### Subnet of Network BIG-IP should use for internal application traffic
-   mask2: '24'
-   ### Mask used for specified internal application subnet using prefix notation. ie '24'
    licenseKey1: '<lic key>'
    ### BIG-IP license key
    imageName: <image name>

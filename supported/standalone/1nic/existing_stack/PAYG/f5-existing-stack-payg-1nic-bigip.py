@@ -13,7 +13,7 @@ def GenerateConfig(context):
       CUSTHASH = ''
       SENDANALYTICS = ''
   resources = [{
-      'name': 'bigip1-' + context.env['deployment'],
+      'name': context.env['deployment'],
       'type': 'compute.v1.instance',
       'properties': {
           'zone': context.properties['availabilityZone1'],
@@ -219,7 +219,7 @@ def GenerateConfig(context):
                                     CUSTHASH,
                                     'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/f5-cloud-libs/scripts/onboard.js --port 8443 --ssl-port ',
                                     context.properties['manGuiPort'],
-                                    ' --wait-for ADMIN_CREATED -o /var/log/cloud/google/onboard.log --log-level debug --no-reboot --host localhost --user admin --password-url file:///config/cloud/gce/.adminPassword --ntp 0.us.pool.ntp.org --ntp 1.us.pool.ntp.org --tz UTC --module ltm:nominal ',
+                                    ' --wait-for ADMIN_CREATED -o /var/log/cloud/google/onboard.log --log-level debug --no-reboot --host localhost --user admin --password-url file:///config/cloud/gce/.adminPassword --ntp 0.pool.ntp.org --ntp 1.pool.ntp.org --tz UTC --module ltm:nominal ',
                                     SENDANALYTICS,
                                     ' &>> /var/log/cloud/google/cloudlibs-install.log < /dev/null &\n',
                                     'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/custom-config.sh --cwd /config/cloud/gce -o /var/log/cloud/google/custom-config.log --log-level debug --wait-for ONBOARD_DONE --signal CUSTOM_CONFIG_DONE &>> /var/log/cloud/google/cloudlibs-install.log < /dev/null &\n',
