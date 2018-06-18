@@ -20,8 +20,6 @@ resources:
    ### Specify Network name to for BIG-IP application traffic
    subnet1: <subnet>
    ### Subnet of Network BIG-IP should use for application traffic
-   mask1: '<mask prefix>'
-   ### Mask used for specified application traffic subnet using prefix notation. ie '24'
    licenseKey1: '<lic key>'
    ### BIG-IP license key
    imageName: <image name>

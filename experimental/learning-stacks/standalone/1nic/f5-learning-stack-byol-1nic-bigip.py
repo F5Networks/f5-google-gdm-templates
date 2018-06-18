@@ -270,7 +270,7 @@ def GenerateConfig(context):
                                     CUSTHASH,
                                     'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/f5-cloud-libs/scripts/onboard.js --port 8443 --ssl-port ',
                                     context.properties['manGuiPort'],
-                                    ' --wait-for ADMIN_CREATED -o /var/log/onboard.log --log-level debug --no-reboot --host localhost --user admin --password-url file:///config/cloud/gce/.adminPassword --ntp 0.us.pool.ntp.org --ntp 1.us.pool.ntp.org --tz UTC --module ltm:nominal --license ',
+                                    ' --wait-for ADMIN_CREATED -o /var/log/onboard.log --log-level debug --no-reboot --host localhost --user admin --password-url file:///config/cloud/gce/.adminPassword --ntp 0.pool.ntp.org --ntp 1.pool.ntp.org --tz UTC --module ltm:nominal --license ',
                                     context.properties['licenseKey1'],
                                     SENDANALYTICS,
                                     ' --ping &>> /var/log/cloudlibs-install.log < /dev/null &\n',

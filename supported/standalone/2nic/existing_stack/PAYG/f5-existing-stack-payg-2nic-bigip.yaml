@@ -20,8 +20,6 @@ resources:
    ### Specify Network name to for BIG-IP application traffic
    subnet1: <subnet>
    ### Subnet of Network BIG-IP should use for application traffic
-   mask1: '<mask prefix>'
-   ### Mask used for specified application traffic subnet using prefix notation. ie '24'
    imageName: <image name>
    ### BIG-IP image, valid choices include:
    # f5-hourly-bigip-13-1-0-2-0-6-best-1gbps
