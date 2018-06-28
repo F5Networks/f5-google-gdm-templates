@@ -1,0 +1,44 @@
+# Copyright 2018 F5 Networks All rights reserved.
+#
+# Version v1.3.1
+
+imports:
+- path: f5-existing-stack-payg-1nic-bigip.py
+resources:
+- name: bigip-1nic-setup
+  type: f5-existing-stack-payg-1nic-bigip.py
+  properties:
+   region: <region>
+   ### Google Region to deploy BIG-IP, for example us-west1
+   availabilityZone1: <availability zone>
+   ### Google Zone in specified region to deploy BIG-IP, for example us-west1-a
+   network: <network>
+   ### Network name to deploy BIG-IP
+   subnet1: <subnet>
+   ### Subnet of Network BIG-IP should use
+   imageName: <image name>
+   ### BIG-IP image, valid choices include:
+   # f5-hourly-bigip-13-1-0-2-0-6-best-1gbps
+   # f5-hourly-bigip-13-1-0-2-0-6-best-200mbps
+   # f5-hourly-bigip-13-1-0-2-0-6-best-25mbps
+   # f5-hourly-bigip-13-1-0-2-0-6-best-5gbps
+   # f5-hourly-bigip-13-1-0-2-0-6-better-1gbps
+   # f5-hourly-bigip-13-1-0-2-0-6-better-200mbps
+   # f5-hourly-bigip-13-1-0-2-0-6-better-25mbps
+   # f5-hourly-bigip-13-1-0-2-0-6-better-5gbps
+   # f5-hourly-bigip-13-1-0-2-0-6-good-1gbps
+   # f5-hourly-bigip-13-1-0-2-0-6-good-200mbps
+   # f5-hourly-bigip-13-1-0-2-0-6-good-25mbps
+   # f5-hourly-bigip-13-1-0-2-0-6-good-5gbps
+   instanceType: n1-standard-4
+   ### Instance type assigned to BIG-IP, example n1-standard-4.
+   manGuiPort: '8443'
+   ### BIG-IP Management Port, the default is 8443
+   serviceAccount: '<service account>'
+   ### If using service discovery, enter google service account to use for discovery. Leave single quotes with nothing between when not using service discovery.
+   tagName: '<tag>'
+   ### If using service discovery, enter tag name used on servers for discovery. Leave single quotes with nothing between if not using service discovery.
+   tagValue: '<value>'
+   ### If using service discovery, enter tag value used on servers for discovery. Leave single quotes with nothing between if not using service discovery.
+   allowUsageAnalytics: 'yes'
+   ### This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent.

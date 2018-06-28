@@ -1,0 +1,53 @@
+# Copyright 2018 F5 Networks All rights reserved.
+#
+# Version v1.3.1
+
+imports:
+- path: f5-deployment-template.py
+resources:
+- name: f5-deployment-template
+  type: f5-deployment-template.py
+  properties:
+   region: <region>
+   ### Google Region to deploy BIG-IP, for example us-west1
+   availabilityZone1: <availability zone>
+   ### Google Zone in specified region to deploy BIG-IP, for example us-west1-a
+   mgmtNetwork: <network>
+   ### Specify network to use for management traffic
+   mgmtSubnet: <subnet>
+   ### Specify subnet to use for management traffic
+   network1: <network>
+   ### Specify Network name to for BIG-IP external application traffic
+   subnet1: <subnet>
+   ### Subnet of Network BIG-IP should use for external application traffic
+   mask1: '<mask prefix>'
+   ### Mask used for specified external application traffic subnet using prefix notation. ie '24'
+   aliasIp: '<ip address with prefix>'
+   ### Enter alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'.  A list of alias IPs can be provided, seperated by a semi-colon: IE 10.x.x.16/28;10.x.x.32/28.
+   network2: dewpt3
+   ### Specify Network name to for BIG-IP internal application traffic
+   subnet2: subnet3
+   ### Subnet of Network BIG-IP should use for internal application traffic
+   mask2: '24'
+   ### Mask used for specified internal application subnet using prefix notation. ie '24'
+   licenseKey1: '<lic key>'
+   ### BIG-IP license key
+   licenseKey2: '<lic key>'
+   ### BIG-IP license key
+   imageName: <image name>
+   ### BIG-IP image, valid choices include:
+   # f5-byol-bigip-13-1-0-2-0-6-best
+   # f5-byol-bigip-13-1-0-2-0-6-better
+   # f5-byol-bigip-13-1-0-2-0-6-good
+   instanceType: n1-standard-4
+   ### Instance type assigned to BIG-IP, example n1-standard-4.
+   manGuiPort: '443'
+   ### BIG-IP Management Port, the default is 443
+   serviceAccount: '<service account>'
+   ### If using service discovery, enter google service account to use for discovery. Leave single quotes with nothing between when not using service discovery.
+   tagName: '<tag>'
+   ### If using service discovery, enter tag name used on servers for discovery. Leave single quotes with nothing between if not using service discovery.
+   tagValue: '<value>'
+   ### If using service discovery, enter tag value used on servers for discovery. Leave single quotes with nothing between if not using service discovery.
+   allowUsageAnalytics: 'yes'
+   ### This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent.

@@ -3,6 +3,7 @@ The following table contains all of the tagged releases of the F5 Google Deploym
 
 | Release Tag | Template Family | BIG-IP Versions | License Bundles and Throughput Rates |
 | --- | --- | --- | --- |
+| [v1.4.0](https://github.com/F5Networks/f5-google-gdm-templates/releases/tag/v1.4.0) | Standalone | BIG-IP v13.1.0.2 | Good/Better/Best: 5Gbps, 1Gbps, 200Mbps, 25Mbps
 | [v1.3.1](https://github.com/F5Networks/f5-google-gdm-templates/releases/tag/v1.3.1) | Standalone | BIG-IP v13.1.0.2 | Good/Better/Best: 5Gbps, 1Gbps, 200Mbps, 25Mbps
 | [v1.3.0](https://github.com/F5Networks/f5-google-gdm-templates/releases/tag/v1.3.0) | Standalone | BIG-IP v13.1.0.2 | Good/Better/Best: 5Gbps, 1Gbps, 200Mbps, 25Mbps
 | [v1.2.0](https://github.com/F5Networks/f5-google-gdm-templates/releases/tag/v1.2.0) | Standalone | BIG-IP v13.0 | Good/Better/Best: 5Gbps, 1Gbps, 200Mbps, 25Mbps
