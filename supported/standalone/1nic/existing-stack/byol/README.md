@@ -111,7 +111,7 @@ Keep in mind the following:
 
 The following is a simple configuration diagram for this single NIC deployment. In this scenario, all access to the BIG-IP VE appliance is through the same IP address and virtual network interface (vNIC).  This interface processes both management and data plane traffic.
 
-![Single NIC configuration example](images/google_setup.png)
+![Single NIC configuration example](../images/google_setup.png)
 
 ## Service Discovery
 
