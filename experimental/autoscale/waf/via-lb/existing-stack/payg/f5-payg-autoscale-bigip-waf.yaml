@@ -1,0 +1,56 @@
+# Copyright 2018 F5 Networks All rights reserved.
+#
+# Version v1.5.0
+## note deployment name can not excede 23 charactors.
+imports:
+- path: f5-payg-autoscale-bigip-waf.py
+resources:
+- name: f5-payg-autoscale-bigip-waf
+  type: f5-payg-autoscale-bigip-waf.py
+  properties:
+   ### Google Region to deploy BIG-IP, for example us-west1
+   region: <region>
+   ### Google Zone in specified region to deploy BIG-IP, for example us-west1-a
+   availabilityZone1: <availability zone>
+   ### Specify network to use for management traffic
+   mgmtNetwork: <management network>
+   ### Specify subnet to use for management traffic
+   mgmtSubnet: <management subnet>
+   ### BIG-IP image, valid choices include:
+   # f5-hourly-bigip-13-1-1-0-0-4-awaf-1gbps
+   # f5-hourly-bigip-13-1-1-0-0-4-awaf-200mbps
+   # f5-hourly-bigip-13-1-1-0-0-4-awaf-25mbps
+   # f5-hourly-bigip-13-1-1-0-0-4-best-1gbps
+   # f5-hourly-bigip-13-1-1-0-0-4-best-200mbps
+   # f5-hourly-bigip-13-1-1-0-0-4-best-25mbps
+   # f5-hourly-bigip-13-1-1-0-0-4-best-5gbps
+   imageName: f5-hourly-bigip-13-1-1-0-0-4-best-25mbps
+   ### Instance type assigned to BIG-IP, example n1-standard-4.
+   instanceType: n1-standard-4
+   ### BIG-IP Management Port, the default is 8443
+   manGuiPort: 8443
+   ### If using service discovery, enter google service account to use for discovery. Leave single quotes with nothing between when not using service discovery.
+   serviceAccount: '<service acount>'
+   ### If using service discovery, enter tag name used on servers for discovery. Leave single quotes with nothing between if not using service discovery.
+   tagName: <tagname>
+   ### If using service discovery, enter tag value used on servers for discovery. Leave single quotes with nothing between if not using service discovery.
+   tagValue: <tagvalue>
+   ### Number of instances to start
+   targetSize: 2
+   ### Minimum number of instances autoscale policy will scale down to.
+   minReplicas: 2
+   ### Maximum number of instances autoscale poilcy will allow.
+   maxReplicas: 8
+   ### Target percent of BIG-IP managed instance group utilization. A new instance is created once this target is met for the entire group.
+   cpuUtilization: 0.8
+   ### How long to wait before collecting information from a new instance. This should be at least the time it takes to initialize the instance. In most cases, default value of 10 minutes should be used.
+   coolDownPeriod: 600
+   ### Choose asm policy
+   # valid values include:high, meduium, or low
+   policyLevel: <policy level>
+   ### List application port
+   applicationPort: 80
+   ### What DNS will this application use?
+   applicationDnsName: <dns value of your application>
+   ### This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent.
+   allowUsageAnalytics: yes

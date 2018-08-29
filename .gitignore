@@ -1,0 +1,12 @@
+.vscode
+.idea
+build/makefile.local
+build/target
+build/var
+build/log
+build/docs/html
+build/tmp
+.cache
+.python_history
+.bash_history
+.DS_Store

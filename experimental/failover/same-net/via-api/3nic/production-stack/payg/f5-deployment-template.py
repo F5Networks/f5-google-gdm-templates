@@ -49,7 +49,7 @@ def Metadata(context, group, storageName, licenseType):
                           "--tz UTC",
                           "--module ltm:nominal",
                           LICENSE + SENDANALYTICS,
-                          "&>> /var/log/cloud/google/cloudlibs-install.log < /dev/null &"
+                          "&>> /var/log/cloud/google/install.log < /dev/null &"
                         ])
   ## Cluster
   if group == "create":
@@ -73,7 +73,7 @@ def Metadata(context, group, storageName, licenseType):
                           "--network-failover",
                           "--device ${HOSTNAME}",
                           "--auto-sync",
-                          "&>> /var/log/cloud/google/cloudlibs-install.log < /dev/null &"
+                          "&>> /var/log/cloud/google/install.log < /dev/null &"
     ])
   elif group == "join":
     CLUSTERJS = ' '.join(["INT2ADDRESS=$(curl -s -f --retry 20 \"http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/2/ip\" -H \"Metadata-Flavor: Google\");nohup /config/waitThenRun.sh",
@@ -93,7 +93,7 @@ def Metadata(context, group, storageName, licenseType):
                           "--device-group failover_group",
                           "--remote-host ",
                           "$(ref.bigip1-" + context.env['deployment'] + ".networkInterfaces[0].networkIP)",
-                          "&>> /var/log/cloud/google/cloudlibs-install.log < /dev/null &"
+                          "&>> /var/log/cloud/google/install.log < /dev/null &"
     ])
   else:
     CLUSTERJS = ''  
@@ -256,12 +256,12 @@ def Metadata(context, group, storageName, licenseType):
                                     '   \'tmsh load sys application template /config/cloud/f5.service_discovery.tmpl\')',
                                     'fi',
                                     'tmsh+=(',
-                                    '\"tmsh create net vlan external interfaces add { 1.1 }\"',
+                                    '\"tmsh create net vlan external interfaces add { 1.1 } mtu 1460\"',
                                     '\"tmsh create net self ${INT1ADDRESS}/32 vlan external\"',
                                     '\"tmsh create net route ext_gw_int network ${GATEWAY}/32 interface external\"',
                                     EXTRT,
                                     '\"tmsh create net route default gw ${GATEWAY}\"',
-                                    '\"tmsh create net vlan internal interfaces add { 1.2 }\"',
+                                    '\"tmsh create net vlan internal interfaces add { 1.2 } mtu 1460\"',
                                     '\"tmsh create net self ${INT2ADDRESS}/32 vlan internal allow-service add { tcp:4353 udp:1026 }\"',
                                     '\"tmsh create net route int_gw_int network ${GATEWAY2}/32 interface internal\"',
                                     '\"tmsh modify cm device ${HOSTNAME} unicast-address { { effective-ip ${INT2ADDRESS} effective-port 1026 ip ${INT2ADDRESS} } }\"',
@@ -313,10 +313,10 @@ def Metadata(context, group, storageName, licenseType):
                                     'chmod 755 /config/cloud/gce/rm-password.sh',
                                     'chmod 755 /config/cloud/gce/create-va.sh',
                                     'mkdir -p /var/log/cloud/google',
-                                    'nohup /usr/bin/setdb provision.1nicautoconfig disable &>> /var/log/cloud/google/cloudlibs-install.log < /dev/null &',
-                                    'nohup /config/installCloudLibs.sh &>> /var/log/cloud/google/cloudlibs-install.log < /dev/null &',
-                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --signal PASSWORD_CREATED --file f5-rest-node --cl-args \'/config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/generatePassword --file /config/cloud/gce/.adminPassword --encrypt\' --log-level verbose -o /var/log/cloud/google/generatePassword.log &>> /var/log/cloud/google/cloudlibs-install.log < /dev/null &',
-                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --wait-for PASSWORD_CREATED --signal ADMIN_CREATED --file /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/createUser.sh --cl-args \'--user admin --password-file /config/cloud/gce/.adminPassword --password-encrypted\' --log-level debug -o /var/log/cloud/google/createUser.log &>> /var/log/cloud/google/cloudlibs-install.log < /dev/null &',
+                                    'nohup /usr/bin/setdb provision.1nicautoconfig disable &>> /var/log/cloud/google/install.log < /dev/null &',
+                                    'nohup /config/installCloudLibs.sh &>> /var/log/cloud/google/install.log < /dev/null &',
+                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --signal PASSWORD_CREATED --file f5-rest-node --cl-args \'/config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/generatePassword --file /config/cloud/gce/.adminPassword --encrypt\' --log-level verbose -o /var/log/cloud/google/generatePassword.log &>> /var/log/cloud/google/install.log < /dev/null &',
+                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --wait-for PASSWORD_CREATED --signal ADMIN_CREATED --file /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/createUser.sh --cl-args \'--user admin --password-file /config/cloud/gce/.adminPassword --password-encrypted\' --log-level debug -o /var/log/cloud/google/createUser.log &>> /var/log/cloud/google/install.log < /dev/null &',
                                     CUSTHASH,
                                     ONBOARDJS,
                                     'CONFIG_FILE=\'/config/cloud/.deployment\'',
@@ -324,10 +324,10 @@ def Metadata(context, group, storageName, licenseType):
                                     'echo \'{"tagKey":"f5_deployment","tagValue":"' + context.env['deployment'] + '"}\' > $CONFIG_FILE',
                                     'echo "/usr/bin/f5-rest-node ${CLOUD_LIBS_DIR}/f5-cloud-libs-gce/scripts/failover.js" >> /config/failover/tgactive',
                                     'echo "/usr/bin/f5-rest-node ${CLOUD_LIBS_DIR}/f5-cloud-libs-gce/scripts/failover.js" >> /config/failover/tgrefresh',
-                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/custom-config.sh --cwd /config/cloud/gce -o /var/log/cloud/google/custom-config.log --log-level debug --wait-for ONBOARD_DONE --signal CUSTOM_CONFIG_DONE &>> /var/log/cloud/google/cloudlibs-install.log < /dev/null &',
+                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/custom-config.sh --cwd /config/cloud/gce -o /var/log/cloud/google/custom-config.log --log-level debug --wait-for ONBOARD_DONE --signal CUSTOM_CONFIG_DONE &>> /var/log/cloud/google/install.log < /dev/null &',
                                     CLUSTERJS,
-                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/rm-password.sh --cwd /config/cloud/gce -o /var/log/cloud/google/rm-password.log --log-level debug --wait-for CLUSTER_DONE --signal PASSWORD_REMOVED &>> /var/log/cloud/google/cloudlibs-install.log < /dev/null &',
-                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/create-va.sh --cwd /config/cloud/gce -o /var/log/cloud/google/create-va.log --log-level debug --wait-for CLUSTER_DONE --signal VIRTUAL_ADDRESSES_CREATED &>> /var/log/cloud/google/cloudlibs-install.log < /dev/null &',
+                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/rm-password.sh --cwd /config/cloud/gce -o /var/log/cloud/google/rm-password.log --log-level debug --wait-for CLUSTER_DONE --signal PASSWORD_REMOVED &>> /var/log/cloud/google/install.log < /dev/null &',
+                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/create-va.sh --cwd /config/cloud/gce --log-level debug --wait-for CLUSTER_DONE --signal VIRTUAL_ADDRESSES_CREATED &>> /var/log/cloud/google/install.log < /dev/null &',
                                     'touch /config/startupFinished',
                                     ])
                             )
