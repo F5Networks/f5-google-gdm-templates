@@ -10,3 +10,5 @@ build/tmp
 .python_history
 .bash_history
 .DS_Store
+# Local deployment configuration file
+*.local.yaml

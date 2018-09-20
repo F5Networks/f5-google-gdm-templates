@@ -18,7 +18,7 @@ This solution uses a Google Deployment Manager Template to launch a 2 NIC deploy
 
 This is an *existing stack* template, meaning the networking infrastructure MUST be available prior to deploying. See the Template Parameters Section for required networking objects.
 
-In a 2-NIC implementation, one interface is data-plane traffic from the Internet, and the second interface is connected into the Google networks where traffic is processed by the pool members. Traffic flows from the BIG-IP VE to the application servers.
+In a 2-NIC implementation, one interface is for management and one is for data-plane traffic, each with a unique public/private IP. Traffic flows from the BIG-IP VE to the application servers.
 
 The BIG-IP VE has the [Local Traffic Manager](https://f5.com/products/big-ip/local-traffic-manager-ltm) (LTM) module enabled to provide advanced traffic management functionality. This means you can also configure the BIG-IP VE to enable F5's L4/L7 security features, access control, and intelligent traffic management.
 

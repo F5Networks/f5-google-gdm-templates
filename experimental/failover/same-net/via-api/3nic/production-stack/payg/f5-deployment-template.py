@@ -1,6 +1,6 @@
 # Copyright 2018 F5 Networks All rights reserved.
 #
-# Version v1.3.1
+# Version v1.5.1
 
 """Creates BIG-IP"""
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
@@ -10,7 +10,7 @@ def Metadata(context, group, storageName, licenseType):
   ALLOWUSAGEANALYTICS = context.properties['allowUsageAnalytics']
   if ALLOWUSAGEANALYTICS == "yes":
     CUSTHASH = 'CUSTOMERID=`curl -s "http://metadata.google.internal/computeMetadata/v1/project/numeric-project-id" -H "Metadata-Flavor: Google" |sha512sum|cut -d " " -f 1`;\nDEPLOYMENTID=`curl -s "http://metadata.google.internal/computeMetadata/v1/instance/id" -H "Metadata-Flavor: Google"|sha512sum|cut -d " " -f 1`;'
-    SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-prod-stack-same-net-cluster-payg-3nic-bigip.py,templateVersion:v1.3.1,licenseType:payg"'
+    SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-prod-stack-same-net-cluster-payg-3nic-bigip.py,templateVersion:v1.5.1,licenseType:payg"'
   else:
     CUSTHASH = '# No template analytics'
     SENDANALYTICS = ''
@@ -29,7 +29,7 @@ def Metadata(context, group, storageName, licenseType):
   elif group == "join" and licenseType == "byol":
     LICENSE = '--license ' + context.properties['licenseKey2']
   else:
-    LICENSE = ''  
+    LICENSE = ''
   ONBOARDJS = ' '.join ([ "nohup /config/waitThenRun.sh",
                           "f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/onboard.js",
                           "--port 443",
@@ -96,7 +96,7 @@ def Metadata(context, group, storageName, licenseType):
                           "&>> /var/log/cloud/google/install.log < /dev/null &"
     ])
   else:
-    CLUSTERJS = ''  
+    CLUSTERJS = ''
 
   ## generate metadata
   metadata = {
@@ -303,9 +303,9 @@ def Metadata(context, group, storageName, licenseType):
                                     '/config/failover/tgactive',
                                     'date',
                                     'EOF',
-                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs.tar.gz https://raw.githubusercontent.com/F5Networks/f5-cloud-libs/v4.2.0/dist/f5-cloud-libs.tar.gz',
-                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs-gce.tar.gz https://raw.githubusercontent.com/F5Networks/f5-cloud-libs-gce/v2.1.0/dist/f5-cloud-libs-gce.tar.gz',
-                                    'curl -s -f --retry 20 -o /config/cloud/f5.service_discovery.tmpl https://raw.githubusercontent.com/F5Networks/f5-cloud-iapps/v2.0.3/f5-service-discovery/f5.service_discovery.tmpl',
+                                    'curl -s -f --retry 20 --retry-delay 5 --retry-max-time 240 -o /config/cloud/f5-cloud-libs.tar.gz https://raw.githubusercontent.com/F5Networks/f5-cloud-libs/v4.3.0/dist/f5-cloud-libs.tar.gz',
+                                    'curl -s -f --retry 20 --retry-delay 5 --retry-max-time 240 -o /config/cloud/f5-cloud-libs-gce.tar.gz https://raw.githubusercontent.com/F5Networks/f5-cloud-libs-gce/v2.2.0/dist/f5-cloud-libs-gce.tar.gz',
+                                    'curl -s -f --retry 20 --retry-delay 5 --retry-max-time 240 -o /config/cloud/f5.service_discovery.tmpl https://raw.githubusercontent.com/F5Networks/f5-cloud-iapps/v2.1.1/f5-service-discovery/f5.service_discovery.tmpl',
                                     'chmod 755 /config/verifyHash',
                                     'chmod 755 /config/installCloudLibs.sh',
                                     'chmod 755 /config/waitThenRun.sh',
@@ -338,7 +338,7 @@ def Instance(context, group, storageName, licenseType):
   aliasIps = []
   if group == 'create':
     aliasIps = [{'ipCidrRange': ip} for ip in context.properties['aliasIp'].split(';')]
-  instance = {   
+  instance = {
         'zone': context.properties['availabilityZone1'],
         'canIpForward': True,
         'tags': {
@@ -395,7 +395,7 @@ def Instance(context, group, storageName, licenseType):
                                   context.properties['subnet2']]),
           }],
           'metadata': Metadata(context, group, storageName, licenseType)
-    }  
+    }
   return instance
 def GenerateConfig(context):
   import random

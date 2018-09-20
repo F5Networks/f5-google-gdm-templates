@@ -1,6 +1,6 @@
 # Copyright 2017 F5 Networks All rights reserved.
 #
-# Version v1.5.0
+# Version v1.5.1
 
 """Creates BIG-IP"""
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
@@ -287,5 +287,5 @@ def GenerateConfig(context):
   outputs = [{
       'name': 'bigipIP',
       'value': ''.join(['$(ref.' + context.env['name'] + '-' + context.env['deployment'] + '.bigipIP)'])
-  }] 
+  }]
   return {'resources': resources}

@@ -1,6 +1,6 @@
 # Copyright 2018 F5 Networks All rights reserved.
 #
-# Version v1.5.0
+# Version v1.5.1
 
 """Creates BIG-IP"""
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
@@ -8,7 +8,7 @@ def GenerateConfig(context):
   ALLOWUSAGEANALYTICS = context.properties['allowUsageAnalytics']
   if ALLOWUSAGEANALYTICS == "yes":
       CUSTHASH = 'CUSTOMERID=`curl -s "http://metadata.google.internal/computeMetadata/v1/project/numeric-project-id" -H "Metadata-Flavor: Google" |sha512sum|cut -d " " -f 1`;\nDEPLOYMENTID=`curl -s "http://metadata.google.internal/computeMetadata/v1/instance/id" -H "Metadata-Flavor: Google"|sha512sum|cut -d " " -f 1`;\n'
-      SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-existing-stack-payg-3nic-bigip.py,templateVersion:v1.3.1,licenseType:payg"'
+      SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-existing-stack-payg-3nic-bigip.py,templateVersion:v1.5.1,licenseType:payg"'
   else:
       CUSTHASH = ''
       SENDANALYTICS = ''
@@ -122,7 +122,7 @@ def GenerateConfig(context):
                                     'cat <<\'EOF\' > /config/verifyHash\n',
                                     'cli script /Common/verifyHash {\n',
                                     'proc script::run {} {\n',
-                                    '        if {[catch {\n',                                    
+                                    '        if {[catch {\n',
                                     '            set hashes(f5-cloud-libs.tar.gz) ce4f117ee84dc5e05be0bb29d2536f6e8dbb8ce3d899c1c380bdab56c9584983ddc64213ef7b1dfd305ca6ad9c830d73d4c3343256822fb500c5b77f48cf1c4e\n',
                                     '            set hashes(f5-cloud-libs-aws.tar.gz) 6fe531dfe013ba3e6e59576d8da7adf4e02c958e8ce8206c8f8a203996a4a1d60c43fa7ff55aa9a76eb53b62141cfca2e5622c555ffe94b981459f1f6cbdfbc0\n',
                                     '            set hashes(f5-cloud-libs-azure.tar.gz) d5e2e26f92f61f3917d8212b71fee55e9f58811ee488137e9c28ac54e5eb2434725696af286839e8b5ea68e05078188e0ada6e215c6c233d2585fd2acca0532d\n',
@@ -167,7 +167,7 @@ def GenerateConfig(context):
                                     '}\n',
                                     'EOF\n',
                                     '# empty new line chars get stripped, strip out place holder NEW_LINE\n',
-                                    'sed -i "s/NEW_LINE//" /config/verifyHash\n',                                  
+                                    'sed -i "s/NEW_LINE//" /config/verifyHash\n',
                                     'cat <<\'EOF\' > /config/waitThenRun.sh\n',
                                     '#!/bin/bash\n',
                                     'while true; do echo \"waiting for cloud libs install to complete\"\n',

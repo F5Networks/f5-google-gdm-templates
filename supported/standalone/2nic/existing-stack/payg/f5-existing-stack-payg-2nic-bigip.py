@@ -1,6 +1,6 @@
 # Copyright 2018 F5 Networks All rights reserved.
 #
-# Version v1.5.0
+# Version v1.5.1
 
 """Creates BIG-IP"""
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
@@ -8,7 +8,7 @@ def GenerateConfig(context):
   ALLOWUSAGEANALYTICS = context.properties['allowUsageAnalytics']
   if ALLOWUSAGEANALYTICS == "yes":
       CUSTHASH = 'CUSTOMERID=`curl -s "http://metadata.google.internal/computeMetadata/v1/project/numeric-project-id" -H "Metadata-Flavor: Google" |sha512sum|cut -d " " -f 1`;\nDEPLOYMENTID=`curl -s "http://metadata.google.internal/computeMetadata/v1/instance/id" -H "Metadata-Flavor: Google"|sha512sum|cut -d " " -f 1`;\n'
-      SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-existing-stack-payg-2nic-bigip.py,templateVersion:v1.3.1,licenseType:payg"'
+      SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-existing-stack-payg-2nic-bigip.py,templateVersion:v1.5.1,licenseType:payg"'
   else:
       CUSTHASH = ''
       SENDANALYTICS = ''
@@ -157,7 +157,7 @@ def GenerateConfig(context):
                                     '}\n',
                                     'EOF\n',
                                     '# empty new line chars get stripped, strip out place holder NEW_LINE\n',
-                                    'sed -i "s/NEW_LINE//" /config/verifyHash\n',                                  
+                                    'sed -i "s/NEW_LINE//" /config/verifyHash\n',
                                     'cat <<\'EOF\' > /config/waitThenRun.sh\n',
                                     '#!/bin/bash\n',
                                     'while true; do echo \"waiting for cloud libs install to complete\"\n',

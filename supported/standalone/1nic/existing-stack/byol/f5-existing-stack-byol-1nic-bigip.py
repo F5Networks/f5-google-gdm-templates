@@ -1,6 +1,6 @@
 # Copyright 2018 F5 Networks All rights reserved.
 #
-# Version v1.5.0
+# Version v1.5.1
 
 """Creates BIG-IP"""
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
@@ -8,7 +8,7 @@ def GenerateConfig(context):
   ALLOWUSAGEANALYTICS = context.properties['allowUsageAnalytics']
   if ALLOWUSAGEANALYTICS == "yes":
       CUSTHASH = 'CUSTOMERID=`curl -s "http://metadata.google.internal/computeMetadata/v1/project/numeric-project-id" -H "Metadata-Flavor: Google" |sha512sum|cut -d " " -f 1`;\nDEPLOYMENTID=`curl -s "http://metadata.google.internal/computeMetadata/v1/instance/id" -H "Metadata-Flavor: Google"|sha512sum|cut -d " " -f 1`;\n'
-      SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-existing-stack-byol-1nic-bigip.py,templateVersion:v1.3.1,licenseType:byol"'
+      SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-existing-stack-byol-1nic-bigip.py,templateVersion:v1.5.1,licenseType:byol"'
   else:
       CUSTHASH = ''
       SENDANALYTICS = ''
@@ -45,7 +45,7 @@ def GenerateConfig(context):
               'subnetwork': ''.join([COMPUTE_URL_BASE, 'projects/',
                                   context.env['project'], '/regions/',
                                   context.properties['region'], '/subnetworks/',
-                                  context.properties['subnet1']]),                    
+                                  context.properties['subnet1']]),
               'accessConfigs': [{
                   'name': 'Management NAT',
                   'type': 'ONE_TO_ONE_NAT'
@@ -95,7 +95,7 @@ def GenerateConfig(context):
                                     'echo expanding f5-cloud-libs-gce.tar.gz\n',
                                     'tar xvfz /config/cloud/f5-cloud-libs-gce.tar.gz -C /config/cloud/gce/node_modules/f5-cloud-libs/node_modules\n',
                                     'touch /config/cloud/cloudLibsReady\n',
-                                    'EOF\n',                                   
+                                    'EOF\n',
                                     'cat <<\'EOF\' > /config/verifyHash\n',
                                     'cli script /Common/verifyHash {\n',
                                     'proc script::run {} {\n',
@@ -144,7 +144,7 @@ def GenerateConfig(context):
                                     '}\n',
                                     'EOF\n',
                                     '# empty new line chars get stripped, strip out place holder NEW_LINE\n',
-                                    'sed -i "s/NEW_LINE//" /config/verifyHash\n',                                   
+                                    'sed -i "s/NEW_LINE//" /config/verifyHash\n',
                                     'cat <<\'EOF\' > /config/waitThenRun.sh\n',
                                     '#!/bin/bash\n',
                                     'while true; do echo \"waiting for cloud libs install to complete\"\n',

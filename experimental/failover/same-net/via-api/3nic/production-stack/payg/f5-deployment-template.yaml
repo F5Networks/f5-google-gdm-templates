@@ -1,6 +1,6 @@
 # Copyright 2018 F5 Networks All rights reserved.
 #
-# Version v1.3.1
+# Version v1.5.1
 
 imports:
 - path: f5-deployment-template.py
@@ -25,9 +25,9 @@ resources:
    ### Enter alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'.  A list of alias IPs can be provided, seperated by a semi-colon: IE 10.x.x.16/28;10.x.x.32/28.
    aliasIp: '<ip address with prefix>'
    ### Specify Network name to for BIG-IP internal application traffic
-   network2: dewpt3
+   network2: <network>
    ### Subnet of Network BIG-IP should use for internal application traffic
-   subnet2: subnet3
+   subnet2: <subnet>
    ### Mask used for specified internal application subnet using prefix notation. ie '24'
    mask2: '24'
    ### BIG-IP image, valid choices include:

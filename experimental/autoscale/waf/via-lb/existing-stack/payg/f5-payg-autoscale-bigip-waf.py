@@ -1,6 +1,6 @@
 # Copyright 2018 F5 Networks All rights reserved.
 #
-# Version v1.5.0
+# Version v1.5.1
 
 """Creates BIG-IP"""
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
@@ -21,7 +21,7 @@ def Instance(context,storageName,deployment):
         'name': 'bigip-' + deployment,
         'type': 'compute.v1.instanceTemplate',
         'properties': {
-            'properties': {    
+            'properties': {
                 'canIpForward': True,
                 'tags': {
                     'items': ['mgmtfw-' + context.env['deployment'],'appfw-' + context.env['deployment'],'syncfw-' + context.env['deployment'],]
@@ -57,12 +57,12 @@ def Instance(context,storageName,deployment):
                     'accessConfigs': [{
                         'name': 'Management NAT',
                         'type': 'ONE_TO_ONE_NAT'
-                    }],                
+                    }],
                 }],
                 'metadata': Metadata(context,storageName,deployment)
             }
         }
-    } 
+    }
     return instance
 def Igm(context,deployment):
     # Build instance group manager
@@ -78,7 +78,7 @@ def Igm(context,deployment):
             'zone': context.properties['availabilityZone1'],
         }
     }
-    return igm    
+    return igm
 def Autoscaler(context,deployment):
     # Build autoscaler
     autoscaler = {
@@ -105,7 +105,7 @@ def HealthCheck(context,deployment):
         'type': 'compute.v1.httpHealthCheck',
         'properties': {
             'port': int(context.properties['applicationPort']),
-        }            
+        }
     }
     return healthCheck
 def TargetPool(context,deployment):
@@ -119,7 +119,7 @@ def TargetPool(context,deployment):
             'sessionAffinity': 'CLIENT_IP',
         }
     }
-    return targetPool 
+    return targetPool
 def ForwardingRule(context,deployment):
     # Build forwarding rule
     forwardingRule = {
@@ -195,7 +195,7 @@ def FirewallRuleMgmt(context):
             ]
         }
     }
-    return firewallRuleMgmt     
+    return firewallRuleMgmt
 def Metadata(context,storageName,deployment):
     # Build metadata
     ALLOWUSAGEANALYTICS = str(context.properties['allowUsageAnalytics'])
@@ -330,7 +330,7 @@ def Metadata(context,storageName,deployment):
                                     'cat <<\'EOF\' > /config/cloud/gce/custom-config.sh',
                                     '#!/bin/bash',
                                     'date',
-                                    'echo "starting custom-config.sh"',                                  
+                                    'echo "starting custom-config.sh"',
                                     'tmsh save /sys config',
                                     'echo "Attempting to Join or Initiate Autoscale Cluster"',
                                     'useServiceDiscovery=' + str(context.properties['tagValue']),
@@ -340,7 +340,7 @@ def Metadata(context,storageName,deployment):
                                     'if [ -f /config/cloud/master ];then',
                                     '  if $(jq \'.ucsLoaded\' < /config/cloud/master);then',
                                     '    echo "UCS backup loaded from backup folder in storage: ' + storageName + '."',
-                                    '  else',                      
+                                    '  else',
                                     '    echo "SELF-SELECTED as Master ... Initiated Autoscale Cluster ... Loading default config"',
                                     '    tmsh modify cm device-group autoscale-group asm-sync enabled',
                                     '    tmsh load sys application template /config/cloud/f5.http.v1.2.0rc7.tmpl',
@@ -416,7 +416,7 @@ def GenerateConfig(context):
     # build resources
     resources = [
         Storage(context,storageName),
-        Instance(context,storageName,deployment),    
+        Instance(context,storageName,deployment),
         Igm(context,deployment),
         Autoscaler(context,deployment),
         HealthCheck(context,deployment),

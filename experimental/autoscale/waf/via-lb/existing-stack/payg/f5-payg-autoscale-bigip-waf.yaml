@@ -1,6 +1,6 @@
 # Copyright 2018 F5 Networks All rights reserved.
 #
-# Version v1.5.0
+# Version v1.5.1
 ## note deployment name can not excede 23 charactors.
 imports:
 - path: f5-payg-autoscale-bigip-waf.py
