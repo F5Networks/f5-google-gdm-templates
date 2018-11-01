@@ -1,32 +1,32 @@
 # Copyright 2018 F5 Networks All rights reserved.
 #
-# Version v1.5.1
+# Version v2.0.0
 
 imports:
-- path: f5-deployment-template.py
+- path: f5-prod-stack-same-net-cluster-byol-3nic-bigip.py
 resources:
-- name: f5-deployment-template
-  type: f5-deployment-template.py
+- name: prod-stack-same-net-cluster-3nic-setup
+  type: f5-prod-stack-same-net-cluster-byol-3nic-bigip.py
   properties:
    ### Google Region to deploy BIG-IP, for example us-west1
    region: <region>
    ### Google Zone in specified region to deploy BIG-IP, for example us-west1-a
    availabilityZone1: <availability zone>
-   ### Specify network to use for management traffic
+   ### Specify the network to use for management traffic
    mgmtNetwork: <network>
-   ### Specify subnet to use for management traffic
+   ### Specify the subnet to use for management traffic
    mgmtSubnet: <subnet>
-   ### Specify Network name to for BIG-IP external application traffic
+   ### Specify the Network name for BIG-IP external application traffic
    network1: <network>
-   ### Subnet of Network BIG-IP should use for external application traffic
+   ### Subnet of the Network BIG-IP should use for external application traffic
    subnet1: <subnet>
    ### Mask used for specified external application traffic subnet using prefix notation. ie '24'
    mask1: '<mask prefix>'
-   ### Enter alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'.  A list of alias IPs can be provided, seperated by a semi-colon: IE 10.x.x.16/28;10.x.x.32/28.
+   ### Enter alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'.  A list of alias IPs can be provided, separated by a semi-colon: IE 10.x.x.16/28;10.x.x.32/28.
    aliasIp: '<ip address with prefix>'
-   ### Specify Network name to for BIG-IP internal application traffic
+   ### Specify the Network name for BIG-IP internal application traffic
    network2: <network>
-   ### Subnet of Network BIG-IP should use for internal application traffic
+   ### Subnet of the Network BIG-IP should use for internal application traffic
    subnet2: <subnet>
    ### Mask used for specified internal application subnet using prefix notation. ie '24'
    mask2: '24'
@@ -41,12 +41,12 @@ resources:
    ### Instance type assigned to BIG-IP, example n1-standard-4.
    instanceType: n1-standard-4
    ### BIG-IP Management Port, the default is 443
-   manGuiPort: '443'
-   ### If using service discovery, enter google service account to use for discovery. Leave single quotes with nothing between when not using service discovery.
+   mgmtGuiPort: '443'
+   ### If using service discovery, enter the Google service account to use for discovery. Leave single quotes with nothing between when not using service discovery.
    serviceAccount: '<service account>'
-   ### If using service discovery, enter tag name used on servers for discovery. Leave single quotes with nothing between if not using service discovery.
+   ### If using service discovery, enter the tag name used on servers for discovery. Leave single quotes with nothing between if not using service discovery.
    tagName: '<tag>'
-   ### If using service discovery, enter tag value used on servers for discovery. Leave single quotes with nothing between if not using service discovery.
+   ### If using service discovery, enter the tag value used on servers for discovery. Leave single quotes with nothing between if not using service discovery.
    tagValue: '<value>'
    ### This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent.
    allowUsageAnalytics: 'yes'

@@ -1,6 +1,6 @@
 # Copyright 2018 F5 Networks All rights reserved.
 #
-# Version v1.5.1
+# Version v2.0.0
 
 imports:
 - path: f5-existing-stack-payg-2nic-bigip.py
@@ -12,16 +12,22 @@ resources:
    region: <region>
    ### Google Zone in specified region to deploy BIG-IP, for example us-west1-a
    availabilityZone1: <availability zone>
-   ### Specify network to use for management traffic
+   ### Specify the network to use for management traffic
    mgmtNetwork: <network>
-   ### Specify subnet to use for management traffic
+   ### Specify the subnet to use for management traffic
    mgmtSubnet: <subnet>
-   ### Specify Network name to for BIG-IP application traffic
+   ### Static IP address to use (optional). Note: For dynamic address provisioning use the default value of 'DYNAMIC'
+   mgmtSubnetAddress: <DYNAMIC or address>
+   ### This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources
+   restrictedSrcAddress: <address/mask address/mask>
+   ### This field restricts web application access (ports 80 and 443) to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources.
+   restrictedSrcAddressApp: <address/mask address/mask>   
+   ### Specify the Network name for BIG-IP application traffic
    network1: <network>
-   ### Subnet of Network BIG-IP should use for application traffic
+   ### Subnet of the Network BIG-IP should use for application traffic
    subnet1: <subnet>
-   ### Mask used for specified application traffic subnet using prefix notation. ie '24'
-   mask1: '<mask prefix>'
+   ### Static IP address to use (optional). Note: For dynamic address provisioning use the default value of 'DYNAMIC'
+   subnet1Address: <DYNAMIC or address>
    ### BIG-IP image, valid choices include:
    # f5-hourly-bigip-13-1-1-0-0-4-best-1gbps
    # f5-hourly-bigip-13-1-1-0-0-4-best-200mbps
@@ -35,20 +41,24 @@ resources:
    # f5-hourly-bigip-13-1-1-0-0-4-good-200mbps
    # f5-hourly-bigip-13-1-1-0-0-4-good-25mbps
    # f5-hourly-bigip-13-1-1-0-0-4-good-5gbps
-   # f5-hourly-bigip-13-1-1-0-0-4-per-app-awaf-200mbps
-   # f5-hourly-bigip-13-1-1-0-0-4-per-app-awaf-25mbps
-   # f5-hourly-bigip-13-1-1-0-0-4-per-app-ltm-200mbps
-   # f5-hourly-bigip-13-1-1-0-0-4-per-app-ltm-25mbps
-   imageName: <image name>
+   imageName: <image>
    ### Instance type assigned to BIG-IP, example n1-standard-4.
-   instanceType: n1-standard-4
+   instanceType: <instance>
    ### BIG-IP Management Port, the default is 443
-   manGuiPort: '443'
-   ### If using service discovery, enter google service account to use for discovery. Leave single quotes with nothing between when not using service discovery.
-   serviceAccount: '<service account>'
-   ### If using service discovery, enter tag name used on servers for discovery. Leave single quotes with nothing between if not using service discovery.
-   tagName: '<tag>'
-   ### If using service discovery, enter tag value used on servers for discovery. Leave single quotes with nothing between if not using service discovery.
-   tagValue: '<value>'
+   manGuiPort: <port>
+   ### List application port(s) separated by a space.
+   applicationPort: <port port>
+   ## List NTP servers separated by a space. 
+   ntpServer: <server server>
+   ## Enter the Olson timezone string from /usr/share/zoneinfo
+   timezone: <timezone>   
+   ### If using service discovery, enter the Google service account to use for discovery. Leave blank if not using service discovery.
+   serviceAccount: <service account>
+   ### If using service discovery, enter the tag name used on servers for discovery. Leave blank if not using service discovery.
+   tagName: <tag>
+   ### If using service discovery, enter the tag value used on servers for discovery. Leave blank if not using service discovery.
+   tagValue: <value>
    ### This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent.
-   allowUsageAnalytics: 'yes'
+   allowUsageAnalytics: yes
+   ### Log setting, used to set log level on scripts used during deployment. Acceptable values:error, warn, info, verbose, debug, silly.
+   logLevel: <level>

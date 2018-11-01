@@ -100,9 +100,9 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | imageName | Yes | BIG-IP image you want to deploy |
 | instanceType | Yes | The BIG-IP instance type you want to use, such as **n1-standard-4** |
 | manGuiPort | Yes | BIG-IP management port.  The default is **8443** |
-| serviceAccount | Yes | If using service discovery, enter Google service account to use for discovery. Leave single quotes with nothing between when not using service discovery |
-| tagName | No | If using service discovery, enter tag name used on servers for discovery. Leave single quotes with nothing between if not using service discovery |
-| tagValue | No | If using service discovery, enter tag value used on servers for discovery. Leave single quotes with nothing between if not using service discovery |
+| serviceAccount | Yes | If using service discovery, enter the Google service account to use for discovery. Leave single quotes with nothing between when not using service discovery |
+| tagName | No | If using service discovery, enter the tag name used on servers for discovery. Leave single quotes with nothing between if not using service discovery |
+| tagValue | No | If using service discovery, enter the tag value used on servers for discovery. Leave single quotes with nothing between if not using service discovery |
 | targetSize | Yes | The number of instances you want to start with |
 | minReplicas | Yes | The minimum number of BIG-IP instances the autoscale policy scales down to |
 | maxReplicas | Yes | The maximum number of BIG-IP instances the autoscale policy allows |

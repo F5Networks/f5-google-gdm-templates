@@ -1,0 +1,109 @@
+# Copyright 2018 F5 Networks All rights reserved.
+info: 
+  title: F5 BIG-IP 3NIC
+  author: F5 Networks
+  description: Creates a BIG-IP with 3 network interfaces.
+  version: 2.0.0
+imports:
+  - path: f5-existing-stack-payg-3nic-bigip.py
+required:
+  - region
+  - availabilityZone1
+  - mgmtNetwork
+  - mgmtSubnet
+  - restrictedSrcAddress
+  - restrictedSrcAddressApp
+  - network1
+  - subnet1
+  - network2
+  - subnet2
+  - imageName
+  - instanceType
+properties:
+  region:
+    description: Google Zone in specified region to deploy BIG-IP
+    type: string
+  availabilityZone1:
+    description: Google Zone in specified region to deploy BIG-IP, for example us-west1-a
+    type: string
+  mgmtNetwork:
+    description: Specify the network to use for management traffic
+    type: string
+  mgmtSubnet:
+    description: Specify the subnet to use for management traffic
+    type: string
+  mgmtSubnetAddress:
+    description: Static IP address to use (optional). Note, for dynamic address provisioning use the default value of 'DYNAMIC'
+    type: string
+    default: DYNAMIC
+  restrictedSrcAddress:
+    description: This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources
+    type: string
+  restrictedSrcAddressApp:   
+    description: This field restricts web application access (ports 80 and 443) to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources.
+    type: string
+  network1:
+    description: Specify the Network name for BIG-IP application traffic
+    type: string
+  subnet1:
+    description: Subnet of the Network BIG-IP should use for application traffic
+    type: string
+  subnet1Address:
+    description: Static IP address to use (optional). Note, for dynamic address provisioning use the default value of 'DYNAMIC'
+    type: string
+    default: DYNAMIC
+  network2:
+    description: Specify the Network name for BIG-IP internal application traffic
+    type: string
+  subnet2:
+    description: Subnet of the Network BIG-IP should use for internal application traffic
+    type: string
+  subnet2Address:
+    description: Static IP address to use (optional). Note, for dynamic address provisioning use the default value of 'DYNAMIC'
+    type: string
+    default: DYNAMIC
+  imageName:
+    description: BIG-IP image, valid choices include - f5-hourly-bigip-13-1-1-0-0-4-best-1gbps, f5-hourly-bigip-13-1-1-0-0-4-best-200mbps, f5-hourly-bigip-13-1-1-0-0-4-best-25mbps, f5-hourly-bigip-13-1-1-0-0-4-best-5gbps, f5-hourly-bigip-13-1-1-0-0-4-better-1gbps, f5-hourly-bigip-13-1-1-0-0-4-better-200mbps, f5-hourly-bigip-13-1-1-0-0-4-better-25mbps, f5-hourly-bigip-13-1-1-0-0-4-better-5gbps, f5-hourly-bigip-13-1-1-0-0-4-good-1gbps, f5-hourly-bigip-13-1-1-0-0-4-good-200mbps, f5-hourly-bigip-13-1-1-0-0-4-good-25mbps, f5-hourly-bigip-13-1-1-0-0-4-good-5gbps
+    type: string
+  instanceType:
+    description: Instance type assigned to BIG-IP, example n1-standard-4.
+    type: string
+  mgmtGuiPort:
+    description: BIG-IP Management Port
+    type: integer
+    default: 443
+  applicationPort:
+    description: List application port(s) separated by a space
+    default: 80 443
+  ntpServer:
+    description: List NTP servers separated by a space
+    type: string
+    default: time.google.com
+  timezone:   
+    description: Enter the Olson timezone string from /usr/share/zoneinfo
+    type: string
+    default: UTC
+  serviceAccount:
+    description: If using service discovery, enter the Google service account to use for discovery. Leave blank if not using service discovery
+    type: string
+    default: ''
+  tagName:
+    description: If using service discovery, enter the tag name used on servers for discovery.
+    type: string
+    default: ''
+  tagValue:
+    description: If using service discovery, enter the tag value used on servers for discovery.
+    type: string
+    default: ''
+  allowUsageAnalytics:
+    description: This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent
+    type: boolean
+    default: yes
+  logLevel:
+    description: Log setting, used to set log level on scripts used during deployment. Acceptable values are error, warn, info, verbose, debug, or silly.
+    type: string
+    default: info  
+documentation:
+  - README.md
+examples:
+  - f5-existing-stack-payg-3nic-bigip.yaml  

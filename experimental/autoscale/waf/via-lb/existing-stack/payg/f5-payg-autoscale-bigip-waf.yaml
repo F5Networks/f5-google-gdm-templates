@@ -1,6 +1,6 @@
 # Copyright 2018 F5 Networks All rights reserved.
 #
-# Version v1.5.1
+# Version v2.0.0
 ## note deployment name can not excede 23 charactors.
 imports:
 - path: f5-payg-autoscale-bigip-waf.py
@@ -12,9 +12,9 @@ resources:
    region: <region>
    ### Google Zone in specified region to deploy BIG-IP, for example us-west1-a
    availabilityZone1: <availability zone>
-   ### Specify network to use for management traffic
+   ### Specify the network to use for management traffic
    mgmtNetwork: <management network>
-   ### Specify subnet to use for management traffic
+   ### Specify the subnet to use for management traffic
    mgmtSubnet: <management subnet>
    ### BIG-IP image, valid choices include:
    # f5-hourly-bigip-13-1-1-0-0-4-awaf-1gbps
@@ -29,11 +29,11 @@ resources:
    instanceType: n1-standard-4
    ### BIG-IP Management Port, the default is 8443
    manGuiPort: 8443
-   ### If using service discovery, enter google service account to use for discovery. Leave single quotes with nothing between when not using service discovery.
+   ### If using service discovery, enter the Google service account to use for discovery. Leave single quotes with nothing between when not using service discovery.
    serviceAccount: '<service acount>'
-   ### If using service discovery, enter tag name used on servers for discovery. Leave single quotes with nothing between if not using service discovery.
+   ### If using service discovery, enter the tag name used on servers for discovery. Leave single quotes with nothing between if not using service discovery.
    tagName: <tagname>
-   ### If using service discovery, enter tag value used on servers for discovery. Leave single quotes with nothing between if not using service discovery.
+   ### If using service discovery, enter the tag value used on servers for discovery. Leave single quotes with nothing between if not using service discovery.
    tagValue: <tagvalue>
    ### Number of instances to start
    targetSize: 2
