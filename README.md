@@ -28,7 +28,7 @@ F5 has created a matrix that contains all of the tagged releases of the F5 Googl
 corresponding BIG-IP versions, license types and throughput levels available for a specific tagged release. See
 https://github.com/F5Networks/f5-google-gdm-templates/blob/master/google-bigip-version-matrix.md.
 
-## Current F5 Google Deployment Manager templates
+## Current Supported F5 Google Deployment Manager templates
 
 The following is a list of the current *supported* F5 GDM templates. Click the link to view the README file which includes information on how to deploy the template in Google Cloud.
 
@@ -45,9 +45,31 @@ The following is a list of the current *supported* F5 GDM templates. Click the l
 **Standalone BIG-IP VE - 3 NIC**
 - <a href="https://github.com/F5Networks/f5-google-gdm-templates/tree/master/supported/standalone/3nic/existing-stack/payg">**Hourly**</a>, which uses pay-as-you-go hourly billing
 - <a href="https://github.com/F5Networks/f5-google-gdm-templates/tree/master/supported/standalone/3nic/existing-stack/byol">**BYOL**</a> (bring your own license), which allows you to use an existing BIG-IP license.
-
-
 <br>
+
+**Clustered BIG-IP VE - 3 NICs**
+- <a href="https://github.com/F5Networks/f5-google-gdm-templates/tree/master/supported/standalone/1nic/existing-stack/payg">**Hourly**</a>, which uses pay-as-you-go hourly billing
+- <a href="https://github.com/F5Networks/f5-google-gdm-templates/tree/master/supported/standalone/1nic/existing-stack/byol">**BYOL**</a> (bring your own license), which allows you to use an existing BIG-IP license.
+
+**Standalone BIG-IP VE - 2 NIC**
+- <a href="https://github.com/F5Networks/f5-google-gdm-templates/tree/master/supported/standalone/2nic/existing-stack/payg">**Hourly**</a>, which uses pay-as-you-go hourly billing
+- <a href="https://github.com/F5Networks/f5-google-gdm-templates/tree/master/supported/standalone/2nic/existing-stack/byol">**BYOL**</a> (bring your own license), which allows you to use an existing BIG-IP license.
+
+
+**Clustered BIG-IP VE: Failover via API - 3 NICs**
+- *Existing Stack* which includes an external IP address (typical)
+    - <a href="https://github.com/F5Networks/f5-google-gdm-templates/tree/master/supported/failover/same-net/via-api/3nic/existing-stack/payg">**Hourly**</a>, which uses pay-as-you-go hourly billing  
+    - <a href="https://github.com/F5Networks/f5-google-gdm-templates/tree/master/supported/failover/same-net/via-api/3nic/existing-stack/byol">**BYOL**</a> (bring your own license), which allows you to use an existing BIG-IP license.  
+
+- *Production stack*</a> template, which does not include a public IP address (see README file for details)  
+    - <a href="https://github.com/F5Networks/f5-google-gdm-templates/tree/master/supported/failover/same-net/via-api/3nic/production-stack/payg">**Hourly**</a>, which uses pay-as-you-go hourly billing  
+    - <a href="https://github.com/F5Networks/f5-google-gdm-templates/tree/master/supported/failover/same-net/via-api/3nic/production-stack/byol">**BYOL**</a> (bring your own license), which allows you to use an existing BIG-IP license. 
+
+**Clustered BIG-IP VE: Failover via LB - 3 NICs**
+- *Existing Stack* which includes an external IP address (typical)
+    - <a href="https://github.com/F5Networks/f5-google-gdm-templates/tree/master/supported/failover/same-net/via-lb/3nic/existing-stack/payg">**Hourly**</a>, which uses pay-as-you-go hourly billing  
+    - <a href="https://github.com/F5Networks/f5-google-gdm-templates/tree/master/supported/failover/same-net/via-lb/3nic/existing-stack/byol">**BYOL**</a> (bring your own license), which allows you to use an existing BIG-IP license.  
+
 
 
 ## Copyright

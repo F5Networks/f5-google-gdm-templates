@@ -35,6 +35,7 @@ The following are prerequisites for the F5 2 NIC GDM template:
 
 ## Important configuration notes
 
+- All supported versions of F5 ARM templates now include Application Services 3 Extension (AS3) v3.5.1 (LTS version) on the BIG-IP VE.  AS3 uses a declarative configuration model, meaning you send a declaration file using a single Rest API call. See the [AS3 documentation](https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/3.5.1/) for details on how to use AS3 on your BIG-IP VE(s). 
 - Beginning with release 2.0.0, interface NIC1 is used for management traffic. This will allow the use of specific Google services which require NIC0 be used, such as port forwarding, lb services, etc. Specifically, public/external application traffic now traverses NIC0, and management traffic traverses NIC1.
 - Beginning with release 1.5.0, the BIG-IP image names have changed (previous options were Good, Better, and Best).  Now you choose a BIG-IP VE image based on whether you need [LTM](https://www.f5.com/products/big-ip-services/local-traffic-manager) only or All modules available (including [WAF](https://www.f5.com/products/security/advanced-waf), [AFM](https://www.f5.com/products/security/advanced-firewall-manager), etc.), and if you need 1 or 2 boot locations.  Use 2 boot locations if you expect to upgrade the BIG-IP VE in the future. If you do not need room to upgrade (if you intend to create a new instance when a new version of BIG-IP VE is released), use an image with 1 boot location.
 - This template supports service discovery.  See the [Service Discovery section](#service-discovery) for details.
@@ -60,7 +61,7 @@ We encourage you to use our [Slack channel](https://f5cloudsolutions.herokuapp.c
 
 This solution uses python script and a YAML file to deploy the BIG-IP VE.  The YAML file contains the parameters necessary to deploy the BIG-IP instance in Google Cloud, and calls the python script to launch the instance.
 
-- BYOL: [**f5-existing-stack-byol-2nic-bigip.yaml**](https://github.com/F5Networks/f5-google-gdm-templates/blob/master/supported/standalone/2nic/existing-stack/byol/f5-existing-stack-byol-2nic-bigip.yaml)
+- BYOL: [**f5-existing-stack-byol-2nic-bigip.yaml**](f5-existing-stack-byol-2nic-bigip.yaml)
 
 
 You ***must edit the YAML file*** to include information for your deployment before using the file to launch the BIG-IP VE instance.
@@ -100,7 +101,7 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 
 ### Save the YAML and Python files
 
-After you have edited the YAML file with the appropriate values, save the YAML file in a location accessible from the gcloud command line.  Save the [python file](https://github.com/F5Networks/f5-google-gdm-templates/blob/master/supported/standalone/2nic/existing-stack/byol/f5-existing-stack-byol-2nic-bigip.py) in the same location.
+After you have edited the YAML file with the appropriate values, save the YAML file in a location accessible from the gcloud command line.  Save the [python file](f5-existing-stack-byol-2nic-bigip.py) in the same location.
 
 ### Deploy the BIG-IP VE
 

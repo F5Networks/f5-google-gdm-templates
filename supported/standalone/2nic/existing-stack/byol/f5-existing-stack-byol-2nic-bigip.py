@@ -1,6 +1,6 @@
 # Copyright 2018 F5 Networks All rights reserved.
 #
-# Version v2.0.0
+# Version v2.1.0
 
 """ Creates Deployment """
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
@@ -44,7 +44,7 @@ def FirewallRuleMgmt(context):
             ]
         }
     }
-    return firewallRuleMgmt 
+    return firewallRuleMgmt
 def Instance(context):
     # declare specific instance properties ahead of time as they may change
     network_interfaces = [{
@@ -85,7 +85,7 @@ def Instance(context):
     if context.properties['serviceAccount']:
         service_account = [{
                 'email': str(context.properties['serviceAccount']),
-                'scopes': ['https://www.googleapis.com/auth/compute.readonly']
+                'scopes': ['https://www.googleapis.com/auth/compute']
         }]
     else:
          service_account = []
@@ -122,11 +122,11 @@ def Instance(context):
         }
     }
     return instance
-def Metadata(context):    
+def Metadata(context):
     ALLOWUSAGEANALYTICS = context.properties['allowUsageAnalytics']
     if ALLOWUSAGEANALYTICS:
         CUSTHASH = 'CUSTOMERID=`curl -s "http://metadata.google.internal/computeMetadata/v1/project/numeric-project-id" -H "Metadata-Flavor: Google" |sha512sum|cut -d " " -f 1`;\nDEPLOYMENTID=`curl -s "http://metadata.google.internal/computeMetadata/v1/instance/id" -H "Metadata-Flavor: Google"|sha512sum|cut -d " " -f 1`;'
-        SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-existing-stack-byol-2nic-bigip.py,templateVersion:v2.0.0,licenseType:byol"'
+        SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-existing-stack-byol-2nic-bigip.py,templateVersion:v2.1.0,licenseType:byol"'
     else:
         CUSTHASH = 'echo "No analytics."'
         SENDANALYTICS = ''
@@ -162,7 +162,8 @@ def Metadata(context):
                                     '    exit',
                                     'fi',
                                     'echo loaded verifyHash',
-                                    'declare -a filesToVerify=(\"/config/cloud/f5-cloud-libs.tar.gz\" \"/config/cloud/f5-cloud-libs-gce.tar.gz\" \"/config/cloud/f5.service_discovery.tmpl\")',
+                                    'declare -a filesToVerify=(\"/config/cloud/f5-cloud-libs.tar.gz\" \"/config/cloud/f5-cloud-libs-gce.tar.gz\" \"/config/cloud/f5-appsvcs-3.5.1-5.noarch.rpm\" \"/config/cloud/f5.service_discovery.tmpl\")',
+                                    '#declare -a filesToVerify=()',
                                     'for fileToVerify in \"${filesToVerify[@]}\"',
                                     'do',
                                     '    echo verifying \"$fileToVerify\"',
@@ -184,10 +185,10 @@ def Metadata(context):
                                     'cli script /Common/verifyHash {',
                                     'proc script::run {} {',
                                     '        if {[catch {',
-                                    '            set hashes(f5-cloud-libs.tar.gz) 2481d285c33b97ed083f6e48edcfbd1d5f8fb1dea0578f429017706a1829d3625fab6aff8f55fe71b2b5929410110043a17d57179d833f0f51c90fb0f6ff292d',
-                                    '            set hashes(f5-cloud-libs-aws.tar.gz) 35361a507a4ef0c8f5205c05d913dbea024f287777e86dccd0c345560a637c106aeab4150af9eafd828929eb7798184e076ea5359e16b4c2d5544cc380800711',
-                                    '            set hashes(f5-cloud-libs-azure.tar.gz) def8780b308a7cfea52d524e5ad07121e7091ecb826e01c87bc758c90fee5c25d12a2a4a06dc78ff64cb478a471f8514bde2cd5da19fb427de28598272a978bb',
-                                    '            set hashes(f5-cloud-libs-gce.tar.gz) 9d0d8c32909a272cc9a56dad60121916830462ba26c9bb1d731c10f4e33ba7a856520db55016097db2043e27d048027924470a8e68f366de0339a43b7b68b0d6',
+                                    '            set hashes(f5-cloud-libs.tar.gz) 535059811324dbda9783df2c4f7ac8405acf6f198efd5696bc0d90f4f8f645b77c04efd42c3dc94261f0b92d76cbae87613412531968a5e646baf4177807b953',
+                                    '            set hashes(f5-cloud-libs-aws.tar.gz) 076c969cbfff12efacce0879820262b7787c98645f1105667cc4927d4acfe2466ed64c777b6d35957f6df7ae266937dde42fef4c8b1f870020a366f7f910ffb5',
+                                    '            set hashes(f5-cloud-libs-azure.tar.gz) eea34eb9bf1fc86702cc8d3adcd0cd4cd3e8ede0bad5d85ce55b7248aeb5726583b0314bd1ac9383dbfbf97c79d08d27a473539844de6972c9f6f5fea1a7b9aa',
+                                    '            set hashes(f5-cloud-libs-gce.tar.gz) 605c13c0725dcf6ee96d24349aee68be59640c58fef16d42d69fe1b01fb2e59df14f2cd41f0718d21061b8fb52cdce57fcf6541ebc8610e54e0f7fe8e46d94cb',
                                     '            set hashes(f5-cloud-libs-openstack.tar.gz) 5c83fe6a93a6fceb5a2e8437b5ed8cc9faf4c1621bfc9e6a0779f6c2137b45eab8ae0e7ed745c8cf821b9371245ca29749ca0b7e5663949d77496b8728f4b0f9',
                                     '            set hashes(asm-policy-linux.tar.gz) 63b5c2a51ca09c43bd89af3773bbab87c71a6e7f6ad9410b229b4e0a1c483d46f1a9fff39d9944041b02ee9260724027414de592e99f4c2475415323e18a72e0',
                                     '            set hashes(f5.http.v1.2.0rc4.tmpl) 47c19a83ebfc7bd1e9e9c35f3424945ef8694aa437eedd17b6a387788d4db1396fefe445199b497064d76967b0d50238154190ca0bd73941298fc257df4dc034',
@@ -200,14 +201,15 @@ def Metadata(context):
                                     '            set hashes(asm-policy.tar.gz) 2d39ec60d006d05d8a1567a1d8aae722419e8b062ad77d6d9a31652971e5e67bc4043d81671ba2a8b12dd229ea46d205144f75374ed4cae58cefa8f9ab6533e6',
                                     '            set hashes(deploy_waf.sh) 1a3a3c6274ab08a7dc2cb73aedc8d2b2a23cd9e0eb06a2e1534b3632f250f1d897056f219d5b35d3eed1207026e89989f754840fd92969c515ae4d829214fb74',
                                     '            set hashes(f5.policy_creator.tmpl) 06539e08d115efafe55aa507ecb4e443e83bdb1f5825a9514954ef6ca56d240ed00c7b5d67bd8f67b815ee9dd46451984701d058c89dae2434c89715d375a620',
-                                    '            set hashes(f5.service_discovery.tmpl) 01dc84d4a4be2bc484ab57b771f186f87d4b664e1fb9a073e025b5362ee14d712b970eef4041f794f66286fb1429418aab16e832c89df8a25e02229c68b83de8',
+                                    '            set hashes(f5.service_discovery.tmpl) 0c43a28d58ff8339891ef324763675c29275170f8984d39298a53f570385eef82bef6d5a273adebb5310fc529faffc9b225358ec8f65100115246915eff706fe',
                                     '            set hashes(f5.cloud_logger.v1.0.0.tmpl) 64a0ed3b5e32a037ba4e71d460385fe8b5e1aecc27dc0e8514b511863952e419a89f4a2a43326abb543bba9bc34376afa114ceda950d2c3bd08dab735ff5ad20',
+                                    '            set hashes(f5-appsvcs-3.5.1-5.noarch.rpm) ba71c6e1c52d0c7077cdb25a58709b8fb7c37b34418a8338bbf67668339676d208c1a4fef4e5470c152aac84020b4ccb8074ce387de24be339711256c0fa78c8',
                                     'NEW_LINE',
                                     '            set file_path [lindex $tmsh::argv 1]',
                                     '            set file_name [file tail $file_path]',
                                     'NEW_LINE',
                                     '            if {![info exists hashes($file_name)]} {',
-                                    '                tmsh::log err "No hash found for $file_name"',
+                                    '                tmsh::log err \"No hash found for $file_name\"',
                                     '                exit 1',
                                     '            }',
                                     'NEW_LINE',
@@ -216,19 +218,18 @@ def Metadata(context):
                                     '            if { $expected_hash eq $computed_hash } {',
                                     '                exit 0',
                                     '            }',
-                                    '            tmsh::log err "Hash does not match for $file_path"',
+                                    '            tmsh::log err \"Hash does not match for $file_path\"',
                                     '            exit 1',
                                     '        }]} {',
                                     '            tmsh::log err {Unexpected error in verifyHash}',
                                     '            exit 1',
                                     '        }',
                                     '    }',
-                                    '    script-signature rDemf/H1eVNT9zqev0rGMqJMAsDqmxZOsgwl7LuxD0bocfXqCnZyIt5B6e1nAFWJRwI2m4uKeknO58YAoNJo/+HvoG+4ifoAT71d5f0o2JX13kbvb4qEJAdl0nkGjy2j62CeHSl40+XimWzCBn8FA3bFOhfP6kfs/gAo7OhokBbk4YTxa1Y16hI5rf5Z9fS78/Km2Fs55XU18KKwL81lWyA/6by46V2LvmGYc461j8yFGLsaJLOsgJ6HZQBKRyH1ZrVAA5mdqOU7i9P1VsRgvgLhE/WBraHIDz5olowiq5AfiqnRG//Z6Wn4QgZONn4IGPMViPq+f2NxrDHlirfy/A==',
-                                    '    signing-key /Common/f5-irule',
+                                    '    script-signature hCr5O6FtvOkjRk8Vn1499YU57spPEMbLXCfkgLVsVcmBCXnHbRw6zTIZOJlGkwk7CyCTpcuVuTR1SiGsQKnclgcQFkEDP5rw98jyIwvKpfYXiLxPI2SPsyadom41FDPXy9+b4aOAJGRPcp5/HhRP7+ky7x6jI5SEF4ZFExN6BwWXn61D+MwYe2Ajhes/6wuZv+b9i9teckZLkyB54OAbEyEug3S66YK2Jg916Y5JLNhDn7JNoOPoyFvYlyuDOutcjFHiwjdSFEgcOx/dka/5aHtjKEiMWuCsuaZnhGKSHc/ZCTH8oht1qUi28Dz5W2Gq6hRE9Zt5S4HmS3JKu2wlfg==',                                    '    signing-key /Common/f5-irule',
                                     '}',
                                     'EOF',
                                     '# empty new line chars get stripped, strip out place holder NEW_LINE',
-                                    'sed -i "s/NEW_LINE//" /config/verifyHash',                                   
+                                    'sed -i "s/NEW_LINE//" /config/verifyHash',
                                     'cat <<\'EOF\' > /config/waitThenRun.sh',
                                     '#!/bin/bash',
                                     'while true; do echo \"waiting for cloud libs install to complete\"',
@@ -267,7 +268,7 @@ def Metadata(context):
                                     '    sleep 5',
                                     '  done',
                                     '}',
-                                    'mcp_running',                                    
+                                    'mcp_running',
                                     'source /config/cloud/gce/interface.config',
                                     'MGMTNETWORK=$(/bin/ipcalc -n ${MGMTADDRESS} ${MGMTMASK} | cut -d= -f2)',
                                     'INT1NETWORK=$(/bin/ipcalc -n ${INT1ADDRESS} ${INT1MASK} | cut -d= -f2)',
@@ -315,9 +316,10 @@ def Metadata(context):
                                     '### START CUSTOM TMSH CONFIGURATION',
                                     '### END CUSTOM TMSH CONFIGURATION',
                                     'EOF',
-                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs/v4.5.0/f5-cloud-libs.tar.gz',
-                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs-gce.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs-gce/v2.3.0/f5-cloud-libs-gce.tar.gz',
-                                    'curl -s -f --retry 20 -o /config/cloud/f5.service_discovery.tmpl https://cdn.f5.com/product/cloudsolutions/iapps/common/f5-service-discovery/v2.2.0/f5.service_discovery.tmpl',
+                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs/v4.6.0/f5-cloud-libs.tar.gz',
+                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs-gce.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs-gce/v2.3.2/f5-cloud-libs-gce.tar.gz',
+                                    'curl -s -f --retry 20 -o /config/cloud/f5-appsvcs-3.5.1-5.noarch.rpm https://cdn.f5.com/product/cloudsolutions/f5-appsvcs-extension/v3.6.0/dist/lts/f5-appsvcs-3.5.1-5.noarch.rpm',
+                                    'curl -s -f --retry 20 -o /config/cloud/f5.service_discovery.tmpl https://cdn.f5.com/product/cloudsolutions/iapps/common/f5-service-discovery/v2.2.3/f5.service_discovery.tmpl',
                                     'chmod 755 /config/verifyHash',
                                     'chmod 755 /config/installCloudLibs.sh',
                                     'chmod 755 /config/waitThenRun.sh',
@@ -328,7 +330,7 @@ def Metadata(context):
                                     'nohup /config/installCloudLibs.sh &>> /var/log/cloud/google/install.log < /dev/null &',
                                     'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/onboard.js --version &>> /var/log/cloud/google/install.log < /dev/null &',
                                     CUSTHASH,
-                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/onboard.js --db provision.managementeth:eth1 --port 443 --ssl-port ' + str(context.properties['mgmtGuiPort']) + ' -o /var/log/cloud/google/onboard.log  --log-level ' + str(context.properties['logLevel']) + ' --host localhost ' + ntp_list + ' --tz ' + str(context.properties['timezone']) + ' --module ltm:nominal --license ' + str(context.properties['licenseKey1']) + SENDANALYTICS + ' &>> /var/log/cloud/google/install.log < /dev/null &',
+                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/onboard.js --db provision.managementeth:eth1 --port 443 --ssl-port ' + str(context.properties['mgmtGuiPort']) + ' -o /var/log/cloud/google/onboard.log  --log-level ' + str(context.properties['logLevel']) + ' --install-ilx-package file:///config/cloud/f5-appsvcs-3.5.1-5.noarch.rpm --host localhost ' + ntp_list + ' --tz ' + str(context.properties['timezone']) + ' --module ltm:nominal --license ' + str(context.properties['licenseKey1']) + SENDANALYTICS + ' &>> /var/log/cloud/google/install.log < /dev/null &',
                                     'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/collect-interface.sh --cwd /config/cloud/gce -o /var/log/cloud/google/interface-config.log  --log-level ' + str(context.properties['logLevel']) + ' --wait-for ONBOARD_DONE --signal INT_COLLECTION_DONE &>> /var/log/cloud/google/install.log < /dev/null &',
                                     'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/network.js --host localhost --force-reboot -o /var/log/cloud/google/network.log  --log-level ' + str(context.properties['logLevel']) + ' --wait-for INT_COLLECTION_DONE --signal NETWORK_CONFIG_DONE  &>> /var/log/cloud/google/install.log < /dev/null &',
                                     'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/custom-config.sh --cwd /config/cloud/gce -o /var/log/cloud/google/custom-config.log  --log-level ' + str(context.properties['logLevel']) + ' --wait-for NETWORK_CONFIG_DONE --signal CUSTOM_CONFIG_DONE &>> /var/log/cloud/google/install.log < /dev/null &',
@@ -355,10 +357,10 @@ def Outputs(context):
         'name': 'appTrafficAddress',
         'value': '$(ref.bigip1-' + context.env['deployment'] + '.networkInterfaces[0].accessConfigs[0].natIP)'
     }]
-    return outputs    
+    return outputs
 def GenerateConfig(context):
     ## set variables
- 
+
     # build resources
     resources = [
         Instance(context),
@@ -366,4 +368,4 @@ def GenerateConfig(context):
         FirewallRuleMgmt(context),
     ]
     outputs = Outputs(context)
-    return {'resources': resources, 'outputs': outputs}    
+    return {'resources': resources, 'outputs': outputs}

@@ -1,0 +1,112 @@
+# Copyright 2018 F5 Networks All rights reserved.
+info: 
+  title: F5 BIG-IP 3NIC HA with Google LB
+  author: F5 Networks
+  description: Creates HA pair of BIG-IP's with 3 network interfaces and supporting Google resources.
+  version: 2.1.0
+imports:
+  - path: f5-existing-stack-same-net-cluster-payg-3nic-bigip.py
+required:
+  - region
+  - availabilityZone1
+  - mgmtNetwork
+  - mgmtSubnet
+  - restrictedSrcAddress
+  - restrictedSrcAddressApp
+  - network1
+  - subnet1
+  - network2
+  - subnet2
+  - numberOfForwardingRules
+  - numberOfIntForwardingRules
+  - imageName
+  - instanceType
+  - applicationPort
+  - serviceAccount
+properties:
+  region:
+    description: The Google region in which you want to deploy BIG-IP, for example us-west1
+    type: string
+  availabilityZone1:
+    description: The availability zone where you want to deploy the BIG-IP VE instance, for example us-west1-a
+    type: string
+  mgmtNetwork:
+    description: Specify the network to use for management traffic
+    type: string
+  mgmtSubnet:
+    description: Specify the subnet to use for management traffic
+    type: string
+  restrictedSrcAddress:
+    description: This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources
+    type: string
+  restrictedSrcAddressApp:   
+    description: Restricts web application access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources.
+    type: string
+  restrictedSrcAddressIntApp:
+    description: Restricts web application access to a specific private network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources. Only required when using internal loadbalancer (numberOfForwardingRules equals 1).    
+  network1:
+    description: Specify the Network name for BIG-IP application traffic
+    type: string
+  subnet1:
+    description: Subnet of the Network BIG-IP should use for application traffic
+    type: string
+  network2:
+    description: Specify the Network name for BIG-IP internal application traffic
+    type: string
+  subnet2:
+    description: Subnet of the Network BIG-IP should use for internal application traffic
+    type: string
+  numberOfForwardingRules:
+    description: Number of forwarding rules to create, for example '1'.  All integers from 1 to the max quota for the forwarding rules resource type are allowed.
+    type: integer
+    minimum: 1
+  numberOfIntForwardingRules:
+    description: Number of forwarding rules to create, for example '1'.  Integers 0 and 1 are valid choices.
+    type: integer
+    minimum: 0
+    maximum: 1
+  imageName:
+    description: BIG-IP image, valid choices include - f5-byol-bigip-13-1-1-0-0-4-all-2slot, f5-byol-bigip-13-1-1-0-0-4-ltm-2slot
+    type: string
+  instanceType:
+    description: Instance type assigned to BIG-IP, example n1-standard-4.
+    type: string
+  mgmtGuiPort:
+    description: (optional) BIG-IP Management Port
+    type: integer
+    default: 443
+  applicationPort:
+    description: List application port(s) separated by a space
+  applicationIntPort:
+    description: List application port(s) for internal google load balancer separated by a space. A max of 5 ports can be specified. Only required when using internal loadbalancer (numberOfForwardingRules equals 1).    
+  ntpServer:
+    description: (optional) List NTP servers separated by a space
+    type: string
+    default: time.google.com
+  timezone:   
+    description: (optional) Enter the Olson timezone string from /usr/share/zoneinfo
+    type: string
+    default: UTC
+  serviceAccount:
+    description: Enter service account with correct roles.
+    type: string
+  tagName:
+    description: If using service discovery, enter the tag name used on servers for discovery.
+    type: string
+    default: ''
+  tagValue:
+    description: If using service discovery, enter the tag value used on servers for discovery.
+    type: string
+    default: ''
+  allowUsageAnalytics:
+    description: This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent
+    type: boolean
+    default: yes
+  logLevel:
+    description: Log setting, used to set log level on scripts used during deployment. Acceptable values are error, warn, info, verbose, debug, or silly.
+    type: string
+    default: info
+documentation:
+  - README.md
+examples:
+  - f5-existing-stack-same-az-cluster-byol-3nic-bigip.yaml  

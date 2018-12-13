@@ -87,7 +87,7 @@ def GenerateConfig(context):
                                   context.properties['instanceType']]),
           'serviceAccounts': [{
               'email': context.properties['serviceAccount'],
-              'scopes': ['https://www.googleapis.com/auth/compute.readonly']
+              'scopes': ['https://www.googleapis.com/auth/compute']
           }],
           'disks': [{
               'deviceName': 'boot',
@@ -256,9 +256,9 @@ def GenerateConfig(context):
                                     'rm /config/cloud/gce/.adminPassword\n',
                                     'date\n',
                                     'EOF\n',
-                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs.tar.gz https://raw.githubusercontent.com/F5Networks/f5-cloud-libs/v3.4.1/dist/f5-cloud-libs.tar.gz\n',
-                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs-gce.tar.gz https://raw.githubusercontent.com/F5Networks/f5-cloud-libs-gce/v1.0.0/dist/f5-cloud-libs-gce.tar.gz\n',
-                                    'curl -s -f --retry 20 -o /config/cloud/f5.service_discovery.tmpl https://raw.githubusercontent.com/F5Networks/f5-cloud-iapps/v1.1.1/f5-service-discovery/f5.service_discovery.tmpl\n',
+                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs/v4.6.0/f5-cloud-libs.tar.gz\n',
+                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs-gce.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs-gce/v2.3.2/f5-cloud-libs-gce.tar.gz\n',
+                                    'curl -s -f --retry 20 -o /config/cloud/f5.service_discovery.tmpl https://cdn.f5.com/product/cloudsolutions/iapps/common/f5-service-discovery/v2.2.3/f5.service_discovery.tmpl\n',
                                     'chmod 755 /config/verifyHash\n',
                                     'chmod 755 /config/installCloudLibs.sh\n',
                                     'chmod 755 /config/waitThenRun.sh\n',

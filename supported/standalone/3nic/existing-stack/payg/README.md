@@ -33,6 +33,7 @@ The following are prerequisites for the F5 3 NIC GDM template:
 - **Important**: For this 3 NIC template, you MUST use a machine type of at least **n1-standard-4**.  See this [link](https://cloud.google.com/vpc/docs/create-use-multiple-interfaces#max-interfaces) for more information about required vCPUs and interfaces.  Note: Because of this requirement, the *n1-highcpu* instance types are not supported.
 ## Important configuration notes
 
+- All supported versions of F5 ARM templates now include Application Services 3 Extension (AS3) v3.5.1 (LTS version) on the BIG-IP VE.  AS3 uses a declarative configuration model, meaning you send a declaration file using a single Rest API call. See the [AS3 documentation](https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/3.5.1/) for details on how to use AS3 on your BIG-IP VE(s). 
 - Beginning with release 2.0.0, interface NIC1 is used for management traffic. This will allow the use of specific Google services which require NIC0 be used, such as port forwarding, lb services, etc. Specifically, public/external application traffic now traverses NIC0, Management traffic traverses NIC1, and private/internal application traffic traverses NIC2.
 - This template supports service discovery.  See the [Service Discovery section](#service-discovery) for details.
 - F5 has created a matrix that contains all of the tagged releases of the F5 Google GDM templates, and the corresponding BIG-IP versions, license types and throughput levels available for a specific tagged release. See the matrix [here](https://github.com/F5Networks/f5-google-gdm-templates/blob/master/google-bigip-version-matrix.md).
@@ -59,7 +60,7 @@ We encourage you to use our [Slack channel](https://f5cloudsolutions.herokuapp.c
 
 This solution uses python script and a YAML file to deploy the BIG-IP VE.  The YAML file contains the parameters necessary to deploy the BIG-IP instance in Google Cloud, and calls the python script to launch the instance.
 
-PAYG: [**f5-existing-stack-payg-3nic-bigip.yaml**](https://github.com/F5Networks/f5-google-gdm-templates/blob/master/supported/standalone/3nic/existing-stack/payg/f5-existing-stack-payg-3nic-bigip.yaml)
+PAYG: [**f5-existing-stack-payg-3nic-bigip.yaml**](f5-existing-stack-payg-3nic-bigip.yaml)
 
 You ***must edit the YAML file*** to include information for your deployment before using the file to launch the BIG-IP VE instance.
 
@@ -100,7 +101,7 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 
 ### Save the YAML and Python files
 
-After you have edited the YAML file with the appropriate values, save the YAML file in a location accessible from the gcloud command line.  Save the [python file](https://github.com/F5Networks/f5-google-gdm-templates/blob/master/supported/standalone/3nic/existing-stack/payg/f5-existing-stack-payg-3nic-bigip.py) in the same location.
+After you have edited the YAML file with the appropriate values, save the YAML file in a location accessible from the gcloud command line.  Save the [python file](f5-existing-stack-payg-3nic-bigip.py) in the same location.
 
 ### Deploy the BIG-IP VE
 

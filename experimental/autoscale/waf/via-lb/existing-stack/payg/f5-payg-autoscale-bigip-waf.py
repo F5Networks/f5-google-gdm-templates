@@ -1,6 +1,6 @@
 # Copyright 2018 F5 Networks All rights reserved.
 #
-# Version v2.0.0
+# Version v2.1.0
 
 """Creates BIG-IP"""
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
@@ -32,7 +32,7 @@ def Instance(context,storageName,deployment):
                 'machineType': context.properties['instanceType'],
                 'serviceAccounts': [{
                     'email': context.properties['serviceAccount'],
-                    'scopes': ['https://www.googleapis.com/auth/compute.readonly','https://www.googleapis.com/auth/devstorage.read_write','https://www.googleapis.com/auth/pubsub']
+                    'scopes': ['https://www.googleapis.com/auth/compute','https://www.googleapis.com/auth/devstorage.read_write','https://www.googleapis.com/auth/pubsub']
                 }],
                 'disks': [{
                     'deviceName': 'boot',
@@ -105,6 +105,7 @@ def HealthCheck(context,deployment):
         'type': 'compute.v1.httpHealthCheck',
         'properties': {
             'port': int(context.properties['applicationPort']),
+            'host': str(context.properties['applicationDnsName']),
         }
     }
     return healthCheck
@@ -201,7 +202,7 @@ def Metadata(context,storageName,deployment):
     ALLOWUSAGEANALYTICS = str(context.properties['allowUsageAnalytics'])
     if ALLOWUSAGEANALYTICS == "yes":
         CUSTHASH = 'CUSTOMERID=`curl -s "http://metadata.google.internal/computeMetadata/v1/project/numeric-project-id" -H "Metadata-Flavor: Google" |sha512sum|cut -d " " -f 1`;\nDEPLOYMENTID=`curl -s "http://metadata.google.internal/computeMetadata/v1/instance/id" -H "Metadata-Flavor: Google"|sha512sum|cut -d " " -f 1`;'
-        SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-payg-autoscale-bigip-waf.py,templateVersion:v2.0.0,licenseType:payg"'
+        SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-payg-autoscale-bigip-waf.py,templateVersion:v2.1.0,licenseType:payg"'
     else:
         CUSTHASH = 'echo "No analytics."'
         SENDANALYTICS = ''
@@ -234,7 +235,8 @@ def Metadata(context,storageName,deployment):
                                     '    exit',
                                     'fi',
                                     'echo loaded verifyHash',
-                                    'declare -a filesToVerify=(\"/config/cloud/f5-cloud-libs.tar.gz\" \"/config/cloud/f5-cloud-libs-gce.tar.gz\" \"/config/cloud/f5.service_discovery.tmpl\")',
+                                    'declare -a filesToVerify=(\"/config/cloud/f5-cloud-libs.tar.gz\" \"/config/cloud/f5-cloud-libs-gce.tar.gz\" \"/config/cloud/f5-appsvcs-3.5.1-5.noarch.rpm\"  \"/config/cloud/f5.service_discovery.tmpl\")',
+                                    '#declare -a filesToVerify=()',
                                     'for fileToVerify in \"${filesToVerify[@]}\"',
                                     'do',
                                     '    echo verifying \"$fileToVerify\"',
@@ -258,10 +260,10 @@ def Metadata(context,storageName,deployment):
                                     'cli script /Common/verifyHash {',
                                     'proc script::run {} {',
                                     '        if {[catch {',
-                                    '            set hashes(f5-cloud-libs.tar.gz) a1de46685e31463e6c103078797b90e5f29a4b94702b0522eef2364c3792414067a0bea50c4ed49784c14277a578d8b41f9ac7ba058d9ff72ef687034e5119c6',
-                                    '            set hashes(f5-cloud-libs-aws.tar.gz) d0803e306c01bdf82895c8f30f3b3c2df5f76edbe1875c0ffbfea6864436ece54a73ffd02ccd1b889c324b093897702087b722f10cc7f87994f518f81d7260ea',
-                                    '            set hashes(f5-cloud-libs-azure.tar.gz) a1f264a165b88c03f55d49afb4fdb5f63d80755f1afe947a02e4a36755c7fcec432495417d8084329c6c14e4c426c2e63bab92862afb760d63f584a570b119e6',
-                                    '            set hashes(f5-cloud-libs-gce.tar.gz) c01b25f4d6f48d9ac21b1a6ba3553c978e4fb8ce8655947a307f27e67833c4bebf8b72fef108ea02e11b5e9aa35d33e39db8624b3db34de509d0d79959c754c7',
+                                    '            set hashes(f5-cloud-libs.tar.gz) 535059811324dbda9783df2c4f7ac8405acf6f198efd5696bc0d90f4f8f645b77c04efd42c3dc94261f0b92d76cbae87613412531968a5e646baf4177807b953',
+                                    '            set hashes(f5-cloud-libs-aws.tar.gz) 076c969cbfff12efacce0879820262b7787c98645f1105667cc4927d4acfe2466ed64c777b6d35957f6df7ae266937dde42fef4c8b1f870020a366f7f910ffb5',
+                                    '            set hashes(f5-cloud-libs-azure.tar.gz) eea34eb9bf1fc86702cc8d3adcd0cd4cd3e8ede0bad5d85ce55b7248aeb5726583b0314bd1ac9383dbfbf97c79d08d27a473539844de6972c9f6f5fea1a7b9aa',
+                                    '            set hashes(f5-cloud-libs-gce.tar.gz) 605c13c0725dcf6ee96d24349aee68be59640c58fef16d42d69fe1b01fb2e59df14f2cd41f0718d21061b8fb52cdce57fcf6541ebc8610e54e0f7fe8e46d94cb',
                                     '            set hashes(f5-cloud-libs-openstack.tar.gz) 5c83fe6a93a6fceb5a2e8437b5ed8cc9faf4c1621bfc9e6a0779f6c2137b45eab8ae0e7ed745c8cf821b9371245ca29749ca0b7e5663949d77496b8728f4b0f9',
                                     '            set hashes(asm-policy-linux.tar.gz) 63b5c2a51ca09c43bd89af3773bbab87c71a6e7f6ad9410b229b4e0a1c483d46f1a9fff39d9944041b02ee9260724027414de592e99f4c2475415323e18a72e0',
                                     '            set hashes(f5.http.v1.2.0rc4.tmpl) 47c19a83ebfc7bd1e9e9c35f3424945ef8694aa437eedd17b6a387788d4db1396fefe445199b497064d76967b0d50238154190ca0bd73941298fc257df4dc034',
@@ -274,23 +276,18 @@ def Metadata(context,storageName,deployment):
                                     '            set hashes(asm-policy.tar.gz) 2d39ec60d006d05d8a1567a1d8aae722419e8b062ad77d6d9a31652971e5e67bc4043d81671ba2a8b12dd229ea46d205144f75374ed4cae58cefa8f9ab6533e6',
                                     '            set hashes(deploy_waf.sh) 1a3a3c6274ab08a7dc2cb73aedc8d2b2a23cd9e0eb06a2e1534b3632f250f1d897056f219d5b35d3eed1207026e89989f754840fd92969c515ae4d829214fb74',
                                     '            set hashes(f5.policy_creator.tmpl) 06539e08d115efafe55aa507ecb4e443e83bdb1f5825a9514954ef6ca56d240ed00c7b5d67bd8f67b815ee9dd46451984701d058c89dae2434c89715d375a620',
-                                    '            set hashes(f5.service_discovery.tmpl) 7a4660468dffdc4f6d9aec4c1f9d22abfb3e484e7d6fe6a12fc9ab3eec3819dc34d133aea3cce4fdd87a0f4045069270061f2ea1ee7735922e4371592e498a0b',
-                                    '            set hashes(f5.cloud_logger.v1.0.0.tmpl) a26d5c470e70b821621476bcfd0579dbc0964f6a54158bc6314fa1e2f63b23bf3f3eb43ade5081131c24e08579db2e1e574beb3f8d9789d28acb4f312fad8c3e',
-                                    'EOF',
-                                    'echo -e "" >> /config/verifyHash',
-                                    'cat <<\'EOF\' >> /config/verifyHash',
+                                    '            set hashes(f5.service_discovery.tmpl) 0c43a28d58ff8339891ef324763675c29275170f8984d39298a53f570385eef82bef6d5a273adebb5310fc529faffc9b225358ec8f65100115246915eff706fe',
+                                    '            set hashes(f5.cloud_logger.v1.0.0.tmpl) 64a0ed3b5e32a037ba4e71d460385fe8b5e1aecc27dc0e8514b511863952e419a89f4a2a43326abb543bba9bc34376afa114ceda950d2c3bd08dab735ff5ad20',
+                                    '            set hashes(f5-appsvcs-3.5.1-5.noarch.rpm) ba71c6e1c52d0c7077cdb25a58709b8fb7c37b34418a8338bbf67668339676d208c1a4fef4e5470c152aac84020b4ccb8074ce387de24be339711256c0fa78c8',
+                                    'NEW_LINE',
                                     '            set file_path [lindex $tmsh::argv 1]',
                                     '            set file_name [file tail $file_path]',
-                                    'EOF',
-                                    'echo -e "" >> /config/verifyHash',
-                                    'cat <<\'EOF\' >> /config/verifyHash',
+                                    'NEW_LINE',
                                     '            if {![info exists hashes($file_name)]} {',
                                     '                tmsh::log err \"No hash found for $file_name\"',
                                     '                exit 1',
                                     '            }',
-                                    'EOF',
-                                    'echo -e "" >> /config/verifyHash',
-                                    'cat <<\'EOF\' >> /config/verifyHash',
+                                    'NEW_LINE',
                                     '            set expected_hash $hashes($file_name)',
                                     '            set computed_hash [lindex [exec /usr/bin/openssl dgst -r -sha512 $file_path] 0]',
                                     '            if { $expected_hash eq $computed_hash } {',
@@ -303,9 +300,9 @@ def Metadata(context,storageName,deployment):
                                     '            exit 1',
                                     '        }',
                                     '    }',
-                                    '    script-signature jJpTQ0bcHm9SypZSOPeKaHoUKRdTyLbz80xHYXy39dWx76geCGT5otZi4SdqGBiiwKFydQTqSVu+Uzj8TQZGg2fbxKg/Ks28Ht+nvLoTiNwZGY5o+iPse45QvltBvE+aCOIaw8a5ZBd5ZMF7A8JQpTwttUFRjFgXFu9CncAWOTypov46ve9dzRW8dRPbAImaJSby38jUIVWjv2iB3qZHz//bXjdZ5qUpFvpPH5dGzYN5SoQmUVI3kbiOpZlRJcSj8cKzQ7EsQozile5JkzPrzUeeMgOHihAZcOzgvYWl2LYe9iedixzF7ci6d4YNUuUhFfyrlrUOZSMUPtRzM3+rYQ==',                                    '    signing-key /Common/f5-irule',
+                                    '    script-signature hCr5O6FtvOkjRk8Vn1499YU57spPEMbLXCfkgLVsVcmBCXnHbRw6zTIZOJlGkwk7CyCTpcuVuTR1SiGsQKnclgcQFkEDP5rw98jyIwvKpfYXiLxPI2SPsyadom41FDPXy9+b4aOAJGRPcp5/HhRP7+ky7x6jI5SEF4ZFExN6BwWXn61D+MwYe2Ajhes/6wuZv+b9i9teckZLkyB54OAbEyEug3S66YK2Jg916Y5JLNhDn7JNoOPoyFvYlyuDOutcjFHiwjdSFEgcOx/dka/5aHtjKEiMWuCsuaZnhGKSHc/ZCTH8oht1qUi28Dz5W2Gq6hRE9Zt5S4HmS3JKu2wlfg==',                                    '    signing-key /Common/f5-irule',
                                     '}',
-                                    'EOF\n',
+                                    'EOF',
                                     '# empty new line chars get stripped, strip out place holder NEW_LINE',
                                     'sed -i "s/NEW_LINE//" /config/verifyHash',
                                     'cat <<\'EOF\' > /config/waitThenRun.sh',
@@ -346,23 +343,29 @@ def Metadata(context,storageName,deployment):
                                     '    tmsh load sys application template /config/cloud/f5.http.v1.2.0rc7.tmpl',
                                     '    tmsh load sys application template /config/cloud/f5.service_discovery.tmpl',
                                     '    source /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/waitForBigip.sh;wait-for-bigip',
-                                    '    ### START CUSTOM CONFIGURTION:  Policy Name/Policy URL, etc. ',
-                                    '    tmsh load asm policy file /config/cloud/asm-policy-linux-' + context.properties['policyLevel'] + '.xml',
-                                    '    # modify asm policy names below (ex. /Common/linux-' + context.properties['policyLevel'] + ') to match policy name in the xml file',
-                                    '    tmsh modify asm policy /Common/linux-'+ context.properties['policyLevel'] + ' active',
-                                    '    tmsh create ltm policy app-ltm-policy strategy first-match legacy',
-                                    '    tmsh modify ltm policy app-ltm-policy controls add { asm }',
-                                    '    tmsh modify ltm policy app-ltm-policy rules add { associate-asm-policy { actions replace-all-with { 0 { asm request enable policy /Common/linux-' + context.properties['policyLevel'] + ' } } } }',
-                                    '    # deploy logging profiles',
-                                    '    # profile names',
-                                    '    local_asm_log_name=\'Log illegal requests\'',
+                                    '    ### START CUSTOM CONFIGURATION:  Policy Name/Policy URL, etc. ',
+                                    '    applicationDnsName="' + str(context.properties['applicationDnsName']) + '"',
+                                    '    applicationPort="' + str(context.properties['applicationPort']) + '"',
+                                    '    asm_policy="/config/cloud/asm-policy-linux-' + context.properties['policyLevel'] + '.xml"',
+                                    '    tagName="' + str(context.properties['tagName']) + '"',
+                                    '    tagValue="' + str(context.properties['tagValue']) + '"',
+                                    '    manGuiPort="' + str(context.properties['manGuiPort']) + '"',
+                                    '    passwd=$(f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/decryptDataFromFile.js --data-file /config/cloud/gce/.adminPassword)',
+                                    '    payload=\'{"class":"ADC","schemaVersion":"3.0.0","label":"autoscale_waf","id":"AUTOSCALE_WAF","remark":"Autoscale WAF","waf":{"class":"Tenant","Shared":{"class":"Application","template":"shared","serviceAddress":{"class":"Service_Address","virtualAddress":"0.0.0.0"},"policyWAF":{"class":"WAF_Policy","file":"/tmp/as30-linux-medium.xml"}},"http":{"class":"Application","template":"http","serviceMain":{"class":"Service_HTTP","virtualAddresses":[{"use":"/waf/Shared/serviceAddress"}],"snat":"auto","securityLogProfiles":[{"bigip":"/Common/Log illegal requests"}],"pool":"pool","policyWAF":{"use":"/waf/Shared/policyWAF"}},"pool":{"class":"Pool","monitors":["http"],"members":[{"autoPopulate":true,"hostname":"demo.example.com","servicePort":80,"addressDiscovery":"gce","updateInterval":15,"tagKey":"applicationPoolTagKey","tagValue":"applicationPoolTagValue","addressRealm":"private","region":""}]}}}}\'',
+                                    '    payload=$(echo $payload | jq -c --arg asm_policy $asm_policy --arg pool_http_port $applicationPort --arg vs_http_port $applicationPort \'.waf.Shared.policyWAF.file = $asm_policy | .waf.http.pool.members[0].servicePort = ($pool_http_port | tonumber) | .waf.http.serviceMain.virtualPort = ($vs_http_port | tonumber)\')',
                                     '    if [ -n "${useServiceDiscovery}" ];then',
-                                    '        tmsh create ltm pool ' + deployment + ' { monitor http load-balancing-mode least-connections-member }',
-                                    '        tmsh create sys application service ' + deployment + ' { device-group autoscale-group template f5.http.v1.2.0rc7 lists add { asm__security_logging { value { \"${local_asm_log_name}\" } } } tables add { pool__hosts { column-names { name } rows {{ row { ' + str(context.properties['applicationDnsName']) + ' }}}}} variables add { pool__pool_to_use { value /Common/' + deployment + ' } asm__use_asm { value /Common/app-ltm-policy } pool__addr { value 0.0.0.0 } pool__mask { value 0.0.0.0 } pool__port { value ' + str(context.properties['applicationPort']) + ' } monitor__http_version { value http11 } }}',
-                                    '        tmsh create sys application service ' + deployment + '_sd { template f5.service_discovery variables add { basic__advanced { value no } basic__display_help { value hide } cloud__cloud_provider { value gce }  cloud__gce_region { value \\"/#default#\\" } pool__interval { value 15 } pool__member_conn_limit { value 0 } pool__member_port { value ' + str(context.properties['applicationPort']) + ' } pool__pool_to_use { value /Common/' + deployment + ' } pool__public_private {value private} pool__tag_key { value ' + str(context.properties['tagName']) + ' } pool__tag_value { value ' + str(context.properties['tagValue']) + ' } } }',
+                                    '        payload=$(echo $payload | jq -c \'del(.waf.http.pool.members[0].autoPopulate) | del(.waf.http.pool.members[0].hostname)\')',
+                                    '        payload=$(echo $payload | jq -c --arg tagName $tagName --arg tagValue $tagValue \'.waf.http.pool.members[0].tagKey = $tagName | .waf.http.pool.members[0].tagValue = $tagValue\')',
                                     '    else',
-                                    '        tmsh create ltm node ' + deployment + ' fqdn { name ' + str(context.properties['applicationDnsName']) + ' }',
-                                    '        tmsh create sys application service ' + deployment + ' { device-group autoscale-group template f5.http.v1.2.0rc7 lists add { asm__security_logging { value { \"${local_asm_log_name}\" } } } tables add { pool__hosts { column-names { name } rows { { row { ' + str(context.properties['applicationDnsName']) + ' } } } } pool__members { column-names { addr port connection_limit } rows { { row { /Common/' + deployment + ' ' + str(context.properties['applicationPort']) + ' 0 } } } } } variables add { pool__pool_to_use { value \\\"/#create_new#\\\" } asm__use_asm { value /Common/app-ltm-policy } pool__addr { value 0.0.0.0 } pool__mask { value 0.0.0.0 } pool__port { value ' + str(context.properties['applicationPort']) + ' } ssl_mode { value no_ssl } monitor__http_version { value http11 } }}',
+                                    '        payload=$(echo $payload | jq -c \'del(.waf.http.pool.members[0].updateInterval) | del(.waf.http.pool.members[0].tagKey) | del(.waf.http.pool.members[0].tagValue) | del(.waf.http.pool.members[0].addressRealm) | del(.waf.http.pool.members[0].region)\')',
+                                    '        payload=$(echo $payload | jq -c --arg pool_member $applicationDnsName \'.waf.http.pool.members[0].hostname = $pool_member | .waf.http.pool.members[0].addressDiscovery = "fqdn"\')',
+                                    '    fi',
+                                    '    response_code=$(/usr/bin/curl -skvvu cluster_admin:$passwd -w "%{http_code}" -X POST -H "Content-Type: application/json" https://localhost:${manGuiPort}/mgmt/shared/appsvcs/declare -d "$payload" -o /dev/null)',
+                                    '    if [[ $response_code == 200 || $response_code == 502  ]]; then',
+                                    '         echo "Deployment of application succeeded."',
+                                    '    else',
+                                    '         echo "Failed to deploy application"',
+                                    '         exit 1',
                                     '    fi',
                                     '    ### END CUSTOM CONFIGURATION',
                                     '    tmsh save /sys config',
@@ -381,11 +384,12 @@ def Metadata(context,storageName,deployment):
                                     'rm /config/cloud/gce/.adminPassword',
                                     'date',
                                     'EOF',
-                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs.tar.gz https://raw.githubusercontent.com/F5Networks/f5-cloud-libs/v4.2.0/dist/f5-cloud-libs.tar.gz',
-                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs-gce.tar.gz https://raw.githubusercontent.com/F5Networks/f5-cloud-libs-gce/v2.1.0/dist/f5-cloud-libs-gce.tar.gz',
-                                    'curl -s -f --retry 20 -o /config/cloud/f5.service_discovery.tmpl https://raw.githubusercontent.com/F5Networks/f5-cloud-iapps/v2.0.3/f5-service-discovery/f5.service_discovery.tmpl',
-                                    'curl -s -f --retry 20 -o /config/cloud/f5.http.v1.2.0rc7.tmpl http://cdn.f5.com/product/blackbox/aws/f5.http.v1.2.0rc7.tmpl',
-                                    'curl -s -f --retry 20 -o /config/cloud/asm-policy-linux.tar.gz http://cdn.f5.com/product/blackbox/aws/asm-policy-linux.tar.gz',
+                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs/v4.6.0/f5-cloud-libs.tar.gz',
+                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs-gce.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs-gce/v2.3.2/f5-cloud-libs-gce.tar.gz',
+                                    'curl -s -f --retry 20 -o /config/cloud/f5-appsvcs-3.5.1-5.noarch.rpm https://cdn.f5.com/product/cloudsolutions/f5-appsvcs-extension/v3.6.0/dist/lts/f5-appsvcs-3.5.1-5.noarch.rpm',
+                                    'curl -s -f --retry 20 -o /config/cloud/f5.service_discovery.tmpl https://cdn.f5.com/product/cloudsolutions/iapps/common/f5-service-discovery/v2.2.3/f5.service_discovery.tmpl',
+                                    'curl -s -f --retry 20 -o /config/cloud/f5.http.v1.2.0rc7.tmpl http://cdn.f5.com/product/cloudsolutions/iapps/common/f5-http/f5.http.v1.2.0rc7.tmpl',
+                                    'curl -s -f --retry 20 -o /config/cloud/asm-policy-linux.tar.gz http://cdn.f5.com/product/cloudsolutions/solution-scripts/asm-policy-linux.tar.gz',
                                     'chmod 755 /config/verifyHash',
                                     'chmod 755 /config/installCloudLibs.sh',
                                     'chmod 755 /config/waitThenRun.sh',
@@ -398,7 +402,7 @@ def Metadata(context,storageName,deployment):
                                     'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --signal PASSWORD_CREATED --file f5-rest-node --cl-args \'/config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/generatePassword --file /config/cloud/gce/.adminPassword --encrypt\' --log-level silly -o /var/log/cloud/google/generatePassword.log &>> /var/log/cloud/google/install.log < /dev/null &',
                                     'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --wait-for PASSWORD_CREATED --signal ADMIN_CREATED --file /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/createUser.sh --cl-args \'--user cluster_admin --password-file /config/cloud/gce/.adminPassword --password-encrypted\' --log-level silly -o /var/log/cloud/google/createUser.log &>> /var/log/cloud/google/install.log < /dev/null &',
                                     CUSTHASH,
-                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/onboard.js --port 8443 --ssl-port ' + str(context.properties['manGuiPort']) + ' --wait-for ADMIN_CREATED -o /var/log/cloud/google/onboard.log --log-level silly --no-reboot --host localhost --user cluster_admin --password-url file:///config/cloud/gce/.adminPassword --password-encrypted --hostname $(curl http://metadata.google.internal/computeMetadata/v1/instance/hostname -H "Metadata-Flavor: Google") --ntp 0.us.pool.ntp.org --ntp 1.us.pool.ntp.org --tz UTC --module ltm:nominal --module asm:nominal --db provision.1nicautoconfig:disable' + SENDANALYTICS + ' &>> /var/log/cloud/google/install.log < /dev/null &',
+                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/onboard.js --port 8443 --ssl-port ' + str(context.properties['manGuiPort']) + ' --wait-for ADMIN_CREATED -o /var/log/cloud/google/onboard.log --log-level silly --no-reboot --install-ilx-package file:///config/cloud/f5-appsvcs-3.5.1-5.noarch.rpm --host localhost --user cluster_admin --password-url file:///config/cloud/gce/.adminPassword --password-encrypted --hostname $(curl http://metadata.google.internal/computeMetadata/v1/instance/hostname -H "Metadata-Flavor: Google") --ntp 0.us.pool.ntp.org --ntp 1.us.pool.ntp.org --tz UTC --module ltm:nominal --module asm:nominal --db provision.1nicautoconfig:disable' + SENDANALYTICS + ' &>> /var/log/cloud/google/install.log < /dev/null &',
                                     'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/custom-config.sh --cwd /config/cloud/gce -o /var/log/cloud/google/custom-config.log --log-level silly --wait-for ONBOARD_DONE --signal CUSTOM_CONFIG_DONE &>> /var/log/cloud/google/install.log < /dev/null &',
                                     'touch /config/startupFinished',
                                     ])
