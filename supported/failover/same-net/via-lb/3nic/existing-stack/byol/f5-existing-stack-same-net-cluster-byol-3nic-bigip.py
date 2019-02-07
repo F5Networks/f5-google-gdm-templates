@@ -1,6 +1,6 @@
 # Copyright 2018 F5 Networks All rights reserved.
 #
-# Version v2.1.0
+# Version v2.1.1
 
 """Creates BIG-IP"""
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
@@ -267,7 +267,7 @@ def Metadata(context, group, storageName, licenseType):
   ALLOWUSAGEANALYTICS = context.properties['allowUsageAnalytics']
   if ALLOWUSAGEANALYTICS == "yes":
     CUSTHASH = 'CUSTOMERID=`curl -s "http://metadata.google.internal/computeMetadata/v1/project/numeric-project-id" -H "Metadata-Flavor: Google" |sha512sum|cut -d " " -f 1`;\nDEPLOYMENTID=`curl -s "http://metadata.google.internal/computeMetadata/v1/instance/id" -H "Metadata-Flavor: Google"|sha512sum|cut -d " " -f 1`;'
-    SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-existing-stack-same-net-cluster-byol-3nic-bigip.py,templateVersion:v2.1.0,licenseType:byol"'
+    SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-existing-stack-same-net-cluster-byol-3nic-bigip.py,templateVersion:v2.1.1,licenseType:byol"'
   else:
     CUSTHASH = '# No template analytics'
     SENDANALYTICS = ''
@@ -394,9 +394,9 @@ def Metadata(context, group, storageName, licenseType):
                                     'cli script /Common/verifyHash {',
                                     'proc script::run {} {',
                                     '        if {[catch {',
-                                    '            set hashes(f5-cloud-libs.tar.gz) 535059811324dbda9783df2c4f7ac8405acf6f198efd5696bc0d90f4f8f645b77c04efd42c3dc94261f0b92d76cbae87613412531968a5e646baf4177807b953',
+                                    '            set hashes(f5-cloud-libs.tar.gz) 9f0d44f88a43f1effb52f95df1def607982c938fd260aa73fac1755025a47a0955cc8a3cac74e4a7def6f4eff3e1ec9b882549dd9fded09addcb7a122868508e',
                                     '            set hashes(f5-cloud-libs-aws.tar.gz) 076c969cbfff12efacce0879820262b7787c98645f1105667cc4927d4acfe2466ed64c777b6d35957f6df7ae266937dde42fef4c8b1f870020a366f7f910ffb5',
-                                    '            set hashes(f5-cloud-libs-azure.tar.gz) eea34eb9bf1fc86702cc8d3adcd0cd4cd3e8ede0bad5d85ce55b7248aeb5726583b0314bd1ac9383dbfbf97c79d08d27a473539844de6972c9f6f5fea1a7b9aa',
+                                    '            set hashes(f5-cloud-libs-azure.tar.gz) 1903a02ec58b4e0251d8200426097cb136a209da2106a092e39bc0b67870cfb3f41be3c5e15668ab43ba3ef047994d7b562e329e9f73075e39eabdd6702932f1',
                                     '            set hashes(f5-cloud-libs-gce.tar.gz) 605c13c0725dcf6ee96d24349aee68be59640c58fef16d42d69fe1b01fb2e59df14f2cd41f0718d21061b8fb52cdce57fcf6541ebc8610e54e0f7fe8e46d94cb',
                                     '            set hashes(f5-cloud-libs-openstack.tar.gz) 5c83fe6a93a6fceb5a2e8437b5ed8cc9faf4c1621bfc9e6a0779f6c2137b45eab8ae0e7ed745c8cf821b9371245ca29749ca0b7e5663949d77496b8728f4b0f9',
                                     '            set hashes(asm-policy-linux.tar.gz) 63b5c2a51ca09c43bd89af3773bbab87c71a6e7f6ad9410b229b4e0a1c483d46f1a9fff39d9944041b02ee9260724027414de592e99f4c2475415323e18a72e0',
@@ -410,7 +410,7 @@ def Metadata(context, group, storageName, licenseType):
                                     '            set hashes(asm-policy.tar.gz) 2d39ec60d006d05d8a1567a1d8aae722419e8b062ad77d6d9a31652971e5e67bc4043d81671ba2a8b12dd229ea46d205144f75374ed4cae58cefa8f9ab6533e6',
                                     '            set hashes(deploy_waf.sh) 1a3a3c6274ab08a7dc2cb73aedc8d2b2a23cd9e0eb06a2e1534b3632f250f1d897056f219d5b35d3eed1207026e89989f754840fd92969c515ae4d829214fb74',
                                     '            set hashes(f5.policy_creator.tmpl) 06539e08d115efafe55aa507ecb4e443e83bdb1f5825a9514954ef6ca56d240ed00c7b5d67bd8f67b815ee9dd46451984701d058c89dae2434c89715d375a620',
-                                    '            set hashes(f5.service_discovery.tmpl) 0c43a28d58ff8339891ef324763675c29275170f8984d39298a53f570385eef82bef6d5a273adebb5310fc529faffc9b225358ec8f65100115246915eff706fe',
+                                    '            set hashes(f5.service_discovery.tmpl) 09a980ca8e26e35b848803b47fa42b5808bf78439a599379f122758c4314c3e55068e52aa86753326390984a152910758b122a4bef0d94a8c5da293f0d153f86',
                                     '            set hashes(f5.cloud_logger.v1.0.0.tmpl) 64a0ed3b5e32a037ba4e71d460385fe8b5e1aecc27dc0e8514b511863952e419a89f4a2a43326abb543bba9bc34376afa114ceda950d2c3bd08dab735ff5ad20',
                                     '            set hashes(f5-appsvcs-3.5.1-5.noarch.rpm) ba71c6e1c52d0c7077cdb25a58709b8fb7c37b34418a8338bbf67668339676d208c1a4fef4e5470c152aac84020b4ccb8074ce387de24be339711256c0fa78c8',
                                     'NEW_LINE',
@@ -434,7 +434,7 @@ def Metadata(context, group, storageName, licenseType):
                                     '            exit 1',
                                     '        }',
                                     '    }',
-                                    '    script-signature hCr5O6FtvOkjRk8Vn1499YU57spPEMbLXCfkgLVsVcmBCXnHbRw6zTIZOJlGkwk7CyCTpcuVuTR1SiGsQKnclgcQFkEDP5rw98jyIwvKpfYXiLxPI2SPsyadom41FDPXy9+b4aOAJGRPcp5/HhRP7+ky7x6jI5SEF4ZFExN6BwWXn61D+MwYe2Ajhes/6wuZv+b9i9teckZLkyB54OAbEyEug3S66YK2Jg916Y5JLNhDn7JNoOPoyFvYlyuDOutcjFHiwjdSFEgcOx/dka/5aHtjKEiMWuCsuaZnhGKSHc/ZCTH8oht1qUi28Dz5W2Gq6hRE9Zt5S4HmS3JKu2wlfg==',                                    '    signing-key /Common/f5-irule',
+                                    '    script-signature dUSc6wAMM8Q7qRjOpPebeEMhaG6XKyyJPmlG4fY+M3mBstEjNUE5OiGTqyiFJIGYHCaDIiJwHldviTOlB373ofKFseA68rVsFQtvx/jdoIcntd67r8lFVNxCAvqGmCiHAt/hQtPvXvtF8pavrlm/nj4uybr/cjiLLtJg8ke2LadXtdR+OiRTZwPrdih5/0s6QNBITz90Z/qjxVN3pHVXovNnEdfdMwNlNGp816qa2/iPYrkbJWVoqSIr/sIUBKdQPGMqTUdvdbBOWLOnosrfkrwedJd/7Y5cKKkiUbxqT0apVXIuTgFUpZDwO6wL/eIVesAf7uucqGaub+KCZaoHvg==',                                    '    signing-key /Common/f5-irule',
                                     '}',
                                     'EOF',
                                     '# empty new line chars get stripped, strip out place holder NEW_LINE',
@@ -500,6 +500,24 @@ def Metadata(context, group, storageName, licenseType):
                                     'echo \"${PROGNAME}: ${1:-\\\"Unknown Error\\\"}\" 1>&2',
                                     'exit 1',
                                     '}',
+                                    'function wait_for_ready {',
+                                    '   checks=0',
+                                    '   ready_response=""',
+                                    '   while [ $checks -lt 120 ] ; do',
+                                    '      ready_response=$(curl -sku admin:$passwd -w "%{http_code}" -X GET  https://localhost:${mgmtGuiPort}/mgmt/shared/appsvcs/info -o /dev/null)',
+                                    '      if [[ $ready_response == *200 ]]; then',
+                                    '          echo "AS3 is ready"',
+                                    '          break',
+                                    '      else',
+                                    '         echo "AS3" is not ready: $checks, response: $ready_response',
+                                    '         let checks=checks+1',
+                                    '         sleep 5',
+                                    '      fi',
+                                    '   done',
+                                    '   if [[ $ready_response != *200 ]]; then',
+                                    '      error_exit "$LINENO: AS3 was not installed correctly. Exit."',
+                                    '   fi',
+                                    '}',
                                     'date',
                                     'declare -a tmsh=()',
                                     'useServiceDiscovery=' + str(context.properties['tagValue']),
@@ -534,6 +552,32 @@ def Metadata(context, group, storageName, licenseType):
                                     'done',
                                     'date',
                                     '### START CUSTOM CONFIGURATION',
+                                    'mgmtGuiPort="' + str(context.properties['mgmtGuiPort']) + '"',
+                                    'passwd=$(f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/decryptDataFromFile.js --data-file /config/cloud/gce/.adminPassword)',
+                                    'file_loc="/config/cloud/custom_config"',
+                                    'url_regex="(http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$"',
+                                    'if [[ ' + str(context.properties['declarationUrl']) + ' =~ $url_regex ]]; then',
+                                    '   response_code=$(/usr/bin/curl -sk -w "%{http_code}" ' + str(context.properties['declarationUrl']) + ' -o $file_loc)',
+                                    '   if [[ $response_code == 200 ]]; then',
+                                    '       echo "Custom config download complete; checking for valid JSON."',
+                                    '       cat $file_loc | jq .class',
+                                    '       if [[ $? == 0 ]]; then',
+                                    '           wait_for_ready',
+                                    '           response_code=$(/usr/bin/curl -skvvu admin:$passwd -w "%{http_code}" -X POST -H "Content-Type: application/json" https://localhost:${mgmtGuiPort}/mgmt/shared/appsvcs/declare -d @$file_loc -o /dev/null)',
+                                    '           if [[ $response_code == *200 || $response_code == *502 ]]; then',
+                                    '               echo "Deployment of custom application succeeded."',
+                                    '           else',
+                                    '               echo "Failed to deploy custom application; continuing..."',
+                                    '           fi',
+                                    '       else',
+                                    '           echo "Custom config was not valid JSON, continuing..."',
+                                    '       fi',
+                                    '   else',
+                                    '       echo "Failed to download custom config; continuing..."',
+                                    '   fi',
+                                    'else',
+                                    '   echo "Custom config was not a URL, continuing..."',
+                                    'fi',
                                     '### END CUSTOM CONFIGURATION',
                                     'EOF',
                                     'cat <<\'EOF\' > /config/cloud/gce/rm-password.sh',
@@ -550,10 +594,10 @@ def Metadata(context, group, storageName, licenseType):
                                     '}',
                                     '}',
                                     'EOF',
-                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs/v4.6.0/f5-cloud-libs.tar.gz',
+                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs/v4.6.1/f5-cloud-libs.tar.gz',
                                     'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs-gce.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs-gce/v2.3.2/f5-cloud-libs-gce.tar.gz',
                                     'curl -s -f --retry 20 -o /config/cloud/f5-appsvcs-3.5.1-5.noarch.rpm https://cdn.f5.com/product/cloudsolutions/f5-appsvcs-extension/v3.6.0/dist/lts/f5-appsvcs-3.5.1-5.noarch.rpm',
-                                    'curl -s -f --retry 20 -o /config/cloud/f5.service_discovery.tmpl https://cdn.f5.com/product/cloudsolutions/iapps/common/f5-service-discovery/v2.2.3/f5.service_discovery.tmpl',
+                                    'curl -s -f --retry 20 -o /config/cloud/f5.service_discovery.tmpl https://cdn.f5.com/product/cloudsolutions/iapps/common/f5-service-discovery/v2.3.0/f5.service_discovery.tmpl',
                                     'chmod 755 /config/verifyHash',
                                     'chmod 755 /config/installCloudLibs.sh',
                                     'chmod 755 /config/waitThenRun.sh',

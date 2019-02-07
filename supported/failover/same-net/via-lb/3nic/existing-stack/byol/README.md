@@ -25,7 +25,7 @@ The BIG-IP VE has the [Local Traffic Manager](https://f5.com/products/big-ip/loc
 
 The following are prerequisites for this F5 GDM template:
 
-- All supported versions of F5 ARM templates now include Application Services 3 Extension (AS3) v3.5.1 (LTS version) on the BIG-IP VE.  AS3 uses a declarative configuration model, meaning you send a declaration file using a single Rest API call. See the [AS3 documentation](https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/3.5.1/) for details on how to use AS3 on your BIG-IP VE(s). 
+- All F5 Google templates include Application Services 3 Extension (AS3) v3.5.1 (LTS version) on the BIG-IP VE.  As of release 4.1.2, all supported templates give the option of including the URL of an AS3 declaration, which you can use to specify the BIG-IP configuration you want on your newly created BIG-IP VE(s).  In templates such as autoscale, where an F5-recommended configuration is deployed by default, specifying an AS3 declaration URL will override the default configuration with your declaration.   See the [AS3 documentation](https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/3.5.1/) for details on how to use AS3.  
 - You must have installed the [Google Cloud SDK](https://cloud.google.com/sdk/downloads)
 - If using BYOL licensing only: An F5 Networks BYOL license (Bring Your Own License) available.
 - Three Google Cloud Platform (GCP) networks with at least one subnet in each. The subnet for the management network requires a route and access to the Internet for the initial configuration to download the BIG-IP cloud library.
@@ -104,6 +104,7 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | tagValue | No | If using service discovery, enter the tag value used on servers for discovery. |
 | allowUsageAnalytics | Yes | This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you select **No** statistics are not sent |
 | logLevel | No | Log setting, used to set log level on scripts used during deployment. Acceptable values are error, warn, info, verbose, debug, or silly. |
+| declarationUrl | URL for the [AS3](https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/3.5.1/) declaration JSON file to be deployed. Leave as **none** to deploy without a service configuration. |
   
 ### Save the YAML and Python files
 

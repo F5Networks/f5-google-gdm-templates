@@ -37,6 +37,7 @@ The following are prerequisites for the F5 auto scale single NIC GDM template:
 
 ## Important configuration notes
 
+- All F5 Google templates include Application Services 3 Extension (AS3) v3.5.1 (LTS version) on the BIG-IP VE.  As of release 4.1.2, all supported templates give the option of including the URL of an AS3 declaration, which you can use to specify the BIG-IP configuration you want on your newly created BIG-IP VE(s).  In templates such as autoscale, where an F5-recommended configuration is deployed by default, specifying an AS3 declaration URL will override the default configuration with your declaration.   See the [AS3 documentation](https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/3.5.1/) for details on how to use AS3.
 - F5 GDM templates do not reconfigure existing GCE resources, such as network security groups.  Depending on your configuration, you may need to configure these resources to allow the BIG-IP VE(s) to receive traffic for your application.
 - This template supports service discovery.  See the [Service Discovery section](#service-discovery) for details.
 - This template can send non-identifiable statistical information to F5 Networks to help us improve our templates.  See [Sending statistical information to F5](#sending-statistical-information-to-f5).
@@ -112,6 +113,7 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | applicationPort | Yes | The port for your application |
 | applicationDnsName | Yes | The DNS name for your application. |
 | allowUsageAnalytics | No | This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you select **No** statistics are not sent. |
+| declarationUrl | URL for the [AS3](https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/3.5.1/) declaration JSON file to be deployed. Leave as **none** to deploy without a service configuration. |
 
 
 ### Save the YAML and Python files

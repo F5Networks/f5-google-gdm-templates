@@ -1,6 +1,6 @@
 # Copyright 2018 F5 Networks All rights reserved.
 #
-# Version v2.1.0
+# Version v2.1.1
 ## note deployment name can not excede 23 charactors.
 imports:
 - path: f5-payg-autoscale-bigip-waf.py
@@ -54,3 +54,5 @@ resources:
    applicationDnsName: <dns value of your application>
    ### This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent.
    allowUsageAnalytics: yes
+   ### URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration.
+   declarationUrl: default
