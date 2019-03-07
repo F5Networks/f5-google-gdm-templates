@@ -1,6 +1,6 @@
 # Copyright 2018 F5 Networks All rights reserved.
 #
-# Version v2.1.1
+# Version v2.1.2
 
 """Creates BIG-IP"""
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
@@ -150,11 +150,12 @@ def Metadata(context, group, storageName, licenseType):
                                     'cli script /Common/verifyHash {',
                                     'proc script::run {} {',
                                     '        if {[catch {',
-                                    '            set hashes(f5-cloud-libs.tar.gz) 38dd6c47a3156f408aa4697564d7886d21d491c49937b31cca1aca3c84f4bdc0815bb355302c4f584b954d4bf376b18ac54b09db5e534d17a9c785a6089122ff',
+                                    '            set hashes(f5-cloud-libs.tar.gz) 2ab601b44cb15118d533350af714cc2597881972b8c43bfca1c210c6927d9c4b166093ee5ca9a3cbaa03a84f6411cb4e42a1b95e4d244b870faede9537e92046',
                                     '            set hashes(f5-cloud-libs-aws.tar.gz) 076c969cbfff12efacce0879820262b7787c98645f1105667cc4927d4acfe2466ed64c777b6d35957f6df7ae266937dde42fef4c8b1f870020a366f7f910ffb5',
-                                    '            set hashes(f5-cloud-libs-azure.tar.gz) 889605c4944e88b1a4c686517afb20a82ca9485357b97f701f1e34eb092d9ca1f5861e4f696267ede8335e08e5b513cde84ba8dfce6ec57bd714a9837134d83f',
-                                    '            set hashes(f5-cloud-libs-gce.tar.gz) 5cd829ee1cbeb713a6edba82de03b327ef73520c8141df164ff827e52b73a812ef2dd7fe38d5f17271d613717a4d19c0ed91d757fa7e575dad1f1e510b20d221',
+                                    '            set hashes(f5-cloud-libs-azure.tar.gz) 57fae388e8aa028d24a2d3fa2c029776925011a72edb320da47ccd4fb8dc762321c371312f692b7b8f1c84e8261c280f6887ba2e0f841b50547e6e6abc8043ba',
+                                    '            set hashes(f5-cloud-libs-gce.tar.gz) 1677835e69967fd9882ead03cbdd24b426627133b8db9e41f6de5a26fef99c2d7b695978ac189f00f61c0737e6dbb638d42dea43a867ef4c01d9507d0ee1fb2f',
                                     '            set hashes(f5-cloud-libs-openstack.tar.gz) 5c83fe6a93a6fceb5a2e8437b5ed8cc9faf4c1621bfc9e6a0779f6c2137b45eab8ae0e7ed745c8cf821b9371245ca29749ca0b7e5663949d77496b8728f4b0f9',
+                                    '            set hashes(f5-cloud-libs-consul.tar.gz) 2c6face582064600553f442a67a58bc7c19533923fac72a88edef0a90a845a5b9c45b5ba340184292a27a3319d8b8118364d16ea17f6225d31f7c2e997be9775',
                                     '            set hashes(asm-policy-linux.tar.gz) 63b5c2a51ca09c43bd89af3773bbab87c71a6e7f6ad9410b229b4e0a1c483d46f1a9fff39d9944041b02ee9260724027414de592e99f4c2475415323e18a72e0',
                                     '            set hashes(f5.http.v1.2.0rc4.tmpl) 47c19a83ebfc7bd1e9e9c35f3424945ef8694aa437eedd17b6a387788d4db1396fefe445199b497064d76967b0d50238154190ca0bd73941298fc257df4dc034',
                                     '            set hashes(f5.http.v1.2.0rc6.tmpl) 811b14bffaab5ed0365f0106bb5ce5e4ec22385655ea3ac04de2a39bd9944f51e3714619dae7ca43662c956b5212228858f0592672a2579d4a87769186e2cbfe',
@@ -163,10 +164,11 @@ def Metadata(context, group, storageName, licenseType):
                                     '            set hashes(f5.aws_advanced_ha.v1.4.0rc1.tmpl) de068455257412a949f1eadccaee8506347e04fd69bfb645001b76f200127668e4a06be2bbb94e10fefc215cfc3665b07945e6d733cbe1a4fa1b88e881590396',
                                     '            set hashes(f5.aws_advanced_ha.v1.4.0rc2.tmpl) 6ab0bffc426df7d31913f9a474b1a07860435e366b07d77b32064acfb2952c1f207beaed77013a15e44d80d74f3253e7cf9fbbe12a90ec7128de6facd097d68f',
                                     '            set hashes(f5.aws_advanced_ha.v1.4.0rc3.tmpl) 2f2339b4bc3a23c9cfd42aae2a6de39ba0658366f25985de2ea53410a745f0f18eedc491b20f4a8dba8db48970096e2efdca7b8efffa1a83a78e5aadf218b134',
+                                    '            set hashes(f5.aws_advanced_ha.v1.4.0rc4.tmpl) 2418ac8b1f1884c5c096cbac6a94d4059aaaf05927a6a4508fd1f25b8cc6077498839fbdda8176d2cf2d274a27e6a1dae2a1e3a0a9991bc65fc74fc0d02ce963',
                                     '            set hashes(asm-policy.tar.gz) 2d39ec60d006d05d8a1567a1d8aae722419e8b062ad77d6d9a31652971e5e67bc4043d81671ba2a8b12dd229ea46d205144f75374ed4cae58cefa8f9ab6533e6',
                                     '            set hashes(deploy_waf.sh) 1a3a3c6274ab08a7dc2cb73aedc8d2b2a23cd9e0eb06a2e1534b3632f250f1d897056f219d5b35d3eed1207026e89989f754840fd92969c515ae4d829214fb74',
                                     '            set hashes(f5.policy_creator.tmpl) 06539e08d115efafe55aa507ecb4e443e83bdb1f5825a9514954ef6ca56d240ed00c7b5d67bd8f67b815ee9dd46451984701d058c89dae2434c89715d375a620',
-                                    '            set hashes(f5.service_discovery.tmpl) 683888a937d5824e84bba76816bcb73259bca3c8453970077ae49c045e808f12e6dec1e980cb4b0012d0a30d37a09c09a3bd0bacca7d18b0edbdfc4565744c27',
+                                    '            set hashes(f5.service_discovery.tmpl) 4811a95372d1dbdbb4f62f8bcc48d4bc919fa492cda012c81e3a2fe63d7966cc36ba8677ed049a814a930473234f300d3f8bced2b0db63176d52ac99640ce81b',
                                     '            set hashes(f5.cloud_logger.v1.0.0.tmpl) 64a0ed3b5e32a037ba4e71d460385fe8b5e1aecc27dc0e8514b511863952e419a89f4a2a43326abb543bba9bc34376afa114ceda950d2c3bd08dab735ff5ad20',
                                     '            set hashes(f5-appsvcs-3.5.1-5.noarch.rpm) ba71c6e1c52d0c7077cdb25a58709b8fb7c37b34418a8338bbf67668339676d208c1a4fef4e5470c152aac84020b4ccb8074ce387de24be339711256c0fa78c8',
                                     'NEW_LINE',
@@ -330,10 +332,10 @@ def Metadata(context, group, storageName, licenseType):
                                     '/config/failover/tgactive',
                                     'date',
                                     'EOF',
-                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs/v4.6.1/f5-cloud-libs.tar.gz',
-                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs-gce.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs-gce/v2.3.2/f5-cloud-libs-gce.tar.gz',
+                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs/v4.8.0/f5-cloud-libs.tar.gz',
+                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs-gce.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs-gce/v2.3.4/f5-cloud-libs-gce.tar.gz',
                                     'curl -s -f --retry 20 -o /config/cloud/f5-appsvcs-3.5.1-5.noarch.rpm https://cdn.f5.com/product/cloudsolutions/f5-appsvcs-extension/v3.6.0/dist/lts/f5-appsvcs-3.5.1-5.noarch.rpm',
-                                    'curl -s -f --retry 20 -o /config/cloud/f5.service_discovery.tmpl https://cdn.f5.com/product/cloudsolutions/iapps/common/f5-service-discovery/v2.3.0/f5.service_discovery.tmpl',
+                                    'curl -s -f --retry 20 -o /config/cloud/f5.service_discovery.tmpl https://cdn.f5.com/product/cloudsolutions/iapps/common/f5-service-discovery/v2.3.2/f5.service_discovery.tmpl',
                                     'chmod 755 /config/verifyHash',
                                     'chmod 755 /config/installCloudLibs.sh',
                                     'chmod 755 /config/waitThenRun.sh',

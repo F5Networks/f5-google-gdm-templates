@@ -1,6 +1,6 @@
 # Copyright 2018 F5 Networks All rights reserved.
 #
-# Version v2.1.1
+# Version v2.1.2
 
 """Creates BIG-IP"""
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
@@ -434,7 +434,7 @@ def Metadata(context, group, storageName, licenseType):
                                     '            exit 1',
                                     '        }',
                                     '    }',
-                                    '    script-signature dUSc6wAMM8Q7qRjOpPebeEMhaG6XKyyJPmlG4fY+M3mBstEjNUE5OiGTqyiFJIGYHCaDIiJwHldviTOlB373ofKFseA68rVsFQtvx/jdoIcntd67r8lFVNxCAvqGmCiHAt/hQtPvXvtF8pavrlm/nj4uybr/cjiLLtJg8ke2LadXtdR+OiRTZwPrdih5/0s6QNBITz90Z/qjxVN3pHVXovNnEdfdMwNlNGp816qa2/iPYrkbJWVoqSIr/sIUBKdQPGMqTUdvdbBOWLOnosrfkrwedJd/7Y5cKKkiUbxqT0apVXIuTgFUpZDwO6wL/eIVesAf7uucqGaub+KCZaoHvg==',                                    '    signing-key /Common/f5-irule',
+                                    '    script-signature OkhShM2pz6d5Rl2P+wsrW0nHGEinXT1SeFA4+0S1jvSDyeBvfjZq4vMzyLJWf5Ip1plRd3LtGsEIc5B/ixZyXOnz8Kp0pMa8TNjHew4s1IeOnNqoIPRzGzmVJ/zbxYzHCYg6Fn4zdX9giS/YQd7IQHSzsM3LYOkadKGEtRO6IRC/uGfcA4XPRslTlR5NS/9GgLouQS/UlejP5+uQkzDlueYJnSn+JoN2ewRZhotylncQlcJ4+8U/ucmV9vhLw+7/LZ9q2QrHIY4KExIazElBFT7xbS+dihMLp9xIztrqSiJc8+T+3le+0PhO9ZB4YOQg9uNV5FBWaSfVLjbu8pSZaA==',                                    '    signing-key /Common/f5-irule',
                                     '}',
                                     'EOF',
                                     '# empty new line chars get stripped, strip out place holder NEW_LINE',
@@ -594,10 +594,10 @@ def Metadata(context, group, storageName, licenseType):
                                     '}',
                                     '}',
                                     'EOF',
-                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs/v4.6.1/f5-cloud-libs.tar.gz',
-                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs-gce.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs-gce/v2.3.2/f5-cloud-libs-gce.tar.gz',
+                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs/v4.8.0/f5-cloud-libs.tar.gz',
+                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs-gce.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs-gce/v2.3.4/f5-cloud-libs-gce.tar.gz',
                                     'curl -s -f --retry 20 -o /config/cloud/f5-appsvcs-3.5.1-5.noarch.rpm https://cdn.f5.com/product/cloudsolutions/f5-appsvcs-extension/v3.6.0/dist/lts/f5-appsvcs-3.5.1-5.noarch.rpm',
-                                    'curl -s -f --retry 20 -o /config/cloud/f5.service_discovery.tmpl https://cdn.f5.com/product/cloudsolutions/iapps/common/f5-service-discovery/v2.3.0/f5.service_discovery.tmpl',
+                                    'curl -s -f --retry 20 -o /config/cloud/f5.service_discovery.tmpl https://cdn.f5.com/product/cloudsolutions/iapps/common/f5-service-discovery/v2.3.2/f5.service_discovery.tmpl',
                                     'chmod 755 /config/verifyHash',
                                     'chmod 755 /config/installCloudLibs.sh',
                                     'chmod 755 /config/waitThenRun.sh',

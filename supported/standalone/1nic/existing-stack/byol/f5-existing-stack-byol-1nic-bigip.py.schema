@@ -1,9 +1,9 @@
 # Copyright 2018 F5 Networks All rights reserved.
-info: 
+info:
   title: F5 BIG-IP 1NIC
   author: F5 Networks
   description: Creates a BIG-IP with 1 network interface.
-  version: 2.1.1
+  version: 2.1.2
 imports:
   - path: f5-existing-stack-byol-1nic-bigip.py
 required:
@@ -37,7 +37,7 @@ properties:
   restrictedSrcAddress:
     description: This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources
     type: string
-  restrictedSrcAddressApp:   
+  restrictedSrcAddressApp:
     description: This field restricts web application access (ports 80 and 443) to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources.
     type: string
   imageName:
@@ -60,7 +60,7 @@ properties:
     description: List NTP servers separated by a space
     type: string
     default: time.google.com
-  timezone:   
+  timezone:
     description: Enter the Olson timezone string from /usr/share/zoneinfo
     type: string
     default: UTC
@@ -91,4 +91,4 @@ properties:
 documentation:
   - README.md
 examples:
-  - f5-existing-stack-byol-3nic-bigip.yaml  
+  - f5-existing-stack-byol-3nic-bigip.yaml
