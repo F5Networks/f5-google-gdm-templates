@@ -47,7 +47,7 @@ The following is a list of the current *supported* F5 GDM templates. Click the l
 - <a href="https://github.com/F5Networks/f5-google-gdm-templates/tree/master/supported/standalone/3nic/existing-stack/byol">**BYOL**</a> (bring your own license), which allows you to use an existing BIG-IP license.
 <br>
 
-**Clustered BIG-IP VE - 3 NICs**
+**Clustered BIG-IP VE - Single NIC**
 - <a href="https://github.com/F5Networks/f5-google-gdm-templates/tree/master/supported/standalone/1nic/existing-stack/payg">**Hourly**</a>, which uses pay-as-you-go hourly billing
 - <a href="https://github.com/F5Networks/f5-google-gdm-templates/tree/master/supported/standalone/1nic/existing-stack/byol">**BYOL**</a> (bring your own license), which allows you to use an existing BIG-IP license.
 

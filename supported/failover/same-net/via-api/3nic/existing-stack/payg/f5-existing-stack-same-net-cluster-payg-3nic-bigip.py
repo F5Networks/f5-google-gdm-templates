@@ -1,6 +1,6 @@
 # Copyright 2018 F5 Networks All rights reserved.
 #
-# Version v2.1.2
+# Version v2.1.3
 
 """Creates BIG-IP"""
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
@@ -121,7 +121,7 @@ def Metadata(context, group, storageName, licenseType):
                                     'cli script /Common/verifyHash {',
                                     'proc script::run {} {',
                                     '        if {[catch {',
-                                    '            set hashes(f5-cloud-libs.tar.gz) 2ab601b44cb15118d533350af714cc2597881972b8c43bfca1c210c6927d9c4b166093ee5ca9a3cbaa03a84f6411cb4e42a1b95e4d244b870faede9537e92046',
+                                    '            set hashes(f5-cloud-libs.tar.gz) 18f1d7db0fe52eceb72aa2f2b56152926c126d153f0f65953441fea79a756c3c5ff847da2ed7b70c153da5490ffd54e3f93eaab33e8d6df46619a525b26e3505',
                                     '            set hashes(f5-cloud-libs-aws.tar.gz) 076c969cbfff12efacce0879820262b7787c98645f1105667cc4927d4acfe2466ed64c777b6d35957f6df7ae266937dde42fef4c8b1f870020a366f7f910ffb5',
                                     '            set hashes(f5-cloud-libs-azure.tar.gz) 57fae388e8aa028d24a2d3fa2c029776925011a72edb320da47ccd4fb8dc762321c371312f692b7b8f1c84e8261c280f6887ba2e0f841b50547e6e6abc8043ba',
                                     '            set hashes(f5-cloud-libs-gce.tar.gz) 1677835e69967fd9882ead03cbdd24b426627133b8db9e41f6de5a26fef99c2d7b695978ac189f00f61c0737e6dbb638d42dea43a867ef4c01d9507d0ee1fb2f',
@@ -163,7 +163,7 @@ def Metadata(context, group, storageName, licenseType):
                                     '            exit 1',
                                     '        }',
                                     '    }',
-                                    '    script-signature OkhShM2pz6d5Rl2P+wsrW0nHGEinXT1SeFA4+0S1jvSDyeBvfjZq4vMzyLJWf5Ip1plRd3LtGsEIc5B/ixZyXOnz8Kp0pMa8TNjHew4s1IeOnNqoIPRzGzmVJ/zbxYzHCYg6Fn4zdX9giS/YQd7IQHSzsM3LYOkadKGEtRO6IRC/uGfcA4XPRslTlR5NS/9GgLouQS/UlejP5+uQkzDlueYJnSn+JoN2ewRZhotylncQlcJ4+8U/ucmV9vhLw+7/LZ9q2QrHIY4KExIazElBFT7xbS+dihMLp9xIztrqSiJc8+T+3le+0PhO9ZB4YOQg9uNV5FBWaSfVLjbu8pSZaA==',                                    '    signing-key /Common/f5-irule',
+                                    '    script-signature Nbpb2UCK1Rcn2WrsZvPhOlXQ7N6CMLcFtjCm+VnfPVYiAONJvsqEOAv8ohgg7yiTV95sL7uwNUwAfxBwzJ1oSXSHBz4/VSMEopvH0+GmdrvHzHFmWT9VOJYm+OMzd/xngMfFZesFrtWcJ9BwhnBcmqVfEv1ueGOPYbXvbz2NuyT8CTNqy4MizzWYhouYqTX8OeTk1ts+nCd+D6fm31xKhUgChx1bw5H6VnuTntbe2kWw5R+KW+Jk2J45EEk4/5rrzYqH9uJhVNegPEPf0QckniILC5WBUPtvOqKoAHxpLgJntnEVzMDnWQdqYoOvtgAKHzYFDFlWZrcsGq7/ywE4vQ==',                                    '    signing-key /Common/f5-irule',
                                     '}',
                                     'EOF',
                                     '# empty new line chars get stripped, strip out place holder NEW_LINE',
@@ -331,7 +331,7 @@ def Metadata(context, group, storageName, licenseType):
                                     '/config/failover/tgactive',
                                     'date',
                                     'EOF',
-                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs/v4.8.0/f5-cloud-libs.tar.gz',
+                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs/v4.8.1/f5-cloud-libs.tar.gz',
                                     'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs-gce.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs-gce/v2.3.4/f5-cloud-libs-gce.tar.gz',
                                     'curl -s -f --retry 20 -o /config/cloud/f5-appsvcs-3.5.1-5.noarch.rpm https://cdn.f5.com/product/cloudsolutions/f5-appsvcs-extension/v3.6.0/dist/lts/f5-appsvcs-3.5.1-5.noarch.rpm',
                                     'curl -s -f --retry 20 -o /config/cloud/f5.service_discovery.tmpl https://cdn.f5.com/product/cloudsolutions/iapps/common/f5-service-discovery/v2.3.2/f5.service_discovery.tmpl',
