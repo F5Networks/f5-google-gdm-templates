@@ -1,6 +1,6 @@
-# Copyright 2017 F5 Networks All rights reserved.
+# Copyright 2019 F5 Networks All rights reserved.
 #
-# Version v2.1.3
+# Version v2.2.0
 
 """Creates BIG-IP"""
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
@@ -205,7 +205,7 @@ def GenerateConfig(context):
                                     '            exit 1',
                                     '        }',
                                     '    }',
-                                    '    script-signature Nbpb2UCK1Rcn2WrsZvPhOlXQ7N6CMLcFtjCm+VnfPVYiAONJvsqEOAv8ohgg7yiTV95sL7uwNUwAfxBwzJ1oSXSHBz4/VSMEopvH0+GmdrvHzHFmWT9VOJYm+OMzd/xngMfFZesFrtWcJ9BwhnBcmqVfEv1ueGOPYbXvbz2NuyT8CTNqy4MizzWYhouYqTX8OeTk1ts+nCd+D6fm31xKhUgChx1bw5H6VnuTntbe2kWw5R+KW+Jk2J45EEk4/5rrzYqH9uJhVNegPEPf0QckniILC5WBUPtvOqKoAHxpLgJntnEVzMDnWQdqYoOvtgAKHzYFDFlWZrcsGq7/ywE4vQ==',
+                                    '    script-signature lPSmuLO0yYUo/rWy+DCa8c6vRwvvgfg08k8adRa8C9/FxeFpw5S38tFE84BJnBatqYSIMxehmpKSUllaXj9gVvSPSnuEaO9GrYFw7kzph1ciOKxzLqrTBOVlHsbIa6eLsDuZSJq2py3ZtvonFfOWTu3Amcifeb2TdNdrGhj1iS97fpA1Uo6FJZGWcDeOFX7u0qP+BcdnNa37zj40R4lxkLoFH+EMuHdFGlR+Deh5rY+vhAbHq2dEpPz4tIAk/hf6er17gFS1iz/dsnnJJBFKcGEUtc62w4H1bK3Fcdu2z6gdr1FB0S3x2rBUG4pccemWABCMNKDfVO2BbG5uKDfw3g==',
                                     '    signing-key /Common/f5-irule',
                                     '}',
                                     'EOF',
@@ -307,7 +307,7 @@ def GenerateConfig(context):
                                     'rm /config/cloud/gce/.adminPassword',
                                     'date',
                                     'EOF',
-                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs/v4.8.1/f5-cloud-libs.tar.gz',
+                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs/v4.8.2/f5-cloud-libs.tar.gz',
                                     'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs-gce.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs-gce/v2.3.4/f5-cloud-libs-gce.tar.gz',
                                     'curl -s -f --retry 20 -o /config/cloud/f5.service_discovery.tmpl https://cdn.f5.com/product/cloudsolutions/iapps/common/f5-service-discovery/v2.3.2/f5.service_discovery.tmpl',
                                     'chmod 755 /config/verifyHash',

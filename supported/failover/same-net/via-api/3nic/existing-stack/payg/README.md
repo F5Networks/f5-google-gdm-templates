@@ -93,7 +93,7 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | subnet2 | Yes | Name of the subnet you want to use for internal application traffic |
 | imageName | Yes | BIG-IP image you want to deploy |
 | instanceType | Yes | The BIG-IP instance type you want to use, such as **n1-standard-4** |
-| manGuiPort | Yes | BIG-IP management port.  The default is **443** |
+| mgmtGuiPort | Yes | BIG-IP management port.  The default is **443** |
 | serviceAccount | Yes | If using service discovery, enter the Google service account to use for discovery. Leave single quotes with nothing between when not using service discovery |
 | tagName | Yes | If using service discovery, enter the tag name used on servers for discovery. Leave single quotes with nothing between if not using service discovery |
 | tagValue | Yes | If using service discovery, enter the tag value used on servers for discovery. Leave single quotes with nothing between if not using service discovery |
