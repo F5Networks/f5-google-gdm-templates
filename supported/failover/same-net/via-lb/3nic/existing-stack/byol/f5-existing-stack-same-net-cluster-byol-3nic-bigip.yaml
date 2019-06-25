@@ -30,9 +30,10 @@ resources:
    aliasIp: <address/mask address/mask>
    ### Number of forwarding rules to create, for example '1'.  All integers from 1 to the max quota for the forwarding rules resource type are allowed.
    numberOfForwardingRules: <Number of forwarding rules>
-   ### Number of forwarding rules to create, for example '1'.  Integers 0 and 1 are valid choices.
+   ### Specify Network name to for BIG-IP internal application traffic
    numberOfIntForwardingRules: <Number of internal rules>
    ### Specify Network name to for BIG-IP internal application traffic
+   ### Specify the Network name for BIG-IP internal application traffic
    network2: <network>
    ### Subnet of the Network BIG-IP should use for internal application traffic
    subnet2: <subnet>
@@ -40,22 +41,27 @@ resources:
    licenseKey1: '<lic key>'
    ### BIG-IP license key
    licenseKey2: '<lic key>'
+   ## Provision Public IP addresses for BIG-IP Network Interfaces. By default it is set to provision public IPs
+   provisionPublicIP: 'yes'
    ### BIG-IP image, valid choices include:
-   # f5-byol-bigip-13-1-1-0-0-4-all-2slot
-   # f5-byol-bigip-13-1-1-0-0-4-ltm-2slot
+   
+   # f5-bigip-14-1-0-3-0-0-6-byol-all-module-2boot-loc-190326001340
+   # f5-bigip-14-1-0-3-0-0-6-byol-ltm-2boot-loc-190326001052
    imageName: <image>
    ### Instance type assigned to BIG-IP, example n1-standard-4.
-   instanceType: <instance>
-   ### (Optional, Defaults to 443)BIG-IP Management Port, the default is 443.
-   mgmtGuiPort: <port>
+   instanceType: n1-standard-4
+   ### (Optional, Defaults to 443) BIG-IP Management Port, the default is 443
+   mgmtGuiPort: 443
    ### List application port(s) separated by a space.
    applicationPort: <port port>
    ### List application port(s) for internal google load balancer separated by a space. A max of 5 ports can be specified. Only required when using internal loadbalancer (numberOfForwardingRules equals 1).
    applicationIntPort: <port port>
-   ### (Optional, Defaults to time.google.com) List NTP servers separated by a space.
+   ## (Optional, Defaults to time.google.com) List NTP servers separated by a space.
    ntpServer: <server server>
-   ### (Optional, Defaults to UTC) Enter the Olson timezone string from /usr/share/zoneinfo
+   ## Enter the Olson timezone string from /usr/share/zoneinfo
    timezone: <timezone>
+   ## Enter the modules and povisioning level
+   bigIpModules: ltm:nominal
    ### Enter service account with correct roles.
    serviceAccount: <service account>
    ### (Optional) If using service discovery, enter the tag name used on servers for discovery.
@@ -63,7 +69,7 @@ resources:
    ### (Optional) If using service discovery, enter the tag value used on servers for discovery.
    tagValue: <value>
    ### This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent.
-   allowUsageAnalytics: yes
+   allowUsageAnalytics: 'yes'
    ### (Optional, Defaults to Info) Log setting, used to set log level on scripts used during deployment. Acceptable values:error, warn, info, verbose, debug, silly.
    logLevel: <level>
    ### URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration.

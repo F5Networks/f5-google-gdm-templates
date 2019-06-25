@@ -16,47 +16,55 @@ resources:
    mgmtNetwork: <network>
    ### Specify the subnet to use for management traffic
    mgmtSubnet: <subnet>
-   ### Specify the Network name for BIG-IP external application traffic
+   ### Specify the Network name for BIG-IP application traffic
    network1: <network>
-   ### Subnet of the Network BIG-IP should use for external application traffic
+   ### Subnet of the Network BIG-IP should use for application traffic
    subnet1: <subnet>
-   ### Enter alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'.  A list of alias IPs can be provided, separated by a semi-colon: IE 10.x.x.16/28;10.x.x.32/28.
-   aliasIp: '<ip address with prefix>'
-   ### Number of forwarding rules to create, for example '1'.  All integers from 0 to the max quota for the forwarding rules resource type are allowed.
-   numberOfForwardingRules: '1'
+   ### Enter alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'.  A list of alias IPs can be provided, separated by a space: IE 10.x.x.16/28 10.x.x.32/28.
+   aliasIp: <address/mask address/mask>
+   ### Number of forwarding rules to create, for example '1'.  All integers from 1 to the max quota for the forwarding rules resource type are allowed.
+   numberOfForwardingRules: <Number of forwarding rules>
    ### Specify the Network name for BIG-IP internal application traffic
    network2: <network>
    ### Subnet of the Network BIG-IP should use for internal application traffic
    subnet2: <subnet>
+   ## Provision Public IP addresses for BIG-IP Network Interfaces. By default it is set to provision public IPs
+   provisionPublicIP: 'yes'
    ### BIG-IP image, valid choices include:
-   # f5-hourly-bigip-13-1-1-0-0-4-best-1gbps
-   # f5-hourly-bigip-13-1-1-0-0-4-best-200mbps
-   # f5-hourly-bigip-13-1-1-0-0-4-best-25mbps
-   # f5-hourly-bigip-13-1-1-0-0-4-best-5gbps
-   # f5-hourly-bigip-13-1-1-0-0-4-better-1gbps
-   # f5-hourly-bigip-13-1-1-0-0-4-better-200mbps
-   # f5-hourly-bigip-13-1-1-0-0-4-better-25mbps
-   # f5-hourly-bigip-13-1-1-0-0-4-better-5gbps
-   # f5-hourly-bigip-13-1-1-0-0-4-good-1gbps
-   # f5-hourly-bigip-13-1-1-0-0-4-good-200mbps
-   # f5-hourly-bigip-13-1-1-0-0-4-good-25mbps
-   # f5-hourly-bigip-13-1-1-0-0-4-good-5gbps
-   # f5-hourly-bigip-13-1-1-0-0-4-per-app-awaf-200mbps
-   # f5-hourly-bigip-13-1-1-0-0-4-per-app-awaf-25mbps
-   # f5-hourly-bigip-13-1-1-0-0-4-per-app-ltm-200mbps
-   # f5-hourly-bigip-13-1-1-0-0-4-per-app-ltm-25mbps
-   imageName: <image name>
+   # f5-bigip-14-1-0-3-0-0-6-payg-best-10gbps-190329165642
+   # f5-bigip-14-1-0-3-0-0-6-payg-best-1gbps-190329165642
+   # f5-bigip-14-1-0-3-0-0-6-payg-best-200mbps-190329165642
+   # f5-bigip-14-1-0-3-0-0-6-payg-best-25mbps-190329165642
+   # f5-bigip-14-1-0-3-0-0-6-payg-best-5gbps-190329165642
+   # f5-bigip-14-1-0-3-0-0-6-payg-better-10gbps-190329165642
+   # f5-bigip-14-1-0-3-0-0-6-payg-better-1gbps-190329165642
+   # f5-bigip-14-1-0-3-0-0-6-payg-better-200mbps-190329165642
+   # f5-bigip-14-1-0-3-0-0-6-payg-better-25mbps-190329165642
+   # f5-bigip-14-1-0-3-0-0-6-payg-better-5gbps-190329165642
+   # f5-bigip-14-1-0-3-0-0-6-payg-good-10gbps-190326001429
+   # f5-bigip-14-1-0-3-0-0-6-payg-good-1gbps-190326001429
+   # f5-bigip-14-1-0-3-0-0-6-payg-good-200mbps-190326001429
+   # f5-bigip-14-1-0-3-0-0-6-payg-good-25mbps-190326001429
+   # f5-bigip-14-1-0-3-0-0-6-payg-good-5gbps-190326001429
+   # f5-bigip-14-1-0-3-0-0-6-payg-hp-ltm-16vcpu-190326001429
+   # f5-bigip-14-1-0-3-0-0-6-payg-pve-ltm-200mbps-190326001340
+   # f5-bigip-14-1-0-3-0-0-6-payg-pve-ltm-25mbps-190326001340
+   imageName: <image>
    ### Instance type assigned to BIG-IP, example n1-standard-4.
    instanceType: n1-standard-4
-   ### BIG-IP Management Port, the default is 443
-   mgmtGuiPort: '443'
-   ### If using service discovery, enter the Google service account to use for discovery. Leave single quotes with nothing between when not using service discovery.
-   serviceAccount: '<service account>'
-   ### If using service discovery, enter the tag name used on servers for discovery. Leave single quotes with nothing between if not using service discovery.
-   tagName: '<tag>'
-   ### If using service discovery, enter the tag value used on servers for discovery. Leave single quotes with nothing between if not using service discovery.
-   tagValue: '<value>'
+   ### (Optional, Defaults to 443) BIG-IP Management Port, the default is 443
+   mgmtGuiPort: 443
+   ## Enter the modules and povisioning level
+   bigIpModules: ltm:nominal
+   ### (Optional) If using service discovery, enter the Google service account to use for discovery.
+   serviceAccount: <service account>
+   ### (Optional) If using service discovery, enter the tag name used on servers for discovery.
+   tagName: <tag>
+   ### (Optional) If using service discovery, enter the tag value used on servers for discovery.
+   tagValue: <value>
    ### This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent.
    allowUsageAnalytics: 'yes'
+   ### (Optional, Defaults to Info) Log setting, used to set log level on scripts used during deployment. Acceptable values:error, warn, info, verbose, debug, silly.
+   logLevel: <level>
    ### URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration.
    declarationUrl: default

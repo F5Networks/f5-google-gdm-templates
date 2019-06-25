@@ -5,7 +5,7 @@
 imports:
 - path: f5-existing-stack-byol-3nic-bigip.py
 resources:
-- name: bigip-3nic-setup
+- name: f5-existing-stack-byol-3nic-bigip
   type: f5-existing-stack-byol-3nic-bigip.py
   properties:
    ### Google Region to deploy BIG-IP, for example us-west1
@@ -26,17 +26,22 @@ resources:
    network1: <network>
    ### Subnet of the Network BIG-IP should use for application traffic
    subnet1: <subnet>
+    
    ### Static IP address to use (optional). Note: For dynamic address provisioning use the default value of 'DYNAMIC'
    subnet1Address: <DYNAMIC or address>
    ### Specify the Network name for BIG-IP internal application traffic
    network2: <network>
    ### Subnet of the Network BIG-IP should use for internal application traffic
    subnet2: <subnet>
+      
    ### Static IP address to use (optional). Note: For dynamic address provisioning use the default value of 'DYNAMIC'
    subnet2Address: <DYNAMIC or address>
+   ## Provision Public IP addresses for BIG-IP Network Interfaces. By default it is set to provision public IPs
+   provisionPublicIP: 'yes'
    ### BIG-IP image, valid choices include:
-   # f5-byol-bigip-13-1-1-0-0-4-all-2slot
-   # f5-byol-bigip-13-1-1-0-0-4-ltm-2slot
+   
+   # f5-bigip-14-1-0-3-0-0-6-byol-all-module-2boot-loc-190326001340
+   # f5-bigip-14-1-0-3-0-0-6-byol-ltm-2boot-loc-190326001052
    imageName: <image>
    ### Instance type assigned to BIG-IP, example n1-standard-4.
    instanceType: <instance>
@@ -46,19 +51,21 @@ resources:
    applicationPort: <port port>
    ### BIG-IP license key
    licenseKey1: <key>
-   ## List NTP servers separated by a space.
+   ## (Optional, Defaults to time.google.com) List NTP servers separated by a space.
    ntpServer: <server server>
-   ## Enter the Olson timezone string from /usr/share/zoneinfo
+   ## (Optional, Defaults to UTC) Enter the Olson timezone string from /usr/share/zoneinfo
    timezone: <timezone>
-   ### If using service discovery, enter the Google service account to use for discovery. Leave blank if not using service discovery.
+   ## Enter the modules and povisioning level
+   bigIpModules: ltm:nominal
+   ### (Optional) If using service discovery, enter the Google service account to use for discovery. Leave blank if not using service discovery.
    serviceAccount: <service account>
-   ### If using service discovery, enter the tag name used on servers for discovery. Leave blank if not using service discovery.
+   ### (Optional) If using service discovery, enter the tag name used on servers for discovery. Leave blank if not using service discovery.
    tagName: <tag>
-   ### If using service discovery, enter the tag value used on servers for discovery. Leave blank if not using service discovery.
+   ### (Optional) If using service discovery, enter the tag value used on servers for discovery. Leave blank if not using service discovery.
    tagValue: <value>
    ### This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent.
-   allowUsageAnalytics: yes
-   ### Log setting, used to set log level on scripts used during deployment. Acceptable values:error, warn, info, verbose, debug, silly.
+   allowUsageAnalytics: 'yes'
+   ### (Optional, Defaults to Info) Log setting, used to set log level on scripts used during deployment. Acceptable values:error, warn, info, verbose, debug, silly.
    logLevel: <level>
    ### URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration.
    declarationUrl: default

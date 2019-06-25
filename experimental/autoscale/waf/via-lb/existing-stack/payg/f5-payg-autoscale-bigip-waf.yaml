@@ -2,6 +2,7 @@
 #
 # Version v2.2.0
 ## note deployment name can not excede 23 charactors.
+
 imports:
 - path: f5-payg-autoscale-bigip-waf.py
 resources:
@@ -17,18 +18,25 @@ resources:
    ### Specify the subnet to use for management traffic
    mgmtSubnet: <management subnet>
    ### BIG-IP image, valid choices include:
-   # f5-hourly-bigip-13-1-1-0-0-4-awaf-1gbps
-   # f5-hourly-bigip-13-1-1-0-0-4-awaf-200mbps
-   # f5-hourly-bigip-13-1-1-0-0-4-awaf-25mbps
-   # f5-hourly-bigip-13-1-1-0-0-4-best-1gbps
-   # f5-hourly-bigip-13-1-1-0-0-4-best-200mbps
-   # f5-hourly-bigip-13-1-1-0-0-4-best-25mbps
-   # f5-hourly-bigip-13-1-1-0-0-4-best-5gbps
-   imageName: f5-hourly-bigip-13-1-1-0-0-4-best-25mbps
+   # f5-bigip-14-1-0-3-0-0-6-payg-adv-waf-1gbps-190329165642
+   # f5-bigip-14-1-0-3-0-0-6-payg-adv-waf-200mbps-190329165642
+   # f5-bigip-14-1-0-3-0-0-6-payg-adv-waf-25mbps-190329165642
+   # f5-bigip-14-1-0-3-0-0-6-payg-hp-adv-waf-16vcpu-190329165642
+   # f5-bigip-14-1-0-3-0-0-6-payg-hp-adv-waf-8vcpu-190329165642
+   # f5-bigip-14-1-0-3-0-0-6-payg-pve-waf-200mbps-190326001609
+   # f5-bigip-14-1-0-3-0-0-6-payg-pve-waf-25mbps-190326001609
+   # f5-bigip-14-1-0-3-0-0-6-payg-best-10gbps-190329165642
+   # f5-bigip-14-1-0-3-0-0-6-payg-best-1gbps-190329165642
+   # f5-bigip-14-1-0-3-0-0-6-payg-best-200mbps-190329165642
+   # f5-bigip-14-1-0-3-0-0-6-payg-best-25mbps-190329165642
+   # f5-bigip-14-1-0-3-0-0-6-payg-best-5gbps-190329165642
+   imageName: <image>
    ### Instance type assigned to BIG-IP, example n1-standard-4.
    instanceType: n1-standard-4
    ### BIG-IP Management Port, the default is 8443
    manGuiPort: 8443
+   ## Enter the modules and povisioning level
+   bigIpModules: asm:nominal
    ### If using service discovery, enter the Google service account to use for discovery. Leave single quotes with nothing between when not using service discovery.
    serviceAccount: '<service acount>'
    ### If using service discovery, enter the tag name used on servers for discovery. Leave single quotes with nothing between if not using service discovery.

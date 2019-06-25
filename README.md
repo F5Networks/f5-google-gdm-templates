@@ -30,6 +30,7 @@ https://github.com/F5Networks/f5-google-gdm-templates/blob/master/google-bigip-v
 
 ## Current Supported F5 Google Deployment Manager templates
 
+Standalone and HA production stack templates have been deprecated; a new parameter has been added to existing-stack templates to control deployment of public IP addresses.
 The following is a list of the current *supported* F5 GDM templates. Click the link to view the README file which includes information on how to deploy the template in Google Cloud.
 
 <br>
@@ -61,9 +62,6 @@ The following is a list of the current *supported* F5 GDM templates. Click the l
     - <a href="https://github.com/F5Networks/f5-google-gdm-templates/tree/master/supported/failover/same-net/via-api/3nic/existing-stack/payg">**Hourly**</a>, which uses pay-as-you-go hourly billing  
     - <a href="https://github.com/F5Networks/f5-google-gdm-templates/tree/master/supported/failover/same-net/via-api/3nic/existing-stack/byol">**BYOL**</a> (bring your own license), which allows you to use an existing BIG-IP license.  
 
-- *Production stack*</a> template, which does not include a public IP address (see README file for details)  
-    - <a href="https://github.com/F5Networks/f5-google-gdm-templates/tree/master/supported/failover/same-net/via-api/3nic/production-stack/payg">**Hourly**</a>, which uses pay-as-you-go hourly billing  
-    - <a href="https://github.com/F5Networks/f5-google-gdm-templates/tree/master/supported/failover/same-net/via-api/3nic/production-stack/byol">**BYOL**</a> (bring your own license), which allows you to use an existing BIG-IP license. 
 
 **Clustered BIG-IP VE: Failover via LB - 3 NICs**
 - *Existing Stack* which includes an external IP address (typical)

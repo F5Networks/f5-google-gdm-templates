@@ -1,7 +1,7 @@
 # Copyright 2019 F5 Networks All rights reserved.
 
 info:
-  title: F5 BIG-IP 3NIC HA with Google LB
+  title: F5 BIG-IP 3NIC HA with Google API
   author: F5 Networks
   description: Creates HA pair of BIG-IP's with 3 network interfaces and supporting Google resources.
   version: 2.1.2
@@ -13,16 +13,14 @@ required:
   - allowUsageAnalytics
   - mgmtNetwork
   - mgmtSubnet
-  - restrictedSrcAddress
-  - restrictedSrcAddressApp
   - network1
   - subnet1
   - network2
   - subnet2
   - licenseKey1
   - licenseKey2
+  - aliasIp
   - numberOfForwardingRules
-  - numberOfIntForwardingRules
   - provisionPublicIP
   - imageName
   - instanceType
@@ -41,14 +39,6 @@ properties:
   mgmtSubnet:
     description: Specify the subnet to use for management traffic
     type: string
-  restrictedSrcAddress:
-    description: This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources
-    type: string
-  restrictedSrcAddressApp:
-    description: Restricts web application access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources.
-    type: string
-  restrictedSrcAddressIntApp:
-    description: Restricts web application access to a specific private network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources. Only required when using internal loadbalancer (numberOfForwardingRules equals 1).
   network1:
     description: Specify the Network name for BIG-IP application traffic
     type: string
@@ -67,15 +57,13 @@ properties:
   licenseKey2:
     description: BIG-IP license key
     type: string
+  aliasIp:
+    description: Number of forwarding rules to create, for example '1'.  All integers from 1 to the max quota for the forwarding rules resource type are allowed.
+    type: string
   numberOfForwardingRules:
     description: Number of forwarding rules to create, for example '1'.  All integers from 1 to the max quota for the forwarding rules resource type are allowed.
     type: integer
     minimum: 1
-  numberOfIntForwardingRules:
-    description: Number of forwarding rules to create, for example '1'.  Integers 0 and 1 are valid choices.
-    type: integer
-    minimum: 0
-    maximum: 1
   provisionPublicIP:
     description: Provision Public IP addresses for BIG-IP Network Interfaces. By default it is set to provision public IPs.
     type: [string, boolean]
@@ -90,18 +78,6 @@ properties:
     description: (optional) BIG-IP Management Port
     type: integer
     default: 443
-  applicationPort:
-    description: List application port(s) separated by a space
-  applicationIntPort:
-    description: List application port(s) for internal google load balancer separated by a space. A max of 5 ports can be specified. Only required when using internal loadbalancer (numberOfForwardingRules equals 1).
-  ntpServer:
-    description: (optional) List NTP servers separated by a space
-    type: string
-    default: time.google.com
-  timezone:
-    description: (optional) Enter the Olson timezone string from /usr/share/zoneinfo
-    type: string
-    default: UTC
   bigIpModules:
     description: Comma separated list of modules and levels to provision, for example, 'ltm:nominal,asm:nominal'
     type: string

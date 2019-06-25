@@ -1,28 +1,31 @@
-# Copyright 2018 F5 Networks All rights reserved.
+# Copyright 2019 F5 Networks All rights reserved.
+
 info:
   title: F5 BIG-IP 1NIC
   author: F5 Networks
-  description: Creates a BIG-IP with 1 network interface.
+  description: Creates a BIG-IP with 1 network interface(s).
   version: 2.1.2
 imports:
   - path: f5-existing-stack-byol-1nic-bigip.py
 required:
   - region
   - availabilityZone1
+  - allowUsageAnalytics
   - mgmtNetwork
   - mgmtSubnet
   - restrictedSrcAddress
   - restrictedSrcAddressApp
+  - provisionPublicIP
   - imageName
   - instanceType
   - licenseKey1
   - declarationUrl
 properties:
   region:
-    description: The Google Region to deploy BIG-IP, for example us-west1
+    description: Google Zone in specified region to deploy BIG-IP
     type: string
   availabilityZone1:
-    description: Google Zone in the specified region to deploy BIG-IP, for example us-west1-a
+    description: Google Zone in specified region to deploy BIG-IP, for example us-west1-a
     type: string
   mgmtNetwork:
     description: Specify the network to use for management traffic
@@ -40,8 +43,12 @@ properties:
   restrictedSrcAddressApp:
     description: This field restricts web application access (ports 80 and 443) to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources.
     type: string
+  provisionPublicIP:
+    description: Provision Public IP addresses for BIG-IP Network Interfaces. By default it is set to provision public IPs
+    type: [string, boolean]
+    default: 'yes'
   imageName:
-    description: BIG-IP image, valid choices include - f5-hourly-bigip-13-1-1-0-0-4-best-1gbps, f5-hourly-bigip-13-1-1-0-0-4-best-200mbps, f5-hourly-bigip-13-1-1-0-0-4-best-25mbps, f5-hourly-bigip-13-1-1-0-0-4-best-5gbps, f5-hourly-bigip-13-1-1-0-0-4-better-1gbps, f5-hourly-bigip-13-1-1-0-0-4-better-200mbps, f5-hourly-bigip-13-1-1-0-0-4-better-25mbps, f5-hourly-bigip-13-1-1-0-0-4-better-5gbps, f5-hourly-bigip-13-1-1-0-0-4-good-1gbps, f5-hourly-bigip-13-1-1-0-0-4-good-200mbps, f5-hourly-bigip-13-1-1-0-0-4-good-25mbps, f5-hourly-bigip-13-1-1-0-0-4-good-5gbps
+    description: BIG-IP image, valid choices include - f5-bigip-14-1-0-3-0-0-6-byol-all-module-2boot-loc-190326001340, f5-bigip-14-1-0-3-0-0-6-byol-ltm-2boot-loc-190326001052
     type: string
   instanceType:
     description: Instance type assigned to BIG-IP, example n1-standard-4.
@@ -64,6 +71,10 @@ properties:
     description: Enter the Olson timezone string from /usr/share/zoneinfo
     type: string
     default: UTC
+  bigIpModules:
+    description: Comma separated list of modules and levels to provision, for example, 'ltm:nominal,asm:nominal'
+    type: string
+    default: ltm:nominal
   serviceAccount:
     description: If using service discovery, enter the Google service account to use for discovery. Leave blank if not using service discovery
     type: string
@@ -78,8 +89,8 @@ properties:
     default: ''
   allowUsageAnalytics:
     description: This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent
-    type: boolean
-    default: yes
+    type: [string, boolean]
+    default: 'yes'
   logLevel:
     description: Log setting, used to set log level on scripts used during deployment. Acceptable values are error, warn, info, verbose, debug, or silly.
     type: string
@@ -91,4 +102,4 @@ properties:
 documentation:
   - README.md
 examples:
-  - f5-existing-stack-byol-3nic-bigip.yaml
+  - f5-existing-stack-byol-1nic-bigip.yaml

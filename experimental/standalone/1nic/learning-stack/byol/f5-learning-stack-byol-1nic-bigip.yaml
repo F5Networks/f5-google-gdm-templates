@@ -26,3 +26,5 @@ resources:
    allowUsageAnalytics: 'yes'
    ### URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration.
    declarationUrl: default
+   ## Enter the modules and povisioning level
+   bigIpModules: asm:nominal

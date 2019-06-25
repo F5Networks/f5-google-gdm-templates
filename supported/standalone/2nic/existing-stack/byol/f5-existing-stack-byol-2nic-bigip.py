@@ -4,6 +4,7 @@
 
 """ Creates Deployment """
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
+
 def FirewallRuleApp(context):
     # Build Application firewall rule
     ports = str(context.properties['applicationPort']).split()
@@ -14,7 +15,7 @@ def FirewallRuleApp(context):
         'properties': {
             'network': ''.join([COMPUTE_URL_BASE, 'projects/',
                                 context.env['project'], '/global/networks/',
-                                context.properties['network1']]),
+                                 context.properties['network1']]),
             'sourceRanges': source_list,
             'targetTags': ['appfw-'+ context.env['deployment']],
             'allowed': [{
@@ -25,6 +26,7 @@ def FirewallRuleApp(context):
         }
     }
     return firewallRuleApp
+
 def FirewallRuleMgmt(context):
     # Build Management firewall rule
     source_list = str(context.properties['restrictedSrcAddress']).split()
@@ -55,10 +57,7 @@ def Instance(context):
                                     context.env['project'], '/regions/',
                                     context.properties['region'], '/subnetworks/',
                                     context.properties['subnet1']]),
-                'accessConfigs': [{
-                    'name': 'External NAT',
-                    'type': 'ONE_TO_ONE_NAT'
-                }],
+                'accessConfigs': []
             },
             {
                 'network': ''.join([COMPUTE_URL_BASE, 'projects/',
@@ -68,11 +67,20 @@ def Instance(context):
                                     context.env['project'], '/regions/',
                                     context.properties['region'], '/subnetworks/',
                                     context.properties['mgmtSubnet']]),
-                'accessConfigs': [{
-                    'name': 'Management NAT',
-                    'type': 'ONE_TO_ONE_NAT'
-                }],
-    }]
+                'accessConfigs': []
+            }]
+
+    # access config - conditional on provisionPublicIP parameter (boolean yes/no)
+    if str(context.properties['provisionPublicIP']).lower() in ['yes', 'true']:
+        network_interfaces[0]['accessConfigs'] = [{
+            'name': 'External NAT',
+            'type': 'ONE_TO_ONE_NAT'
+        }]
+        network_interfaces[1]['accessConfigs'] = [{
+            'name': 'Management NAT',
+            'type': 'ONE_TO_ONE_NAT'
+        }]
+
     # If not 'DYNAMIC'|'' assume a static address is needed
     mgmtSubnetAddress = context.properties['mgmtSubnetAddress'].upper()
     if mgmtSubnetAddress != "DYNAMIC" and mgmtSubnetAddress != "":
@@ -95,7 +103,7 @@ def Instance(context):
         'type': 'compute.v1.instance',
         'properties': {
             'canIpForward': True,
-            'description': 'F5 BIG-IP configured with two interfaces.',
+            'description': 'F5 BIG-IP configured with 2 interface(s).',
             'disks': [{
                 'deviceName': 'boot',
                 'type': 'PERSISTENT',
@@ -109,34 +117,51 @@ def Instance(context):
                 }
             }],
             'machineType': ''.join([COMPUTE_URL_BASE, 'projects/',
-                                    context.env['project'], '/zones/',
-                                    context.properties['availabilityZone1'], '/machineTypes/',
-                                    context.properties['instanceType']]),
+                                context.env['project'], '/zones/',
+                                context.properties['availabilityZone1'], '/machineTypes/',
+                                context.properties['instanceType']]),
             'networkInterfaces': network_interfaces,
             'serviceAccounts': service_account,
             'tags': {
-                'items': ['mgmtfw-' + context.env['deployment'],'appfw-' + context.env['deployment']]
+              'items': [
+                  'mgmtfw-' + context.env['deployment'],
+                  'appfw-' + context.env['deployment']
+              ]
             },
             'zone': context.properties['availabilityZone1'],
             'metadata': Metadata(context)
         }
     }
+
+    # add no-ip tag if provisionPublicIP = no
+    if str(context.properties['provisionPublicIP']).lower() in ['no', 'false']:
+        instance['properties']['tags']['items'].append('no-ip')
     return instance
+
 def Metadata(context):
-    ALLOWUSAGEANALYTICS = context.properties['allowUsageAnalytics']
-    if ALLOWUSAGEANALYTICS:
+
+    ALLOWUSAGEANALYTICS = str(context.properties['allowUsageAnalytics']).lower()
+    if ALLOWUSAGEANALYTICS == 'yes':
         CUSTHASH = 'CUSTOMERID=`curl -s "http://metadata.google.internal/computeMetadata/v1/project/numeric-project-id" -H "Metadata-Flavor: Google" |sha512sum|cut -d " " -f 1`;\nDEPLOYMENTID=`curl -s "http://metadata.google.internal/computeMetadata/v1/instance/id" -H "Metadata-Flavor: Google"|sha512sum|cut -d " " -f 1`;'
         SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-existing-stack-byol-2nic-bigip.py,templateVersion:v2.2.0,licenseType:byol"'
     else:
         CUSTHASH = 'echo "No analytics."'
         SENDANALYTICS = ''
+  
+
+    # Provisioning modules
+    PROVISIONING_MODULES = ','.join(context.properties['bigIpModules'].split('-'))
+
     ntp_servers = str(context.properties['ntpServer']).split()
     ntp_list = ''
     for ntp_server in ntp_servers:
         ntp_list = ntp_list + ' --ntp ' + ntp_server
+
     timezone = ' --tz UTC'
     if context.properties['timezone']:
-        timezone = " --tz {0}".format(str(context.properties['timezone']))
+       timezone = " --tz {0}".format(str(context.properties['timezone']))
+
+
     metadata = {
                 'items': [{
                     'key': 'startup-script',
@@ -184,57 +209,7 @@ def Metadata(context):
                                     'echo cloud libs install complete',
                                     'touch /config/cloud/cloudLibsReady',
                                     'EOF',
-                                    'cat <<\'EOF\' > /config/verifyHash',
-                                    'cli script /Common/verifyHash {',
-                                    'proc script::run {} {',
-                                    '        if {[catch {',
-                                    '            set hashes(f5-cloud-libs.tar.gz) 2ed8a093014132a2a5d78924c4200d399a19001b6464573e23ff6aa7a9796e3ecb727b1d4769612ec95d7f6014ff514d8768a1d9541bcd57877193ebe84a81ee',
-                                    '            set hashes(f5-cloud-libs-aws.tar.gz) 076c969cbfff12efacce0879820262b7787c98645f1105667cc4927d4acfe2466ed64c777b6d35957f6df7ae266937dde42fef4c8b1f870020a366f7f910ffb5',
-                                    '            set hashes(f5-cloud-libs-azure.tar.gz) 57fae388e8aa028d24a2d3fa2c029776925011a72edb320da47ccd4fb8dc762321c371312f692b7b8f1c84e8261c280f6887ba2e0f841b50547e6e6abc8043ba',
-                                    '            set hashes(f5-cloud-libs-gce.tar.gz) 1677835e69967fd9882ead03cbdd24b426627133b8db9e41f6de5a26fef99c2d7b695978ac189f00f61c0737e6dbb638d42dea43a867ef4c01d9507d0ee1fb2f',
-                                    '            set hashes(f5-cloud-libs-openstack.tar.gz) 5c83fe6a93a6fceb5a2e8437b5ed8cc9faf4c1621bfc9e6a0779f6c2137b45eab8ae0e7ed745c8cf821b9371245ca29749ca0b7e5663949d77496b8728f4b0f9',
-                                    '            set hashes(f5-cloud-libs-consul.tar.gz) a32aab397073df92cbbba5067e5823e9b5fafca862a258b60b6b40aa0975c3989d1e110f706177b2ffbe4dde65305a260a5856594ce7ad4ef0c47b694ae4a513',
-                                    '            set hashes(asm-policy-linux.tar.gz) 63b5c2a51ca09c43bd89af3773bbab87c71a6e7f6ad9410b229b4e0a1c483d46f1a9fff39d9944041b02ee9260724027414de592e99f4c2475415323e18a72e0',
-                                    '            set hashes(f5.http.v1.2.0rc4.tmpl) 47c19a83ebfc7bd1e9e9c35f3424945ef8694aa437eedd17b6a387788d4db1396fefe445199b497064d76967b0d50238154190ca0bd73941298fc257df4dc034',
-                                    '            set hashes(f5.http.v1.2.0rc6.tmpl) 811b14bffaab5ed0365f0106bb5ce5e4ec22385655ea3ac04de2a39bd9944f51e3714619dae7ca43662c956b5212228858f0592672a2579d4a87769186e2cbfe',
-                                    '            set hashes(f5.http.v1.2.0rc7.tmpl) 21f413342e9a7a281a0f0e1301e745aa86af21a697d2e6fdc21dd279734936631e92f34bf1c2d2504c201f56ccd75c5c13baa2fe7653213689ec3c9e27dff77d',
-                                    '            set hashes(f5.aws_advanced_ha.v1.3.0rc1.tmpl) 9e55149c010c1d395abdae3c3d2cb83ec13d31ed39424695e88680cf3ed5a013d626b326711d3d40ef2df46b72d414b4cb8e4f445ea0738dcbd25c4c843ac39d',
-                                    '            set hashes(f5.aws_advanced_ha.v1.4.0rc1.tmpl) de068455257412a949f1eadccaee8506347e04fd69bfb645001b76f200127668e4a06be2bbb94e10fefc215cfc3665b07945e6d733cbe1a4fa1b88e881590396',
-                                    '            set hashes(f5.aws_advanced_ha.v1.4.0rc2.tmpl) 6ab0bffc426df7d31913f9a474b1a07860435e366b07d77b32064acfb2952c1f207beaed77013a15e44d80d74f3253e7cf9fbbe12a90ec7128de6facd097d68f',
-                                    '            set hashes(f5.aws_advanced_ha.v1.4.0rc3.tmpl) 2f2339b4bc3a23c9cfd42aae2a6de39ba0658366f25985de2ea53410a745f0f18eedc491b20f4a8dba8db48970096e2efdca7b8efffa1a83a78e5aadf218b134',
-                                    '            set hashes(f5.aws_advanced_ha.v1.4.0rc4.tmpl) 2418ac8b1f1884c5c096cbac6a94d4059aaaf05927a6a4508fd1f25b8cc6077498839fbdda8176d2cf2d274a27e6a1dae2a1e3a0a9991bc65fc74fc0d02ce963',
-                                    '            set hashes(asm-policy.tar.gz) 2d39ec60d006d05d8a1567a1d8aae722419e8b062ad77d6d9a31652971e5e67bc4043d81671ba2a8b12dd229ea46d205144f75374ed4cae58cefa8f9ab6533e6',
-                                    '            set hashes(deploy_waf.sh) 1a3a3c6274ab08a7dc2cb73aedc8d2b2a23cd9e0eb06a2e1534b3632f250f1d897056f219d5b35d3eed1207026e89989f754840fd92969c515ae4d829214fb74',
-                                    '            set hashes(f5.policy_creator.tmpl) 06539e08d115efafe55aa507ecb4e443e83bdb1f5825a9514954ef6ca56d240ed00c7b5d67bd8f67b815ee9dd46451984701d058c89dae2434c89715d375a620',
-                                    '            set hashes(f5.service_discovery.tmpl) 4811a95372d1dbdbb4f62f8bcc48d4bc919fa492cda012c81e3a2fe63d7966cc36ba8677ed049a814a930473234f300d3f8bced2b0db63176d52ac99640ce81b',
-                                    '            set hashes(f5.cloud_logger.v1.0.0.tmpl) 64a0ed3b5e32a037ba4e71d460385fe8b5e1aecc27dc0e8514b511863952e419a89f4a2a43326abb543bba9bc34376afa114ceda950d2c3bd08dab735ff5ad20',
-                                    '            set hashes(f5-appsvcs-3.5.1-5.noarch.rpm) ba71c6e1c52d0c7077cdb25a58709b8fb7c37b34418a8338bbf67668339676d208c1a4fef4e5470c152aac84020b4ccb8074ce387de24be339711256c0fa78c8',
-                                    'NEW_LINE',
-                                    '            set file_path [lindex $tmsh::argv 1]',
-                                    '            set file_name [file tail $file_path]',
-                                    'NEW_LINE',
-                                    '            if {![info exists hashes($file_name)]} {',
-                                    '                tmsh::log err \"No hash found for $file_name\"',
-                                    '                exit 1',
-                                    '            }',
-                                    'NEW_LINE',
-                                    '            set expected_hash $hashes($file_name)',
-                                    '            set computed_hash [lindex [exec /usr/bin/openssl dgst -r -sha512 $file_path] 0]',
-                                    '            if { $expected_hash eq $computed_hash } {',
-                                    '                exit 0',
-                                    '            }',
-                                    '            tmsh::log err \"Hash does not match for $file_path\"',
-                                    '            exit 1',
-                                    '        }]} {',
-                                    '            tmsh::log err {Unexpected error in verifyHash}',
-                                    '            exit 1',
-                                    '        }',
-                                    '    }',
-                                    '    script-signature lPSmuLO0yYUo/rWy+DCa8c6vRwvvgfg08k8adRa8C9/FxeFpw5S38tFE84BJnBatqYSIMxehmpKSUllaXj9gVvSPSnuEaO9GrYFw7kzph1ciOKxzLqrTBOVlHsbIa6eLsDuZSJq2py3ZtvonFfOWTu3Amcifeb2TdNdrGhj1iS97fpA1Uo6FJZGWcDeOFX7u0qP+BcdnNa37zj40R4lxkLoFH+EMuHdFGlR+Deh5rY+vhAbHq2dEpPz4tIAk/hf6er17gFS1iz/dsnnJJBFKcGEUtc62w4H1bK3Fcdu2z6gdr1FB0S3x2rBUG4pccemWABCMNKDfVO2BbG5uKDfw3g==',                                    '    signing-key /Common/f5-irule',
-                                    '}',
-                                    'EOF',
-                                    '# empty new line chars get stripped, strip out place holder NEW_LINE',
-                                    'sed -i "s/NEW_LINE//" /config/verifyHash',
+                                    'echo \'Y2xpIHNjcmlwdCAvQ29tbW9uL3ZlcmlmeUhhc2ggewpwcm9jIHNjcmlwdDo6cnVuIHt9IHsKICAgICAgICBpZiB7W2NhdGNoIHsKICAgICAgICAgICAgc2V0IGhhc2hlcyhmNS1jbG91ZC1saWJzLnRhci5neikgZGI4Y2IzMjIyNmJhYmI3NTU3YzA1ODg0OTg3ZmI0NTQyNDk4Y2ZjOTBiMDExN2ZjYzVlYzlkZTIwM2NhYWIxOGYxZTEyZWMwOTE2MTE1MTY5Njg3MmYxMmNhMzQyZjJmYTIyNTlkZDlkZmQ3NjkwNjYyMWI2NTM0NWM3NmI1YjIKICAgICAgICAgICAgc2V0IGhhc2hlcyhmNS1jbG91ZC1saWJzLWF3cy50YXIuZ3opIDA3NmM5NjljYmZmZjEyZWZhY2NlMDg3OTgyMDI2MmI3Nzg3Yzk4NjQ1ZjExMDU2NjdjYzQ5MjdkNGFjZmUyNDY2ZWQ2NGM3NzdiNmQzNTk1N2Y2ZGY3YWUyNjY5MzdkZGU0MmZlZjRjOGIxZjg3MDAyMGEzNjZmN2Y5MTBmZmI1CiAgICAgICAgICAgIHNldCBoYXNoZXMoZjUtY2xvdWQtbGlicy1henVyZS50YXIuZ3opIDkwMzcyMDNiMWFmMzEyODhiYTY5OTMyMDRhMmFiZjNiZDY2MGY2MmU3ZGZiMmQ1ODI1OTA5ZGQ2OTEzM2NlNWI0ZjVjNzI1YWZhYmQ3ZDJhY2FhNjkzNjY5Yzg3OGRhYTA0YTYzNzUzMTRkOTg1YmEwN2M4YTM2ZGNjYzYxYzVhCiAgICAgICAgICAgIHNldCBoYXNoZXMoZjUtY2xvdWQtbGlicy1nY2UudGFyLmd6KSAxNjc3ODM1ZTY5OTY3ZmQ5ODgyZWFkMDNjYmRkMjRiNDI2NjI3MTMzYjhkYjllNDFmNmRlNWEyNmZlZjk5YzJkN2I2OTU5NzhhYzE4OWYwMGY2MWMwNzM3ZTZkYmI2MzhkNDJkZWE0M2E4NjdlZjRjMDFkOTUwN2QwZWUxZmIyZgogICAgICAgICAgICBzZXQgaGFzaGVzKGY1LWNsb3VkLWxpYnMtb3BlbnN0YWNrLnRhci5neikgNWM4M2ZlNmE5M2E2ZmNlYjVhMmU4NDM3YjVlZDhjYzlmYWY0YzE2MjFiZmM5ZTZhMDc3OWY2YzIxMzdiNDVlYWI4YWUwZTdlZDc0NWM4Y2Y4MjFiOTM3MTI0NWNhMjk3NDljYTBiN2U1NjYzOTQ5ZDc3NDk2Yjg3MjhmNGIwZjkKICAgICAgICAgICAgc2V0IGhhc2hlcyhmNS1jbG91ZC1saWJzLWNvbnN1bC50YXIuZ3opIGEzMmFhYjM5NzA3M2RmOTJjYmJiYTUwNjdlNTgyM2U5YjVmYWZjYTg2MmEyNThiNjBiNmI0MGFhMDk3NWMzOTg5ZDFlMTEwZjcwNjE3N2IyZmZiZTRkZGU2NTMwNWEyNjBhNTg1NjU5NGNlN2FkNGVmMGM0N2I2OTRhZTRhNTEzCiAgICAgICAgICAgIHNldCBoYXNoZXMoYXNtLXBvbGljeS1saW51eC50YXIuZ3opIDYzYjVjMmE1MWNhMDljNDNiZDg5YWYzNzczYmJhYjg3YzcxYTZlN2Y2YWQ5NDEwYjIyOWI0ZTBhMWM0ODNkNDZmMWE5ZmZmMzlkOTk0NDA0MWIwMmVlOTI2MDcyNDAyNzQxNGRlNTkyZTk5ZjRjMjQ3NTQxNTMyM2UxOGE3MmUwCiAgICAgICAgICAgIHNldCBoYXNoZXMoZjUuaHR0cC52MS4yLjByYzQudG1wbCkgNDdjMTlhODNlYmZjN2JkMWU5ZTljMzVmMzQyNDk0NWVmODY5NGFhNDM3ZWVkZDE3YjZhMzg3Nzg4ZDRkYjEzOTZmZWZlNDQ1MTk5YjQ5NzA2NGQ3Njk2N2IwZDUwMjM4MTU0MTkwY2EwYmQ3Mzk0MTI5OGZjMjU3ZGY0ZGMwMzQKICAgICAgICAgICAgc2V0IGhhc2hlcyhmNS5odHRwLnYxLjIuMHJjNi50bXBsKSA4MTFiMTRiZmZhYWI1ZWQwMzY1ZjAxMDZiYjVjZTVlNGVjMjIzODU2NTVlYTNhYzA0ZGUyYTM5YmQ5OTQ0ZjUxZTM3MTQ2MTlkYWU3Y2E0MzY2MmM5NTZiNTIxMjIyODg1OGYwNTkyNjcyYTI1NzlkNGE4Nzc2OTE4NmUyY2JmZQogICAgICAgICAgICBzZXQgaGFzaGVzKGY1Lmh0dHAudjEuMi4wcmM3LnRtcGwpIDIxZjQxMzM0MmU5YTdhMjgxYTBmMGUxMzAxZTc0NWFhODZhZjIxYTY5N2QyZTZmZGMyMWRkMjc5NzM0OTM2NjMxZTkyZjM0YmYxYzJkMjUwNGMyMDFmNTZjY2Q3NWM1YzEzYmFhMmZlNzY1MzIxMzY4OWVjM2M5ZTI3ZGZmNzdkCiAgICAgICAgICAgIHNldCBoYXNoZXMoZjUuYXdzX2FkdmFuY2VkX2hhLnYxLjMuMHJjMS50bXBsKSA5ZTU1MTQ5YzAxMGMxZDM5NWFiZGFlM2MzZDJjYjgzZWMxM2QzMWVkMzk0MjQ2OTVlODg2ODBjZjNlZDVhMDEzZDYyNmIzMjY3MTFkM2Q0MGVmMmRmNDZiNzJkNDE0YjRjYjhlNGY0NDVlYTA3MzhkY2JkMjVjNGM4NDNhYzM5ZAogICAgICAgICAgICBzZXQgaGFzaGVzKGY1LmF3c19hZHZhbmNlZF9oYS52MS40LjByYzEudG1wbCkgZGUwNjg0NTUyNTc0MTJhOTQ5ZjFlYWRjY2FlZTg1MDYzNDdlMDRmZDY5YmZiNjQ1MDAxYjc2ZjIwMDEyNzY2OGU0YTA2YmUyYmJiOTRlMTBmZWZjMjE1Y2ZjMzY2NWIwNzk0NWU2ZDczM2NiZTFhNGZhMWI4OGU4ODE1OTAzOTYKICAgICAgICAgICAgc2V0IGhhc2hlcyhmNS5hd3NfYWR2YW5jZWRfaGEudjEuNC4wcmMyLnRtcGwpIDZhYjBiZmZjNDI2ZGY3ZDMxOTEzZjlhNDc0YjFhMDc4NjA0MzVlMzY2YjA3ZDc3YjMyMDY0YWNmYjI5NTJjMWYyMDdiZWFlZDc3MDEzYTE1ZTQ0ZDgwZDc0ZjMyNTNlN2NmOWZiYmUxMmE5MGVjNzEyOGRlNmZhY2QwOTdkNjhmCiAgICAgICAgICAgIHNldCBoYXNoZXMoZjUuYXdzX2FkdmFuY2VkX2hhLnYxLjQuMHJjMy50bXBsKSAyZjIzMzliNGJjM2EyM2M5Y2ZkNDJhYWUyYTZkZTM5YmEwNjU4MzY2ZjI1OTg1ZGUyZWE1MzQxMGE3NDVmMGYxOGVlZGM0OTFiMjBmNGE4ZGJhOGRiNDg5NzAwOTZlMmVmZGNhN2I4ZWZmZmExYTgzYTc4ZTVhYWRmMjE4YjEzNAogICAgICAgICAgICBzZXQgaGFzaGVzKGY1LmF3c19hZHZhbmNlZF9oYS52MS40LjByYzQudG1wbCkgMjQxOGFjOGIxZjE4ODRjNWMwOTZjYmFjNmE5NGQ0MDU5YWFhZjA1OTI3YTZhNDUwOGZkMWYyNWI4Y2M2MDc3NDk4ODM5ZmJkZGE4MTc2ZDJjZjJkMjc0YTI3ZTZhMWRhZTJhMWUzYTBhOTk5MWJjNjVmYzc0ZmMwZDAyY2U5NjMKICAgICAgICAgICAgc2V0IGhhc2hlcyhmNS5hd3NfYWR2YW5jZWRfaGEudjEuNC4wcmM1LnRtcGwpIDVlNTgyMTg3YWUxYTYzMjNlMDk1ZDQxZWRkZDQxMTUxZDZiZDM4ZWI4M2M2MzQ0MTBkNDUyN2EzZDBlMjQ2YThmYzYyNjg1YWIwODQ5ZGUyYWRlNjJiMDI3NWY1MTI2NGQyZGVhY2NiYzE2Yjc3MzQxN2Y4NDdhNGExZWE5YmM0CiAgICAgICAgICAgIHNldCBoYXNoZXMoYXNtLXBvbGljeS50YXIuZ3opIDJkMzllYzYwZDAwNmQwNWQ4YTE1NjdhMWQ4YWFlNzIyNDE5ZThiMDYyYWQ3N2Q2ZDlhMzE2NTI5NzFlNWU2N2JjNDA0M2Q4MTY3MWJhMmE4YjEyZGQyMjllYTQ2ZDIwNTE0NGY3NTM3NGVkNGNhZTU4Y2VmYThmOWFiNjUzM2U2CiAgICAgICAgICAgIHNldCBoYXNoZXMoZGVwbG95X3dhZi5zaCkgMWEzYTNjNjI3NGFiMDhhN2RjMmNiNzNhZWRjOGQyYjJhMjNjZDllMGViMDZhMmUxNTM0YjM2MzJmMjUwZjFkODk3MDU2ZjIxOWQ1YjM1ZDNlZWQxMjA3MDI2ZTg5OTg5Zjc1NDg0MGZkOTI5NjljNTE1YWU0ZDgyOTIxNGZiNzQKICAgICAgICAgICAgc2V0IGhhc2hlcyhmNS5wb2xpY3lfY3JlYXRvci50bXBsKSAwNjUzOWUwOGQxMTVlZmFmZTU1YWE1MDdlY2I0ZTQ0M2U4M2JkYjFmNTgyNWE5NTE0OTU0ZWY2Y2E1NmQyNDBlZDAwYzdiNWQ2N2JkOGY2N2I4MTVlZTlkZDQ2NDUxOTg0NzAxZDA1OGM4OWRhZTI0MzRjODk3MTVkMzc1YTYyMAogICAgICAgICAgICBzZXQgaGFzaGVzKGY1LnNlcnZpY2VfZGlzY292ZXJ5LnRtcGwpIDQ4MTFhOTUzNzJkMWRiZGJiNGY2MmY4YmNjNDhkNGJjOTE5ZmE0OTJjZGEwMTJjODFlM2EyZmU2M2Q3OTY2Y2MzNmJhODY3N2VkMDQ5YTgxNGE5MzA0NzMyMzRmMzAwZDNmOGJjZWQyYjBkYjYzMTc2ZDUyYWM5OTY0MGNlODFiCiAgICAgICAgICAgIHNldCBoYXNoZXMoZjUuY2xvdWRfbG9nZ2VyLnYxLjAuMC50bXBsKSA2NGEwZWQzYjVlMzJhMDM3YmE0ZTcxZDQ2MDM4NWZlOGI1ZTFhZWNjMjdkYzBlODUxNGI1MTE4NjM5NTJlNDE5YTg5ZjRhMmE0MzMyNmFiYjU0M2JiYTliYzM0Mzc2YWZhMTE0Y2VkYTk1MGQyYzNiZDA4ZGFiNzM1ZmY1YWQyMAogICAgICAgICAgICBzZXQgaGFzaGVzKGY1LWFwcHN2Y3MtMy41LjEtNS5ub2FyY2gucnBtKSBiYTcxYzZlMWM1MmQwYzcwNzdjZGIyNWE1ODcwOWI4ZmI3YzM3YjM0NDE4YTgzMzhiYmY2NzY2ODMzOTY3NmQyMDhjMWE0ZmVmNGU1NDcwYzE1MmFhYzg0MDIwYjRjY2I4MDc0Y2UzODdkZTI0YmUzMzk3MTEyNTZjMGZhNzhjOAoKICAgICAgICAgICAgc2V0IGZpbGVfcGF0aCBbbGluZGV4ICR0bXNoOjphcmd2IDFdCiAgICAgICAgICAgIHNldCBmaWxlX25hbWUgW2ZpbGUgdGFpbCAkZmlsZV9wYXRoXQoKICAgICAgICAgICAgaWYgeyFbaW5mbyBleGlzdHMgaGFzaGVzKCRmaWxlX25hbWUpXX0gewogICAgICAgICAgICAgICAgdG1zaDo6bG9nIGVyciAiTm8gaGFzaCBmb3VuZCBmb3IgJGZpbGVfbmFtZSIKICAgICAgICAgICAgICAgIGV4aXQgMQogICAgICAgICAgICB9CgogICAgICAgICAgICBzZXQgZXhwZWN0ZWRfaGFzaCAkaGFzaGVzKCRmaWxlX25hbWUpCiAgICAgICAgICAgIHNldCBjb21wdXRlZF9oYXNoIFtsaW5kZXggW2V4ZWMgL3Vzci9iaW4vb3BlbnNzbCBkZ3N0IC1yIC1zaGE1MTIgJGZpbGVfcGF0aF0gMF0KICAgICAgICAgICAgaWYgeyAkZXhwZWN0ZWRfaGFzaCBlcSAkY29tcHV0ZWRfaGFzaCB9IHsKICAgICAgICAgICAgICAgIGV4aXQgMAogICAgICAgICAgICB9CiAgICAgICAgICAgIHRtc2g6OmxvZyBlcnIgIkhhc2ggZG9lcyBub3QgbWF0Y2ggZm9yICRmaWxlX3BhdGgiCiAgICAgICAgICAgIGV4aXQgMQogICAgICAgIH1dfSB7CiAgICAgICAgICAgIHRtc2g6OmxvZyBlcnIge1VuZXhwZWN0ZWQgZXJyb3IgaW4gdmVyaWZ5SGFzaH0KICAgICAgICAgICAgZXhpdCAxCiAgICAgICAgfQogICAgfQogICAgc2NyaXB0LXNpZ25hdHVyZSBVNm5qbzJibUhISjg2cVMvYTErNytRRklJT1Y5Vkp6YVJub1ZvT3NCOUtqSGtXaVdZQ2hBVCtRUVd0eUFGZ01TRzlpbDhPbDRwU2hXbElKVmM1bGRKTXAzN0szSytDRFlCamVOVmFpNEZRUXZla2pzdXJsK0wxQ0Zyd2Q2ZHJNWVN4YmpTeEdXQ0hjWmxrWkZyc2thU2VqNnh6bytzY0I0YWVEN3ozTTJvbTdJb3Y4bnE0eDNTOXRUZ05IRkk5WG5MR0doMHBlK0k1Q2FtbkIvZnZySFlTdFljZG5JMzZCTHluZ2dCNk84L2hZb2NYZm1HS2pZNVRkOWdBK3ppcTZPUUhveHR6anpndXllcHRIYThXc0NCNjZneGc3VElPTERLOURmb1NwUWJJS3lOcytCTkw5MVE2UnF5Z2ZRZFVyckFZcnROMlJZdEtrbUs4WFJzNzdWbGc9PQogICAgc2lnbmluZy1rZXkgL0NvbW1vbi9mNS1pcnVsZQp9\' | base64 -d > /config/verifyHash',
                                     'cat <<\'EOF\' > /config/waitThenRun.sh',
                                     '#!/bin/bash',
                                     'while true; do echo \"waiting for cloud libs install to complete\"',
@@ -248,6 +223,7 @@ def Metadata(context):
                                     'done',
                                     '\"$@\"',
                                     'EOF',
+  
                                     'cat <<\'EOF\' > /config/cloud/gce/collect-interface.sh',
                                     '#!/bin/bash',
                                     'echo "MGMTADDRESS=$(curl -s -f --retry 20 \'http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/1/ip\' -H \'Metadata-Flavor: Google\')" >> /config/cloud/gce/interface.config',
@@ -302,7 +278,7 @@ def Metadata(context):
                                     '}',
                                     'declare -a tmsh=()',
                                     'date',
-                                    'echo "starting custom-config.sh"',
+                                    'echo \'starting custom-config.sh\'',
                                     'useServiceDiscovery=' + str(context.properties['tagValue']),
                                     'if [ -n "${useServiceDiscovery}" ] && [ "${useServiceDiscovery}" != "None" ];then',
                                     '   tmsh+=('
@@ -325,12 +301,14 @@ def Metadata(context):
                                     '"tmsh create net route ext_gw_interface network ${INT1GATEWAY}/32 interface external"',
                                     '"tmsh create net route ext_rt network ${INT1NETWORK}/${INT1MASK} gw ${INT1GATEWAY}"',
                                     '"tmsh create net route default gw ${INT1GATEWAY}"',
-                                    '"tmsh save /sys config"',
-                                    '"bigstart restart restnoded")',
+                                    '\'tmsh save /sys config\'',
+                                    '\'tmsh restart sys service mcpd\'',
+                                    '\'bigstart restart restnoded\'',
+                                    '\'bigstart restart\')',
                                     'for CMD in "${tmsh[@]}"',
                                     'do',
                                     '    if $CMD;then',
-                                    '        echo \"command $CMD successfully executed."',
+                                    '        echo "command $CMD successfully executed."',
                                     '    else',
                                     '        error_exit "$LINENO: An error has occurred while executing $CMD. Aborting!"',
                                     '    fi',
@@ -365,7 +343,7 @@ def Metadata(context):
                                     'fi',
                                     '### END CUSTOM TMSH CONFIGURATION',
                                     'EOF',
-                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs/v4.8.2/f5-cloud-libs.tar.gz',
+                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs/v4.9.1/f5-cloud-libs.tar.gz',
                                     'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs-gce.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs-gce/v2.3.4/f5-cloud-libs-gce.tar.gz',
                                     'curl -s -f --retry 20 -o /config/cloud/f5-appsvcs-3.5.1-5.noarch.rpm https://cdn.f5.com/product/cloudsolutions/f5-appsvcs-extension/v3.6.0/dist/lts/f5-appsvcs-3.5.1-5.noarch.rpm',
                                     'curl -s -f --retry 20 -o /config/cloud/f5.service_discovery.tmpl https://cdn.f5.com/product/cloudsolutions/iapps/common/f5-service-discovery/v2.3.2/f5.service_discovery.tmpl',
@@ -379,17 +357,25 @@ def Metadata(context):
                                     'nohup /config/installCloudLibs.sh &>> /var/log/cloud/google/install.log < /dev/null &',
                                     'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/onboard.js --version &>> /var/log/cloud/google/install.log < /dev/null &',
                                     CUSTHASH,
-                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/onboard.js --db provision.managementeth:eth1 --port 443 --ssl-port ' + str(context.properties['mgmtGuiPort']) + ' -o /var/log/cloud/google/onboard.log  --log-level ' + str(context.properties['logLevel']) + ' --install-ilx-package file:///config/cloud/f5-appsvcs-3.5.1-5.noarch.rpm --host localhost ' + ntp_list + timezone + ' --module ltm:nominal --license ' + str(context.properties['licenseKey1']) + SENDANALYTICS + ' &>> /var/log/cloud/google/install.log < /dev/null &',
-                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/collect-interface.sh --cwd /config/cloud/gce -o /var/log/cloud/google/interface-config.log  --log-level ' + str(context.properties['logLevel']) + ' --wait-for ONBOARD_DONE --signal INT_COLLECTION_DONE &>> /var/log/cloud/google/install.log < /dev/null &',
-                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/network.js --host localhost --force-reboot -o /var/log/cloud/google/network.log  --log-level ' + str(context.properties['logLevel']) + ' --wait-for INT_COLLECTION_DONE --signal NETWORK_CONFIG_DONE  &>> /var/log/cloud/google/install.log < /dev/null &',
-                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/custom-config.sh --cwd /config/cloud/gce -o /var/log/cloud/google/custom-config.log  --log-level ' + str(context.properties['logLevel']) + ' --wait-for NETWORK_CONFIG_DONE --signal CUSTOM_CONFIG_DONE &>> /var/log/cloud/google/install.log < /dev/null &',
+        
+                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/onboard.js --db provision.managementeth:eth1 --global-setting mgmt-dhcp:disabled --port 443 --ssl-port ' + str(context.properties['mgmtGuiPort']) + ' -o /var/log/cloud/google/onboard.log --log-level ' + str(context.properties['logLevel']) + ' --install-ilx-package file:///config/cloud/f5-appsvcs-3.5.1-5.noarch.rpm --host localhost ' + ntp_list + timezone + ' --modules ' + PROVISIONING_MODULES + ' --license ' + str(context.properties['licenseKey1']) + SENDANALYTICS + ' &>> /var/log/cloud/google/install.log < /dev/null &',
+                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/collect-interface.sh --cwd /config/cloud/gce -o /var/log/cloud/google/interface-config.log --log-level ' + str(context.properties['logLevel']) + ' --wait-for ONBOARD_DONE --signal INT_COLLECTION_DONE &>> /var/log/cloud/google/install.log < /dev/null &',
+                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/network.js --host localhost --force-reboot -o /var/log/cloud/google/network.log --log-level ' + str(context.properties['logLevel']) + ' --wait-for INT_COLLECTION_DONE --signal NETWORK_CONFIG_DONE  &>> /var/log/cloud/google/install.log < /dev/null &',
+                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/custom-config.sh --cwd /config/cloud/gce -o /var/log/cloud/google/custom-config.log --log-level ' + str(context.properties['logLevel']) + ' --wait-for NETWORK_CONFIG_DONE --signal CUSTOM_CONFIG_DONE &>> /var/log/cloud/google/install.log < /dev/null &',
                                     'touch /config/startupFinished',
                                     ])
                             )
                 }]
     }
     return metadata
+
 def Outputs(context):
+    output_ip_options = {
+        'public': '.accessConfigs[0].natIP',
+        'private': '.networkIP'
+    }
+    pub_or_priv = 'public' if str(context.properties['provisionPublicIP']).lower() == 'yes' else 'private'
+
     outputs = [{
         'name': 'region',
         'value': context.properties['region']
@@ -400,13 +386,14 @@ def Outputs(context):
     },
     {
         'name': 'mgmtURL',
-        'value': 'https://$(ref.bigip1-' + context.env['deployment'] + '.networkInterfaces[1].accessConfigs[0].natIP):' + str(context.properties['mgmtGuiPort'])
+        'value': 'https://$(ref.bigip1-' + context.env['deployment'] + '.networkInterfaces[1]' + output_ip_options[pub_or_priv] + '):' + str(context.properties['mgmtGuiPort'])
     },
     {
         'name': 'appTrafficAddress',
-        'value': '$(ref.bigip1-' + context.env['deployment'] + '.networkInterfaces[0].accessConfigs[0].natIP)'
+        'value': '$(ref.bigip1-' + context.env['deployment'] + '.networkInterfaces[0]' + output_ip_options[pub_or_priv] + ')'
     }]
     return outputs
+
 def GenerateConfig(context):
     ## set variables
 

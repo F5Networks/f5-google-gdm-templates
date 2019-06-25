@@ -1,14 +1,16 @@
-# Copyright 2018 F5 Networks All rights reserved.
-info: 
+# Copyright 2019 F5 Networks All rights reserved.
+
+info:
   title: F5 BIG-IP 3NIC
   author: F5 Networks
-  description: Creates a BIG-IP with 3 network interfaces.
+  description: Creates a BIG-IP with 3 network interface(s).
   version: 2.1.2
 imports:
   - path: f5-existing-stack-payg-3nic-bigip.py
 required:
   - region
   - availabilityZone1
+  - allowUsageAnalytics
   - mgmtNetwork
   - mgmtSubnet
   - restrictedSrcAddress
@@ -17,6 +19,7 @@ required:
   - subnet1
   - network2
   - subnet2
+  - provisionPublicIP
   - imageName
   - instanceType
   - declarationUrl
@@ -40,7 +43,7 @@ properties:
   restrictedSrcAddress:
     description: This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources
     type: string
-  restrictedSrcAddressApp:   
+  restrictedSrcAddressApp:
     description: This field restricts web application access (ports 80 and 443) to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources.
     type: string
   network1:
@@ -54,17 +57,21 @@ properties:
     type: string
     default: DYNAMIC
   network2:
-    description: Specify the Network name for BIG-IP internal application traffic
+    description: Specify the Network name for BIG-IP application traffic
     type: string
   subnet2:
-    description: Subnet of the Network BIG-IP should use for internal application traffic
+    description: Subnet of the Network BIG-IP should use for application traffic
     type: string
   subnet2Address:
     description: Static IP address to use (optional). Note, for dynamic address provisioning use the default value of 'DYNAMIC'
     type: string
     default: DYNAMIC
+  provisionPublicIP:
+    description: Provision Public IP addresses for BIG-IP Network Interfaces. By default it is set to provision public IPs
+    type: [string, boolean]
+    default: 'yes'
   imageName:
-    description: BIG-IP image, valid choices include - f5-hourly-bigip-13-1-1-0-0-4-best-1gbps, f5-hourly-bigip-13-1-1-0-0-4-best-200mbps, f5-hourly-bigip-13-1-1-0-0-4-best-25mbps, f5-hourly-bigip-13-1-1-0-0-4-best-5gbps, f5-hourly-bigip-13-1-1-0-0-4-better-1gbps, f5-hourly-bigip-13-1-1-0-0-4-better-200mbps, f5-hourly-bigip-13-1-1-0-0-4-better-25mbps, f5-hourly-bigip-13-1-1-0-0-4-better-5gbps, f5-hourly-bigip-13-1-1-0-0-4-good-1gbps, f5-hourly-bigip-13-1-1-0-0-4-good-200mbps, f5-hourly-bigip-13-1-1-0-0-4-good-25mbps, f5-hourly-bigip-13-1-1-0-0-4-good-5gbps
+    description: BIG-IP image, valid choices include - f5-bigip-14-1-0-3-0-0-6-payg-best-10gbps-190329165642, f5-bigip-14-1-0-3-0-0-6-payg-best-1gbps-190329165642, f5-bigip-14-1-0-3-0-0-6-payg-best-200mbps-190329165642, f5-bigip-14-1-0-3-0-0-6-payg-best-25mbps-190329165642, f5-bigip-14-1-0-3-0-0-6-payg-best-5gbps-190329165642, f5-bigip-14-1-0-3-0-0-6-payg-better-10gbps-190329165642, f5-bigip-14-1-0-3-0-0-6-payg-better-1gbps-190329165642, f5-bigip-14-1-0-3-0-0-6-payg-better-200mbps-190329165642, f5-bigip-14-1-0-3-0-0-6-payg-better-25mbps-190329165642, f5-bigip-14-1-0-3-0-0-6-payg-better-5gbps-190329165642, f5-bigip-14-1-0-3-0-0-6-payg-good-10gbps-190326001429, f5-bigip-14-1-0-3-0-0-6-payg-good-1gbps-190326001429, f5-bigip-14-1-0-3-0-0-6-payg-good-200mbps-190326001429, f5-bigip-14-1-0-3-0-0-6-payg-good-25mbps-190326001429, f5-bigip-14-1-0-3-0-0-6-payg-good-5gbps-190326001429, f5-bigip-14-1-0-3-0-0-6-payg-hp-ltm-16vcpu-190326001429, f5-bigip-14-1-0-3-0-0-6-payg-pve-ltm-200mbps-190326001340, f5-bigip-14-1-0-3-0-0-6-payg-pve-ltm-25mbps-190326001340
     type: string
   instanceType:
     description: Instance type assigned to BIG-IP, example n1-standard-4.
@@ -80,10 +87,14 @@ properties:
     description: List NTP servers separated by a space
     type: string
     default: time.google.com
-  timezone:   
+  timezone:
     description: Enter the Olson timezone string from /usr/share/zoneinfo
     type: string
     default: UTC
+  bigIpModules:
+    description: Comma separated list of modules and levels to provision, for example, 'ltm:nominal,asm:nominal'
+    type: string
+    default: ltm:nominal
   serviceAccount:
     description: If using service discovery, enter the Google service account to use for discovery. Leave blank if not using service discovery
     type: string
@@ -98,8 +109,8 @@ properties:
     default: ''
   allowUsageAnalytics:
     description: This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent
-    type: boolean
-    default: yes
+    type: [string, boolean]
+    default: 'yes'
   logLevel:
     description: Log setting, used to set log level on scripts used during deployment. Acceptable values are error, warn, info, verbose, debug, or silly.
     type: string
@@ -111,4 +122,4 @@ properties:
 documentation:
   - README.md
 examples:
-  - f5-existing-stack-payg-3nic-bigip.yaml  
+  - f5-existing-stack-payg-3nic-bigip.yaml
