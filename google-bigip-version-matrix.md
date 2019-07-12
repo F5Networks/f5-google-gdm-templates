@@ -6,6 +6,7 @@ The following table contains all of the tagged releases of the F5 Google Deploym
 
 | Release Tag | Template Family | BIG-IP Versions | PAYG License Bundles and Throughput | BYOL Image options (v13.1.1 and later) |
 | --- | --- | --- | --- | --- |
+| [v3.0.1](https://github.com/F5Networks/f5-google-gdm-templates/releases/tag/v3.0.1) | Standalone | BIG-IP v14.1.0 | Good/Better/Best: 5Gbps, 1Gbps, 200Mbps, 25Mbps | AllTwoBootLocations, LTMTwoBootLocations |
 | [v3.0.0](https://github.com/F5Networks/f5-google-gdm-templates/releases/tag/v3.0.0) | Standalone | BIG-IP v14.1.0 | Good/Better/Best: 5Gbps, 1Gbps, 200Mbps, 25Mbps | AllTwoBootLocations, LTMTwoBootLocations |
 | [v2.2.0](https://github.com/F5Networks/f5-google-gdm-templates/releases/tag/v2.2.0) | Standalone | BIG-IP v13.1.1 | Good/Better/Best: 5Gbps, 1Gbps, 200Mbps, 25Mbps | AllTwoBootLocations, LTMTwoBootLocations |
 | [v2.1.3](https://github.com/F5Networks/f5-google-gdm-templates/releases/tag/v2.1.3) | Standalone | BIG-IP v13.1.1 | Good/Better/Best: 5Gbps, 1Gbps, 200Mbps, 25Mbps | AllTwoBootLocations, LTMTwoBootLocations |
@@ -21,6 +22,10 @@ The following table contains all of the tagged releases of the F5 Google Deploym
 | [v1.2.0](https://github.com/F5Networks/f5-google-gdm-templates/releases/tag/v1.2.0) | Standalone | BIG-IP v13.0 | Good/Better/Best: 5Gbps, 1Gbps, 200Mbps, 25Mbps | |
 | [v1.1.0](https://github.com/F5Networks/f5-google-gdm-templates/releases/tag/v1.1.0) | Standalone | BIG-IP v13.0 | Good/Better/Best: 5Gbps, 1Gbps, 200Mbps, 25Mbps | |
 | [v1.0.0](https://github.com/F5Networks/f5-google-gdm-templates/releases/tag/v1.0.0) | Standalone | BIG-IP v13.0 | Good/Better/Best: 5Gbps, 1Gbps, 200Mbps, 25Mbps | |
+
+If you would like to view all available images, run the following command from the **gcloud** command line: 
+
+```$ gcloud compute images list --project f5-7626-networks-public | grep f5```
 
 ## Copyright
 

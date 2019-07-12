@@ -55,14 +55,6 @@ properties:
   serviceAccount:
     description: Enter service account with correct roles.
     type: string
-  tagName:
-    description: If using service discovery, enter the tag name used on servers for discovery.
-    type: string
-    default: ''
-  tagValue:
-    description: If using service discovery, enter the tag value used on servers for discovery.
-    type: string
-    default: ''
   targetSize:
     description: Minimum number of instances autoscale policy will scale down to
     type: integer

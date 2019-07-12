@@ -1,6 +1,6 @@
 # Copyright 2019 F5 Networks All rights reserved.
 #
-# Version v2.2.0
+# Version 3.0.1
 ## note deployment name can not excede 23 charactors.
 
 imports:
@@ -37,12 +37,8 @@ resources:
    manGuiPort: 8443
    ## Enter the modules and povisioning level
    bigIpModules: asm:nominal
-   ### If using service discovery, enter the Google service account to use for discovery. Leave single quotes with nothing between when not using service discovery.
+   ### Enter the Google service account to use for autoscale API calls.
    serviceAccount: '<service acount>'
-   ### If using service discovery, enter the tag name used on servers for discovery. Leave single quotes with nothing between if not using service discovery.
-   tagName: <tagname>
-   ### If using service discovery, enter the tag value used on servers for discovery. Leave single quotes with nothing between if not using service discovery.
-   tagValue: <tagvalue>
    ### Number of instances to start
    targetSize: 2
    ### Minimum number of instances autoscale policy will scale down to.

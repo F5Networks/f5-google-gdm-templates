@@ -13,14 +13,13 @@ required:
   - allowUsageAnalytics
   - mgmtNetwork
   - mgmtSubnet
+  - restrictedSrcAddress
   - network1
   - subnet1
   - network2
   - subnet2
   - licenseKey1
   - licenseKey2
-  - aliasIp
-  - numberOfForwardingRules
   - provisionPublicIP
   - imageName
   - instanceType
@@ -38,6 +37,9 @@ properties:
     type: string
   mgmtSubnet:
     description: Specify the subnet to use for management traffic
+    type: string
+  restrictedSrcAddress:
+    description: This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources
     type: string
   network1:
     description: Specify the Network name for BIG-IP application traffic
@@ -58,7 +60,7 @@ properties:
     description: BIG-IP license key
     type: string
   aliasIp:
-    description: Number of forwarding rules to create, for example '1'.  All integers from 1 to the max quota for the forwarding rules resource type are allowed.
+    description: Alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'.  A list of alias IPs can be provided, separated by a space.
     type: string
   numberOfForwardingRules:
     description: Number of forwarding rules to create, for example '1'.  All integers from 1 to the max quota for the forwarding rules resource type are allowed.
@@ -85,14 +87,6 @@ properties:
   serviceAccount:
     description: Enter service account with correct roles.
     type: string
-  tagName:
-    description: If using service discovery, enter the tag name used on servers for discovery.
-    type: string
-    default: ''
-  tagValue:
-    description: If using service discovery, enter the tag value used on servers for discovery.
-    type: string
-    default: ''
   allowUsageAnalytics:
     description: This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent
     type: [string, boolean]

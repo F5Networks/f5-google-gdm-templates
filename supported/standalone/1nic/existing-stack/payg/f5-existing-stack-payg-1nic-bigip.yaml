@@ -1,6 +1,6 @@
 # Copyright 2019 F5 Networks All rights reserved.
 #
-# Version v2.2.0
+# Version 3.0.1
 
 imports:
 - path: f5-existing-stack-payg-1nic-bigip.py
@@ -54,14 +54,8 @@ resources:
    ntpServer: <server server>
    ## (Optional, Defaults to UTC) Enter the Olson timezone string from /usr/share/zoneinfo
    timezone: <timezone>
-   ## Enter the modules and povisioning level
+   ## Enter the modules and provisioning level
    bigIpModules: ltm:nominal
-   ### (Optional) If using service discovery, enter the Google service account to use for discovery. Leave blank if not using service discovery.
-   serviceAccount: <service account>
-   ### (Optional) If using service discovery, enter the tag name used on servers for discovery. Leave blank if not using service discovery.
-   tagName: <tag>
-   ### (Optional) If using service discovery, enter the tag value used on servers for discovery. Leave blank if not using service discovery.
-   tagValue: <value>
    ### This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent.
    allowUsageAnalytics: 'yes'
    ### (Optional, Defaults to Info) Log setting, used to set log level on scripts used during deployment. Acceptable values:error, warn, info, verbose, debug, silly.

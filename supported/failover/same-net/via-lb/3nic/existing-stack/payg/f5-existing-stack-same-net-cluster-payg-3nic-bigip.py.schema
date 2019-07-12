@@ -101,14 +101,6 @@ properties:
   serviceAccount:
     description: Enter service account with correct roles.
     type: string
-  tagName:
-    description: If using service discovery, enter the tag name used on servers for discovery.
-    type: string
-    default: ''
-  tagValue:
-    description: If using service discovery, enter the tag value used on servers for discovery.
-    type: string
-    default: ''
   allowUsageAnalytics:
     description: This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent
     type: [string, boolean]

@@ -83,18 +83,6 @@ properties:
     description: Comma separated list of modules and levels to provision, for example, 'ltm:nominal,asm:nominal'
     type: string
     default: ltm:nominal
-  serviceAccount:
-    description: If using service discovery, enter the Google service account to use for discovery. Leave blank if not using service discovery
-    type: string
-    default: ''
-  tagName:
-    description: If using service discovery, enter the tag name used on servers for discovery.
-    type: string
-    default: ''
-  tagValue:
-    description: If using service discovery, enter the tag value used on servers for discovery.
-    type: string
-    default: ''
   allowUsageAnalytics:
     description: This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent
     type: [string, boolean]

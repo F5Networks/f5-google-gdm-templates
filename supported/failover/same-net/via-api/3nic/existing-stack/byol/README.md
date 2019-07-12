@@ -32,7 +32,7 @@ The following are prerequisites for the F5 failover-api 3 NIC GDM template:
 - An F5 Networks BYOL license (Bring Your Own License) available.
 - You must have installed the [Google Cloud SDK](https://cloud.google.com/sdk/downloads)
 - Key pair for SSH access to BIG-IP VE (you can create or import this in Google Cloud)
-- Three Google Cloud Platform (GCP) networks with at least one subnet in each. The subnet for the management network requires a route and access to the Internet for the initial configuration to download the BIG-IP cloud library.
+- Three Virtual Private Cloud (VPC) networks with at least one subnet in each. The subnet for the management network requires a route and access to the Internet for the initial configuration to download the BIG-IP cloud library.
 - A Google Firewall rule with the following inbound rules:
     - Port 22 for SSH access to the BIG-IP VE
     - Port 443 (or alternate port) for accessing the BIG-IP web-based Configuration utility
@@ -45,10 +45,12 @@ The following are prerequisites for the F5 failover-api 3 NIC GDM template:
 
 ## Important configuration notes
 
-- All F5 Google templates include Application Services 3 Extension (AS3) v3.5.1 (LTS version) on the BIG-IP VE.  As of release 4.1.2, all supported templates give the option of including the URL of an AS3 declaration, which you can use to specify the BIG-IP configuration you want on your newly created BIG-IP VE(s).  In templates such as autoscale, where an F5-recommended configuration is deployed by default, specifying an AS3 declaration URL will override the default configuration with your declaration.   See the [AS3 documentation](https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/3.5.1/) for details on how to use AS3.  
+- All F5 Google templates include Application Services 3 Extension (AS3) v3.5.1 (LTS version) on the BIG-IP VE.  As of release 4.1.2, all supported templates give the option of including the URL of an AS3 declaration, which you can use to specify the BIG-IP configuration you want on your newly created BIG-IP VE(s).  In templates such as autoscale, where an F5-recommended configuration is deployed by default, specifying an AS3 declaration URL will override the default configuration with your declaration.   See the [AS3 documentation](https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/3.5.1/) for details on how to use AS3.
 - This template supports service discovery.  See the [Service Discovery section](#service-discovery) for details.
 - F5 has created a matrix that contains all of the tagged releases of the F5 Google GDM templates, and the corresponding BIG-IP versions, license types and throughput levels available for a specific tagged release. See the matrix [here](https://github.com/F5Networks/f5-google-gdm-templates/blob/master/google-bigip-version-matrix.md).
+- If you would like to view all available images, run the following command from the **gcloud** command line: ```$ gcloud compute images list --project f5-7626-networks-public | grep f5```
 - This directory now contains a schema file which helps manage the required fields and set defaults to optional fields.  For example, if you omit the property for NTP servers in your configuration file,  we set the default server to time.google.com.
+- Note that when configuring GCP failover, if no external public IPs are provisioned, a GCP alias IP range is required.
 - **Important**: This solution configures the second interface of the instance as the MGMT interface.  This allows the first interface to be used by Google Cloud resources such as forwarding rules and load balancers for application traffic.  To connect to the MGMT interface (nic1) get the IP address from the instance properties and use your management tool of choice.  Note: The Google Cloud console and gcloud SSH connection options target nic0 and will not connect to the instance correctly.
 - In order to pass traffic from your clients to the servers, after launching the template, you must create virtual server(s) on the BIG-IP VE.  See [Creating a virtual server](#creating-virtual-servers-on-the-big-ip-ve).
 - This template creates target instances for each BIG-IP VE as well as a user specified number of forwarding rules.  For more information on creating or modifying these rules see the google [documentation](https://cloud.google.com/load-balancing/docs/forwarding-rules).
@@ -60,16 +62,16 @@ The following are prerequisites for the F5 failover-api 3 NIC GDM template:
 This GDM template downloads helper code to configure the BIG-IP system. If you want to verify the integrity of the template, you can open the GDM template and ensure the following lines are present. See [Security Detail](#securitydetail) for the exact code in each of the following sections.
 
 - In the */config/verifyHash* section: **script-signature** and then a hashed signature
-No Value
+
 
 Additionally, F5 provides checksums for all of our supported Google Deployment Manager templates. For instructions and the checksums to compare against, see this [link](https://devcentral.f5.com/codeshare/checksums-for-f5-supported-cft-and-arm-templates-on-github-1014).
 
-No Value
+
 
 ### Help
 
 **F5 Support** <br>
-No Value
+Because this template has been created and fully tested by F5 Networks, it is fully supported by F5. This means you can get assistance if necessary from [F5 Technical Support](https://support.f5.com/csp/article/K44842449). You can modify the template itself if necessary, but if you modify any of the code outside of the lines ### START CUSTOM TMSH CONFIGURATION and ### END CUSTOM TMSH CONFIGURATION the template is no longer supported by F5.
 
 **Community Support** <br>
 We encourage you to use our [Slack channel](https://f5cloudsolutions.herokuapp.com) for discussion and assistance on F5 Google GDM templates. There are F5 employees who are members of this community who typically monitor the channel Monday-Friday 9-5 PST and will offer best-effort assistance. This slack channel community support should **not** be considered a substitute for F5 Technical Support. See the [Slack Channel Statement](https://github.com/F5Networks/f5-google-gdm-templates/blob/master/slack-channel-statement.md) for guidelines on using this channel.
@@ -91,7 +93,7 @@ You ***must edit the YAML file*** to include information for your deployment bef
 
 ### Edit the YAML file
 
-After completing the prerequisites, edit the YAML file.  You must replace the following parameters with the appropriate values. For more information about the Service Discovery fields, see [Service Discovery section](#service-discovery).
+After completing the prerequisites, edit the YAML file.  You must replace the following parameters with the appropriate values.
 
 | Parameter | Required | Description |
 | --- | --- | --- |
@@ -99,22 +101,21 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | availabilityZone1 | Yes | The availability zone where you want to deploy the BIG-IP VE instance, for example us-west1-a |
 | mgmtNetwork | Yes | Specify the network to use for management traffic |
 | mgmtSubnet | Yes | Specify the subnet to use for management traffic |
+| restrictedSrcAddress | Yes | This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources |
 | network1 | Yes | Specify the Network name for BIG-IP application traffic |
 | subnet1 | Yes | Subnet of the Network BIG-IP should use for application traffic |
 | network2 | Yes | Specify the Network name for BIG-IP internal application traffic |
 | subnet2 | Yes | Subnet of the Network BIG-IP should use for internal application traffic |
 | licenseKey1 | Yes | BIG-IP license key |
 | licenseKey2 | Yes | BIG-IP license key |
-| aliasIp | Yes | Number of forwarding rules to create, for example '1'.  All integers from 1 to the max quota for the forwarding rules resource type are allowed. |
-| numberOfForwardingRules | Yes | Number of forwarding rules to create, for example '1'.  All integers from 1 to the max quota for the forwarding rules resource type are allowed. |
+| aliasIp | No | Alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'.  A list of alias IPs can be provided, separated by a space. |
+| numberOfForwardingRules | No | Number of forwarding rules to create, for example '1'.  All integers from 1 to the max quota for the forwarding rules resource type are allowed. |
 | provisionPublicIP | Yes | Provision Public IP addresses for BIG-IP Network Interfaces. By default it is set to provision public IPs. |
 | imageName | Yes | BIG-IP image, valid choices include - f5-bigip-14-1-0-3-0-0-6-byol-all-module-2boot-loc-190326001340, f5-bigip-14-1-0-3-0-0-6-byol-ltm-2boot-loc-190326001052 |
 | instanceType | Yes | Instance type assigned to BIG-IP, example n1-standard-4. |
 | mgmtGuiPort | No | (optional) BIG-IP Management Port |
 | bigIpModules | No | Comma separated list of modules and levels to provision, for example, 'ltm:nominal,asm:nominal' |
 | serviceAccount | Yes | Enter service account with correct roles. |
-| tagName | No | If using service discovery, enter the tag name used on servers for discovery. |
-| tagValue | No | If using service discovery, enter the tag value used on servers for discovery. |
 | allowUsageAnalytics | Yes | This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent |
 | logLevel | No | Log setting, used to set log level on scripts used during deployment. Acceptable values are error, warn, info, verbose, debug, or silly. |
 | declarationUrl | Yes | URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration. |
@@ -126,7 +127,7 @@ After you have edited the YAML file with the appropriate values, save the YAML f
 
 ### Deploy the BIG-IP VE
 
-The final task is to deploy the BIG-IP VE from the **gcloud** command line.  See https://cloud.google.com/sdk/gcloud/reference/deployment-manager/deployments/create for specific information.  
+The final task is to deploy the BIG-IP VE from the **gcloud** command line.  See https://cloud.google.com/sdk/gcloud/reference/deployment-manager/deployments/create for specific information.
 
 You can either create a new deployment from the [top-level YAML file](#deploying-from-the-yaml-file), or the [top-level template file](#deploying-from-the-template-file).
 
@@ -140,7 +141,7 @@ Keep in mind the following:
 - *your-deployment-name*<br>This name must be unique.<br>
 - *your-file-name.yaml*<br>  If your file is not in the same directory as the Google SDK, include the full file path in the command.
 
-No Value
+
 
 #### Deploying from the template file
 To deploy the BIG-IP VE from the top-level template file, use the following syntax, and set each property key you are using:
@@ -168,9 +169,8 @@ In this template, each IP address is associated with a GCP object attached to th
 4. In the **Destination/Mask** field, type the IP address of the object to be associated with your application (for example: 10.0.1.10/32 or 80.80.80.80/32).
 5. In the **Service Port** field, type the appropriate port.
 6. Configure the rest of the virtual server as appropriate.
-7. If you used the Service Discovery iApp template: In the Resources section, from the **Default Pool** list, select the name of the pool created by the iApp.
-8. Click the **Finished** button.
-9. Repeat as necessary.
+7. Click the **Finished** button.
+8. Repeat as necessary.
 
 When you have completed the virtual server configuration, you may modify the virtual addresses to use an alternative Traffic Group using the following guidance.
 1. On the Main tab, click **Local Traffic > Virtual Servers**.
@@ -194,9 +194,7 @@ This template supports associating GCP resources with up to two BIG-IP traffic g
 
 ## Service Discovery
 
-This Google GDM template supports Service Discovery.  If you enable it in the YAML file, the template runs the Service Discovery iApp template on the BIG-IP VE. Once you have properly tagged the servers you want to include, and then entered the corresponding tags (**tagName** and **tagValue**) and Google service account in the YAML file, the BIG-IP VE programmatically discovers (or removes) members using those tags. See our [Service Discovery video](https://www.youtube.com/watch?v=ig_pQ_tqvsI) to see this feature in action.
-
-**Important**: Even if you don't plan on using the Service Discovery iApp initially, if you think you may want to use it in the future, you must specify the Google service account (**serviceAccount**) in the YAML file before deploying the template.
+This Google GDM template includes the Service Discovery iApp. See our [Service Discovery video](https://www.youtube.com/watch?v=ig_pQ_tqvsI) to see how to configure the Service Discovery iApp, and see this feature in action.
 
 ### Tagging
 
@@ -206,16 +204,7 @@ In Google, you tag objects using the **labels** parameter within the virtual mac
 
 The BIG-IP VE will discover the primary public or private IP addresses for the primary NIC configured for the tagged VM.
 
-
 **Important**: Make sure the tags and IP addresses you use are unique. You should not tag multiple GDM nodes with the same key/tag combination if those nodes use the same IP address.
-
-
-When enabled, the template runs the iApp template automatically.  If you need to modify the template after this initial configuration has taken place, use the following guidance.
-
-1. From the BIG-IP VE web-based Configuration utility, on the Main tab, click **iApps > Application Services**.
-2. From the list of application services, click **serviceDiscovery**.
-3. You can now modify the template settings as applicable.  For assistance, from the *Do you want to see inline help?* question, select **Yes, show inline help**.
-4. When you are done, click the **Finished** button.
 
 If you want to verify the integrity of the template, from the BIG-IP VE Configuration utility click **iApps > Templates**. In the template list, look for **f5.service_discovery**. In the Verification column, you should see **F5 Verified**.
 

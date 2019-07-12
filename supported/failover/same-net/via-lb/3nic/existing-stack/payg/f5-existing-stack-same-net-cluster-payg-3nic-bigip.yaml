@@ -1,6 +1,6 @@
 # Copyright 2019 F5 Networks All rights reserved.
 #
-# Version v2.2.0
+# Version 3.0.1
 
 imports:
 - path: f5-existing-stack-same-net-cluster-payg-3nic-bigip.py
@@ -75,10 +75,6 @@ resources:
    bigIpModules: ltm:nominal
    ### Enter service account with correct roles.
    serviceAccount: <service account>
-   ### (Optional) If using service discovery, enter the tag name used on servers for discovery.
-   tagName: <tag>
-   ### (Optional) If using service discovery, enter the tag value used on servers for discovery.
-   tagValue: <value>
    ### This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent.
    allowUsageAnalytics: 'yes'
    ### (Optional, Defaults to Info) Log setting, used to set log level on scripts used during deployment. Acceptable values:error, warn, info, verbose, debug, silly.

@@ -1,5 +1,5 @@
 ## Template Types
-F5 Networks has created supported templates grouped into the following categories.  Currently, only Standalone templates are supported for Google Cloud.
+F5 Networks has created supported templates grouped into the following categories.
 
   - **Standalone** <br>These templates deploy an individual BIG-IP VE. Standalone BIG-IP VEs are primarily used for Dev/Test/Staging, Replacing/Upgrading individual instances in traditional failover clusters (see Failover), and/or scaling out (for deployments where the configuration is managed remotely as opposed to relying on the synchronization functionality (config-sync)  of the cluster).
 
@@ -12,6 +12,6 @@ F5 Networks has created supported templates grouped into the following categorie
       * Use external automation to completely re-configure and re-cluster
     * Multiple slots
       * In place via live installs from an available slot.
-.<br>   
-  Failover templates include same-net, where instances in the cluster are deployed on the same subnet (L3), and across-net where instances in cluster are deployed across L3 subnets. 
-
+<br>   
+ 
+ Failover templates include same-net, where instances in the cluster are deployed on the same subnet (L3).

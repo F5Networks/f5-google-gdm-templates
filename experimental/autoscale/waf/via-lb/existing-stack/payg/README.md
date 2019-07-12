@@ -31,7 +31,7 @@ The following are prerequisites for the F5 autoscale 1 NIC GDM template:
 
 - You must have installed the [Google Cloud SDK](https://cloud.google.com/sdk/downloads)
 - Key pair for SSH access to BIG-IP VE (you can create or import this in Google Cloud)
-- A Google Cloud Platform (GCP) network with one subnet.  The subnet requires a route and access to the Internet for the initial configuration to download the BIG-IP cloud library.
+- A Virtual Private Cloud (VPC) network with one subnet.  The subnet requires a route and access to the Internet for the initial configuration to download the BIG-IP cloud library.
 - You must use a BIG-IP instance that has at least 2 vCPU and 4 GB memory. For each additional vCPU, add at least 2 GB of memory. Note: Because of this requirement, the *n1-highcpu* instance types are not supported.
 - This solution uses the SSH key to enable access to the BIG-IP system. If you want access to the BIG-IP web-based Configuration utility, you must first SSH into the BIG-IP VE (using an SSH key provided via project-wide metadata).  You can then create a user account with admin-level permissions on the BIG-IP VE to allow access if necessary.
 - **Important**: This solution uses calls to the GCE REST API to read and update GCE resources such as storage accounts, network interfaces, and route tables.  For the solution to function correctly, you must ensure that the BIG-IP(s) can connect to the GCE REST API on port 443.
@@ -40,10 +40,12 @@ The following are prerequisites for the F5 autoscale 1 NIC GDM template:
 
 ## Important configuration notes
 
-- All F5 Google templates include Application Services 3 Extension (AS3) v3.5.1 (LTS version) on the BIG-IP VE.  As of release 4.1.2, all supported templates give the option of including the URL of an AS3 declaration, which you can use to specify the BIG-IP configuration you want on your newly created BIG-IP VE(s).  In templates such as autoscale, where an F5-recommended configuration is deployed by default, specifying an AS3 declaration URL will override the default configuration with your declaration.   See the [AS3 documentation](https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/3.5.1/) for details on how to use AS3.  
+- All F5 Google templates include Application Services 3 Extension (AS3) v3.5.1 (LTS version) on the BIG-IP VE.  As of release 4.1.2, all supported templates give the option of including the URL of an AS3 declaration, which you can use to specify the BIG-IP configuration you want on your newly created BIG-IP VE(s).  In templates such as autoscale, where an F5-recommended configuration is deployed by default, specifying an AS3 declaration URL will override the default configuration with your declaration.   See the [AS3 documentation](https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/3.5.1/) for details on how to use AS3.
 - This template supports service discovery.  See the [Service Discovery section](#service-discovery) for details.
 - F5 has created a matrix that contains all of the tagged releases of the F5 Google GDM templates, and the corresponding BIG-IP versions, license types and throughput levels available for a specific tagged release. See the matrix [here](https://github.com/F5Networks/f5-google-gdm-templates/blob/master/google-bigip-version-matrix.md).
+- If you would like to view all available images, run the following command from the **gcloud** command line: ```$ gcloud compute images list --project f5-7626-networks-public | grep f5```
 - This directory now contains a schema file which helps manage the required fields and set defaults to optional fields.  For example, if you omit the property for NTP servers in your configuration file,  we set the default server to time.google.com.
+- Note that when configuring GCP failover, if no external public IPs are provisioned, a GCP alias IP range is required.
 - This template can send non-identifiable statistical information to F5 Networks to help us improve our templates.  See [Sending statistical information to F5](#sending-statistical-information-to-f5).
 - F5 GDM templates do not reconfigure existing GCE resources, such as network security groups.  Depending on your configuration, you may need to configure these resources to allow the BIG-IP VE(s) to receive traffic for your application.
 - F5 GDM templates now capture all deployment logs to the BIG-IP VE in **/var/log/cloud/google**.  Depending on which template you are using, this includes deployment logs (stdout/stderr), f5-cloud-libs execution logs, recurring solution logs (failover, metrics, and so on), and more.
@@ -93,7 +95,7 @@ You ***must edit the YAML file*** to include information for your deployment bef
 
 ### Edit the YAML file
 
-After completing the prerequisites, edit the YAML file.  You must replace the following parameters with the appropriate values. For more information about the Service Discovery fields, see [Service Discovery section](#service-discovery).
+After completing the prerequisites, edit the YAML file.  You must replace the following parameters with the appropriate values.
 
 | Parameter | Required | Description |
 | --- | --- | --- |
@@ -106,8 +108,6 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | instanceType | Yes | Instance type assigned to BIG-IP, example n1-standard-4. |
 | bigIpModules | No | Comma separated list of modules and levels to provision, for example, 'ltm:nominal,asm:nominal' |
 | serviceAccount | Yes | Enter service account with correct roles. |
-| tagName | No | If using service discovery, enter the tag name used on servers for discovery. |
-| tagValue | No | If using service discovery, enter the tag value used on servers for discovery. |
 | targetSize | Yes | Minimum number of instances autoscale policy will scale down to |
 | minReplicas | Yes | Number of instances to start |
 | maxReplicas | Yes | Maximum number of instances autoscale poilcy will allow. |
@@ -127,7 +127,7 @@ After you have edited the YAML file with the appropriate values, save the YAML f
 
 ### Deploy the BIG-IP VE
 
-The final task is to deploy the BIG-IP VE from the **gcloud** command line.  See https://cloud.google.com/sdk/gcloud/reference/deployment-manager/deployments/create for specific information.  
+The final task is to deploy the BIG-IP VE from the **gcloud** command line.  See https://cloud.google.com/sdk/gcloud/reference/deployment-manager/deployments/create for specific information.
 
 You can either create a new deployment from the [top-level YAML file](#deploying-from-the-yaml-file), or the [top-level template file](#deploying-from-the-template-file).
 
@@ -168,9 +168,7 @@ gcloud deployment-manager deployments create <your-deployment-name>       \
 
 ## Service Discovery
 
-This Google GDM template supports Service Discovery.  If you enable it in the YAML file, the template runs the Service Discovery iApp template on the BIG-IP VE. Once you have properly tagged the servers you want to include, and then entered the corresponding tags (**tagName** and **tagValue**) and Google service account in the YAML file, the BIG-IP VE programmatically discovers (or removes) members using those tags. See our [Service Discovery video](https://www.youtube.com/watch?v=ig_pQ_tqvsI) to see this feature in action.
-
-**Important**: Even if you don't plan on using the Service Discovery iApp initially, if you think you may want to use it in the future, you must specify the Google service account (**serviceAccount**) in the YAML file before deploying the template.
+This Google GDM template includes the Service Discovery iApp. See our [Service Discovery video](https://www.youtube.com/watch?v=ig_pQ_tqvsI) to see how to configure the Service Discovery iApp, and see this feature in action.
 
 ### Tagging
 
@@ -180,16 +178,7 @@ In Google, you tag objects using the **labels** parameter within the virtual mac
 
 The BIG-IP VE will discover the primary public or private IP addresses for the primary NIC configured for the tagged VM.
 
-
 **Important**: Make sure the tags and IP addresses you use are unique. You should not tag multiple GDM nodes with the same key/tag combination if those nodes use the same IP address.
-
-
-When enabled, the template runs the iApp template automatically.  If you need to modify the template after this initial configuration has taken place, use the following guidance.
-
-1. From the BIG-IP VE web-based Configuration utility, on the Main tab, click **iApps > Application Services**.
-2. From the list of application services, click **serviceDiscovery**.
-3. You can now modify the template settings as applicable.  For assistance, from the *Do you want to see inline help?* question, select **Yes, show inline help**.
-4. When you are done, click the **Finished** button.
 
 If you want to verify the integrity of the template, from the BIG-IP VE Configuration utility click **iApps > Templates**. In the template list, look for **f5.service_discovery**. In the Verification column, you should see **F5 Verified**.
 
