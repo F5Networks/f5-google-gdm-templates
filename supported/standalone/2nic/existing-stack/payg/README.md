@@ -102,7 +102,7 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | subnet1 | Yes | Subnet of the Network BIG-IP should use for application traffic |
 | subnet1Address | No | Static IP address to use (optional). Note, for dynamic address provisioning use the default value of 'DYNAMIC' |
 | provisionPublicIP | Yes | Provision Public IP addresses for BIG-IP Network Interfaces. By default it is set to provision public IPs |
-| imageName | Yes | BIG-IP image, valid choices include - f5-bigip-14-1-0-3-0-0-6-payg-best-10gbps-190329165642, f5-bigip-14-1-0-3-0-0-6-payg-best-1gbps-190329165642, f5-bigip-14-1-0-3-0-0-6-payg-best-200mbps-190329165642, f5-bigip-14-1-0-3-0-0-6-payg-best-25mbps-190329165642, f5-bigip-14-1-0-3-0-0-6-payg-best-5gbps-190329165642, f5-bigip-14-1-0-3-0-0-6-payg-better-10gbps-190329165642, f5-bigip-14-1-0-3-0-0-6-payg-better-1gbps-190329165642, f5-bigip-14-1-0-3-0-0-6-payg-better-200mbps-190329165642, f5-bigip-14-1-0-3-0-0-6-payg-better-25mbps-190329165642, f5-bigip-14-1-0-3-0-0-6-payg-better-5gbps-190329165642, f5-bigip-14-1-0-3-0-0-6-payg-good-10gbps-190326001429, f5-bigip-14-1-0-3-0-0-6-payg-good-1gbps-190326001429, f5-bigip-14-1-0-3-0-0-6-payg-good-200mbps-190326001429, f5-bigip-14-1-0-3-0-0-6-payg-good-25mbps-190326001429, f5-bigip-14-1-0-3-0-0-6-payg-good-5gbps-190326001429, f5-bigip-14-1-0-3-0-0-6-payg-hp-ltm-16vcpu-190326001429, f5-bigip-14-1-0-3-0-0-6-payg-pve-ltm-200mbps-190326001340, f5-bigip-14-1-0-3-0-0-6-payg-pve-ltm-25mbps-190326001340 |
+| imageName | Yes | BIG-IP image name |
 | instanceType | Yes | Instance type assigned to BIG-IP, example n1-standard-4. |
 | mgmtGuiPort | No | BIG-IP Management Port |
 | applicationPort | No | List application port(s) separated by a space |

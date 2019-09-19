@@ -104,7 +104,7 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | restrictedSrcAddress | Yes | This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources |
 | restrictedSrcAddressApp | Yes | This field restricts web application access (ports 80 and 443) to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources. |
 | provisionPublicIP | Yes | Provision Public IP addresses for BIG-IP Network Interfaces. By default it is set to provision public IPs |
-| imageName | Yes | BIG-IP image, valid choices include - f5-bigip-14-1-0-3-0-0-6-byol-all-module-2boot-loc-190326001340, f5-bigip-14-1-0-3-0-0-6-byol-ltm-2boot-loc-190326001052 |
+| imageName | Yes | BIG-IP image name |
 | instanceType | Yes | Instance type assigned to BIG-IP, example n1-standard-4. |
 | mgmtGuiPort | No | BIG-IP Management Port |
 | applicationPort | No | List application port(s) separated by a space |

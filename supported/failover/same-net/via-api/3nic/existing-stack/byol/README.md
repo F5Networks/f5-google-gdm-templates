@@ -111,7 +111,7 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | aliasIp | No | Alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'.  A list of alias IPs can be provided, separated by a space. |
 | numberOfForwardingRules | No | Number of forwarding rules to create, for example '1'.  All integers from 1 to the max quota for the forwarding rules resource type are allowed. |
 | provisionPublicIP | Yes | Provision Public IP addresses for BIG-IP Network Interfaces. By default it is set to provision public IPs. |
-| imageName | Yes | BIG-IP image, valid choices include - f5-bigip-14-1-0-3-0-0-6-byol-all-module-2boot-loc-190326001340, f5-bigip-14-1-0-3-0-0-6-byol-ltm-2boot-loc-190326001052 |
+| imageName | Yes | BIG-IP image name |
 | instanceType | Yes | Instance type assigned to BIG-IP, example n1-standard-4. |
 | mgmtGuiPort | No | (optional) BIG-IP Management Port |
 | bigIpModules | No | Comma separated list of modules and levels to provision, for example, 'ltm:nominal,asm:nominal' |

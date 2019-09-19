@@ -93,7 +93,7 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | Parameter | Required | Description |
 | --- | --- | --- |
 | availabilityZone1 | Yes | Google Zone in specified region to deploy BIG-IP, for example us-west1-a |
-| imageName | Yes | BIG-IP image, valid choices include - f5-hourly-bigip-13-1-1-0-0-4-best-1gbps, f5-hourly-bigip-13-1-1-0-0-4-best-200mbps, f5-hourly-bigip-13-1-1-0-0-4-best-25mbps, f5-hourly-bigip-13-1-1-0-0-4-best-5gbps, f5-hourly-bigip-13-1-1-0-0-4-better-1gbps, f5-hourly-bigip-13-1-1-0-0-4-better-200mbps, f5-hourly-bigip-13-1-1-0-0-4-better-25mbps, f5-hourly-bigip-13-1-1-0-0-4-better-5gbps, f5-hourly-bigip-13-1-1-0-0-4-good-1gbps, f5-hourly-bigip-13-1-1-0-0-4-good-200mbps, f5-hourly-bigip-13-1-1-0-0-4-good-25mbps, f5-hourly-bigip-13-1-1-0-0-4-good-5gbps |
+| imageName | Yes | BIG-IP image name |
 | instanceType | Yes | Instance type assigned to BIG-IP, example n1-standard-4. |
 | manGuiPort | Yes | BIG-IP management port.  The default is 8443 |
 | bigIpModules | Yes | Comma separated list of modules and levels to provision, for example, 'ltm:nominal,asm:nominal' |

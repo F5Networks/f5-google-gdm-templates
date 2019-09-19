@@ -58,6 +58,10 @@ The following is a list of the current *supported* F5 GDM templates. Click the l
     - <a href="https://github.com/F5Networks/f5-google-gdm-templates/tree/master/supported/failover/same-net/via-lb/3nic/existing-stack/payg">**Hourly**</a>, which uses pay-as-you-go hourly billing  
     - <a href="https://github.com/F5Networks/f5-google-gdm-templates/tree/master/supported/failover/same-net/via-lb/3nic/existing-stack/byol">**BYOL**</a> (bring your own license), which allows you to use an existing BIG-IP license.  
 
+### Known Issues
+
+All known issues are now on GitHub as Issues for better tracking and visibility.  See issues with a label of **Known Issues** at https://github.com/F5Networks/f5-google-gdm-templates/issues/.
+
 
 
 ## Copyright

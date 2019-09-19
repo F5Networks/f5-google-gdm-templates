@@ -52,7 +52,9 @@ The following are prerequisites for the F5 autoscale 1 NIC GDM template:
 - This template includes a master election feature, which ensures that if the existing master BIG-IP VE is unavailable, a new master is selected from the BIG-IP VEs in the cluster.
 - After deploying the template, we recommend going to [this section](#backup-big-ip-configuration-for-cluster-recovery) to create and store a backup of your BIG-IP configuration.
 - Important: After the template successfully deploys, you must log into one of the BIG-IP VEs to modify the Application Security Synchronization settings.  Log in to the BIG-IP VE, and then click **Security > Options > Synchronization > Application Security Synchronization**.  From the **Device Group** list, select **Sync**, and then click **Save**. This ensures any changes to the ASM security policy are synchronized to other devices in the cluster.
-- For important information on choosing a metric on which to base autoscaling events and the thresholds used by the template, see [Scaling Thresholds](#scaling-thresholds).
+- Scaling Thresholds: 
+   - The scaling process gets triggered based on CPU usage 
+   - The control CPU usage value is defined using a float number in a range of 0 to 1 ( i.e. 0.8 )
 
 ### Security
 
@@ -104,7 +106,7 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | mgmtNetwork | Yes | Specify the network to use for management traffic |
 | manGuiPort | Yes | BIG-IP management port.  The default is 8443 |
 | mgmtSubnet | Yes | Specify the subnet to use for management traffic |
-| imageName | Yes | BIG-IP image, valid choices include - f5-byol-bigip-13-1-1-0-0-4-all-2slot, f5-byol-bigip-13-1-1-0-0-4-ltm-2slot |
+| imageName | Yes | BIG-IP image name |
 | instanceType | Yes | Instance type assigned to BIG-IP, example n1-standard-4. |
 | bigIpModules | No | Comma separated list of modules and levels to provision, for example, 'ltm:nominal,asm:nominal' |
 | serviceAccount | Yes | Enter service account with correct roles. |

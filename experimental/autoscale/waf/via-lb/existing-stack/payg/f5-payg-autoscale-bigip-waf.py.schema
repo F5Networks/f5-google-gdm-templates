@@ -43,7 +43,7 @@ properties:
     description: Specify the subnet to use for management traffic
     type: string
   imageName:
-    description: BIG-IP image, valid choices include - f5-byol-bigip-13-1-1-0-0-4-all-2slot, f5-byol-bigip-13-1-1-0-0-4-ltm-2slot
+    description: BIG-IP image name
     type: string
   instanceType:
     description: Instance type assigned to BIG-IP, example n1-standard-4.

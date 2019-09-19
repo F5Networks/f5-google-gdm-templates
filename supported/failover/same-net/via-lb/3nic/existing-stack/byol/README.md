@@ -107,7 +107,7 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | numberOfForwardingRules | Yes | Number of forwarding rules to create, for example '1'.  All integers from 1 to the max quota for the forwarding rules resource type are allowed. |
 | numberOfIntForwardingRules | Yes | Number of forwarding rules to create, for example '1'.  Integers 0 and 1 are valid choices. |
 | provisionPublicIP | Yes | Provision Public IP addresses for BIG-IP Network Interfaces. By default it is set to provision public IPs. |
-| imageName | Yes | BIG-IP image, valid choices include - f5-bigip-14-1-0-3-0-0-6-byol-all-module-2boot-loc-190326001340, f5-bigip-14-1-0-3-0-0-6-byol-ltm-2boot-loc-190326001052 |
+| imageName | Yes | BIG-IP image name |
 | instanceType | Yes | Instance type assigned to BIG-IP, example n1-standard-4. |
 | mgmtGuiPort | No | (optional) BIG-IP Management Port |
 | applicationPort | No | List application port(s) separated by a space |

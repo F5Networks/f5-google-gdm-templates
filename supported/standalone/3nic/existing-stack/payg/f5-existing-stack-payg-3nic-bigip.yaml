@@ -1,6 +1,6 @@
 # Copyright 2019 F5 Networks All rights reserved.
 #
-# Version 3.0.1
+# Version 3.0.2
 
 imports:
 - path: f5-existing-stack-payg-3nic-bigip.py
@@ -37,24 +37,24 @@ resources:
    ## Provision Public IP addresses for BIG-IP Network Interfaces. By default it is set to provision public IPs
    provisionPublicIP: 'yes'
    ### BIG-IP image, valid choices include:
-   # f5-bigip-14-1-0-3-0-0-6-payg-best-10gbps-190329165642
-   # f5-bigip-14-1-0-3-0-0-6-payg-best-1gbps-190329165642
-   # f5-bigip-14-1-0-3-0-0-6-payg-best-200mbps-190329165642
-   # f5-bigip-14-1-0-3-0-0-6-payg-best-25mbps-190329165642
-   # f5-bigip-14-1-0-3-0-0-6-payg-best-5gbps-190329165642
-   # f5-bigip-14-1-0-3-0-0-6-payg-better-10gbps-190329165642
-   # f5-bigip-14-1-0-3-0-0-6-payg-better-1gbps-190329165642
-   # f5-bigip-14-1-0-3-0-0-6-payg-better-200mbps-190329165642
-   # f5-bigip-14-1-0-3-0-0-6-payg-better-25mbps-190329165642
-   # f5-bigip-14-1-0-3-0-0-6-payg-better-5gbps-190329165642
-   # f5-bigip-14-1-0-3-0-0-6-payg-good-10gbps-190326001429
-   # f5-bigip-14-1-0-3-0-0-6-payg-good-1gbps-190326001429
-   # f5-bigip-14-1-0-3-0-0-6-payg-good-200mbps-190326001429
-   # f5-bigip-14-1-0-3-0-0-6-payg-good-25mbps-190326001429
-   # f5-bigip-14-1-0-3-0-0-6-payg-good-5gbps-190326001429
-   # f5-bigip-14-1-0-3-0-0-6-payg-hp-ltm-16vcpu-190326001429
-   # f5-bigip-14-1-0-3-0-0-6-payg-pve-ltm-200mbps-190326001340
-   # f5-bigip-14-1-0-3-0-0-6-payg-pve-ltm-25mbps-190326001340
+   # f5-bigip-14-1-2-0-0-37-payg-best-10gbps-190807132929
+   # f5-bigip-14-1-2-0-0-37-payg-best-1gbps-190807132929
+   # f5-bigip-14-1-2-0-0-37-payg-best-200mbps-190807132929
+   # f5-bigip-14-1-2-0-0-37-payg-best-25mbps-190807132929
+   # f5-bigip-14-1-2-0-0-37-payg-best-5gbps-190807132929
+   # f5-bigip-14-1-2-0-0-37-payg-better-10gbps-190807132929
+   # f5-bigip-14-1-2-0-0-37-payg-better-1gbps-190807132929
+   # f5-bigip-14-1-2-0-0-37-payg-better-200mbps-190807132929 
+   # f5-bigip-14-1-2-0-0-37-payg-better-25mbps-190807132929
+   # f5-bigip-14-1-2-0-0-37-payg-better-5gbps-190807132929
+   # f5-bigip-14-1-2-0-0-37-payg-good-10gbps-190807132423 
+   # f5-bigip-14-1-2-0-0-37-payg-good-1gbps-190807132423
+   # f5-bigip-14-1-2-0-0-37-payg-good-200mbps-190807132423
+   # f5-bigip-14-1-2-0-0-37-payg-good-25mbps-190807132423
+   # f5-bigip-14-1-2-0-0-37-payg-good-5gbps-190807132423 
+   # f5-bigip-14-1-2-0-0-37-payg-hp-ltm-16vcpu-190807132423
+   # f5-bigip-14-1-2-0-0-37-payg-pve-ltm-200mbps-190807132232 
+   # f5-bigip-14-1-2-0-0-37-payg-pve-ltm-25mbps-190807132232
    imageName: <image>
    ### Instance type assigned to BIG-IP, example n1-standard-4.
    instanceType: <instance>

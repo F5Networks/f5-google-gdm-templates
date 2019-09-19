@@ -1,6 +1,6 @@
 # Copyright 2019 F5 Networks All rights reserved.
 #
-# Version 3.0.1
+# Version 3.0.2
 
 imports:
 - path: f5-existing-stack-same-net-cluster-byol-3nic-bigip.py
@@ -45,8 +45,8 @@ resources:
    provisionPublicIP: 'yes'
    ### BIG-IP image, valid choices include:
    
-   # f5-bigip-14-1-0-3-0-0-6-byol-all-module-2boot-loc-190326001340
-   # f5-bigip-14-1-0-3-0-0-6-byol-ltm-2boot-loc-190326001052
+   # f5-bigip-14-1-2-0-0-37-byol-all-modules-2boot-loc-190807132929
+   # f5-bigip-14-1-2-0-0-37-byol-ltm-2boot-loc-190807132423
    imageName: <image>
    ### Instance type assigned to BIG-IP, example n1-standard-4.
    instanceType: n1-standard-4
