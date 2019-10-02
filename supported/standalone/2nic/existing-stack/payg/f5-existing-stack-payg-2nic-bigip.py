@@ -1,6 +1,6 @@
 # Copyright 2019 F5 Networks All rights reserved.
 #
-# Version 3.0.2
+# Version 3.0.3
 
 """ Creates Deployment """
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
@@ -135,7 +135,7 @@ def Metadata(context):
     ALLOWUSAGEANALYTICS = str(context.properties['allowUsageAnalytics']).lower()
     if ALLOWUSAGEANALYTICS == 'yes':
         CUSTHASH = 'CUSTOMERID=`curl -s "http://metadata.google.internal/computeMetadata/v1/project/numeric-project-id" -H "Metadata-Flavor: Google" |sha512sum|cut -d " " -f 1`;\nDEPLOYMENTID=`curl -s "http://metadata.google.internal/computeMetadata/v1/instance/id" -H "Metadata-Flavor: Google"|sha512sum|cut -d " " -f 1`;'
-        SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-existing-stack-payg-2nic-bigip.py,templateVersion:3.0.2,licenseType:payg"'
+        SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-existing-stack-payg-2nic-bigip.py,templateVersion:3.0.3,licenseType:payg"'
     else:
         CUSTHASH = 'echo "No analytics."'
         SENDANALYTICS = ''
