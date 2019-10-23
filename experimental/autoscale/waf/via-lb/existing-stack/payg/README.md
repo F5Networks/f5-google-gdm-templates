@@ -70,7 +70,7 @@ Additionally, F5 provides checksums for all of our supported Google Deployment M
 The following is a map that shows the available options for the template parameter **bigIpVersion** as it corresponds to the BIG-IP version itself. Only the latest version of BIG-IP VE is posted in the GCE Marketplace. For older versions, see downloads.f5.com.
 | Google BIG-IP Image Version | BIG-IP Version |
 | --- | --- |
-| 13.1.10000 | 13.1.1 Build 0.0.4 |
+| 15.0.10000 | 15.0.1 Build 0.0.1 |
 
 ### Help
 
