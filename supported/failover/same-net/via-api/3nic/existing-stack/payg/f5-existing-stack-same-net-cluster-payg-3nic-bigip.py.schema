@@ -4,7 +4,7 @@ info:
   title: F5 BIG-IP 3NIC HA with Google API
   author: F5 Networks
   description: Creates HA pair of BIG-IP's with 3 network interfaces and supporting Google resources.
-  version: 2.1.2
+  version: 3.2.0
 imports:
   - path: f5-existing-stack-same-net-cluster-payg-3nic-bigip.py
 required:
@@ -25,37 +25,37 @@ required:
   - declarationUrl
 properties:
   region:
-    description: The Google region in which you want to deploy BIG-IP, for example us-west1
+    description: Enter the Google Region in which you want to deploy BIG-IP, for example 'us-west1'.
     type: string
   availabilityZone1:
-    description: The availability zone where you want to deploy the BIG-IP VE instance, for example us-west1-a
+    description: Enter the availability zone where you want to deploy the BIG-IP VE instance, for example 'us-west1-a'.
     type: string
   mgmtNetwork:
-    description: Specify the network to use for management traffic
+    description: Specify the name of the network to use for management traffic, for example 'my-management-network'.
     type: string
   mgmtSubnet:
-    description: Specify the subnet to use for management traffic
+    description: Specify the name of the subnet to use for management traffic, for example 'my-management-subnetwork'.
     type: string
   restrictedSrcAddress:
-    description: This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources
+    description: This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or '0.0.0.0/0' for all sources. For example, '10.0.0.0/0'.
     type: string
   network1:
-    description: Specify the Network name for BIG-IP application traffic
+    description: Specify the Network name for BIG-IP application traffic, for example 'my-application-network'.
     type: string
   subnet1:
-    description: Subnet of the Network BIG-IP should use for application traffic
+    description: Specify the subnet of the Network that the BIG-IP should use for application traffic, for example 'my-application-subnetwork'.
     type: string
   network2:
-    description: Specify the Network name for BIG-IP internal application traffic
+    description: Specify the Network name for BIG-IP internal application traffic, for example 'my-internal-network'.
     type: string
   subnet2:
-    description: Subnet of the Network BIG-IP should use for internal application traffic
+    description: Specify the name of the Subnet of the Network that BIG-IP should use for internal application traffic, for example 'my-internal-subnetwork'.
     type: string
   aliasIp:
-    description: Alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'.  A list of alias IPs can be provided, separated by a space.
+    description: Enter the alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'. A list of alias IPs can be provided, separated by a space. For example, 'IE 10.x.x.16/28 10.x.x.32/28'.
     type: string
   numberOfForwardingRules:
-    description: Number of forwarding rules to create, for example '1'.  All integers from 1 to the max quota for the forwarding rules resource type are allowed.
+    description: Enter the number of forwarding rules to create, for example '1'.  All integers from 1 to the max quota for the forwarding rules resource type are allowed.
     type: integer
     minimum: 1
   provisionPublicIP:
@@ -66,29 +66,29 @@ properties:
     description: BIG-IP image name
     type: string
   instanceType:
-    description: Instance type assigned to BIG-IP, example n1-standard-4.
+    description: Instance type assigned to BIG-IP, for example 'n1-standard-4'.
     type: string
   mgmtGuiPort:
-    description: (optional) BIG-IP Management Port
+    description: (Optional) Enter the BIG-IP Management Port, the default is '443'.
     type: integer
     default: 443
   bigIpModules:
-    description: Comma separated list of modules and levels to provision, for example, 'ltm:nominal,asm:nominal'
+    description: Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'.
     type: string
     default: ltm:nominal
   serviceAccount:
-    description: Enter service account with correct roles.
+    description: Enter the Google service account to use for autoscale API calls, for example 'username@projectname.iam.serviceaccount.com'.
     type: string
   allowUsageAnalytics:
-    description: This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent
+    description: This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent.
     type: [string, boolean]
     default: 'yes'
   logLevel:
-    description: Log setting, used to set log level on scripts used during deployment. Acceptable values are error, warn, info, verbose, debug, or silly.
+    description: (Optional) Log setting, used to set log level on scripts used during deployment. Acceptable values are - error, warn, info, verbose, debug, silly. The default is 'info'.
     type: string
     default: info
   declarationUrl:
-    description: URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration.
+    description: URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration. For example, 'https://cdn.f5.com/product/cloudsolutions/declarations/sample_01.json'
     type: string
     default: default
 documentation:

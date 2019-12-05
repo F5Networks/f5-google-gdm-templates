@@ -96,26 +96,26 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 
 | Parameter | Required | Description |
 | --- | --- | --- |
-| region | Yes | The Google region in which you want to deploy BIG-IP, for example us-west1 |
-| availabilityZone1 | Yes | The availability zone where you want to deploy the BIG-IP VE instance, for example us-west1-a |
-| mgmtNetwork | Yes | Specify the network to use for management traffic |
-| mgmtSubnet | Yes | Specify the subnet to use for management traffic |
-| restrictedSrcAddress | Yes | This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources |
-| network1 | Yes | Specify the Network name for BIG-IP application traffic |
-| subnet1 | Yes | Subnet of the Network BIG-IP should use for application traffic |
-| network2 | Yes | Specify the Network name for BIG-IP internal application traffic |
-| subnet2 | Yes | Subnet of the Network BIG-IP should use for internal application traffic |
-| aliasIp | No | Alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'.  A list of alias IPs can be provided, separated by a space. |
-| numberOfForwardingRules | No | Number of forwarding rules to create, for example '1'.  All integers from 1 to the max quota for the forwarding rules resource type are allowed. |
+| region | Yes | Enter the Google Region in which you want to deploy BIG-IP, for example 'us-west1'. |
+| availabilityZone1 | Yes | Enter the availability zone where you want to deploy the BIG-IP VE instance, for example 'us-west1-a'. |
+| mgmtNetwork | Yes | Specify the name of the network to use for management traffic, for example 'my-management-network'. |
+| mgmtSubnet | Yes | Specify the name of the subnet to use for management traffic, for example 'my-management-subnetwork'. |
+| restrictedSrcAddress | Yes | This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or '0.0.0.0/0' for all sources. For example, '10.0.0.0/0'. |
+| network1 | Yes | Specify the Network name for BIG-IP application traffic, for example 'my-application-network'. |
+| subnet1 | Yes | Specify the subnet of the Network that the BIG-IP should use for application traffic, for example 'my-application-subnetwork'. |
+| network2 | Yes | Specify the Network name for BIG-IP internal application traffic, for example 'my-internal-network'. |
+| subnet2 | Yes | Specify the name of the Subnet of the Network that BIG-IP should use for internal application traffic, for example 'my-internal-subnetwork'. |
+| aliasIp | No | Enter the alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'. A list of alias IPs can be provided, separated by a space. For example, 'IE 10.x.x.16/28 10.x.x.32/28'. |
+| numberOfForwardingRules | No | Enter the number of forwarding rules to create, for example '1'.  All integers from 1 to the max quota for the forwarding rules resource type are allowed. |
 | provisionPublicIP | Yes | Provision Public IP addresses for BIG-IP Network Interfaces. By default it is set to provision public IPs. |
 | imageName | Yes | BIG-IP image name |
-| instanceType | Yes | Instance type assigned to BIG-IP, example n1-standard-4. |
-| mgmtGuiPort | No | (optional) BIG-IP Management Port |
-| bigIpModules | No | Comma separated list of modules and levels to provision, for example, 'ltm:nominal,asm:nominal' |
-| serviceAccount | Yes | Enter service account with correct roles. |
-| allowUsageAnalytics | Yes | This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent |
-| logLevel | No | Log setting, used to set log level on scripts used during deployment. Acceptable values are error, warn, info, verbose, debug, or silly. |
-| declarationUrl | Yes | URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration. |
+| instanceType | Yes | Instance type assigned to BIG-IP, for example 'n1-standard-4'. |
+| mgmtGuiPort | No | (Optional) Enter the BIG-IP Management Port, the default is '443'. |
+| bigIpModules | No | Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'. |
+| serviceAccount | Yes | Enter the Google service account to use for autoscale API calls, for example 'username@projectname.iam.serviceaccount.com'. |
+| allowUsageAnalytics | Yes | This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent. |
+| logLevel | No | (Optional) Log setting, used to set log level on scripts used during deployment. Acceptable values are - error, warn, info, verbose, debug, silly. The default is 'info'. |
+| declarationUrl | Yes | URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration. For example, 'https://cdn.f5.com/product/cloudsolutions/declarations/sample_01.json' |
 
 
 ### Save the YAML and Python files

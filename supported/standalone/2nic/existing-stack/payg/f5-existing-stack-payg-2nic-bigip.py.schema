@@ -23,76 +23,76 @@ required:
   - declarationUrl
 properties:
   region:
-    description: Google Zone in specified region to deploy BIG-IP
+    description: Enter the Google Region in which you want to deploy BIG-IP, for example 'us-west1'.
     type: string
   availabilityZone1:
-    description: Google Zone in specified region to deploy BIG-IP, for example us-west1-a
+    description: Enter the Google availability zone where you want to deploy the BIG-IP VE instance, for example 'us-west1-a'.
     type: string
   mgmtNetwork:
-    description: Specify the network to use for management traffic
+    description: Specify the name of the network to use for management traffic, for example 'my-management-network'.
     type: string
   mgmtSubnet:
-    description: Specify the subnet to use for management traffic
+    description: Specify the name of the subnet to use for management traffic, for example 'my-management-subnetwork'.
     type: string
   mgmtSubnetAddress:
-    description: Static IP address to use (optional). Note, for dynamic address provisioning use the default value of 'DYNAMIC'
+    description: (Optional) Enter the static IP address to use. Note - For dynamic address provisioning use the default value of 'DYNAMIC'. For example, '10.0.1.100'.
     type: string
     default: DYNAMIC
   restrictedSrcAddress:
-    description: This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources
+    description: This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or '0.0.0.0/0' for all sources. For example, '10.0.0.0/0'.
     type: string
   restrictedSrcAddressApp:
-    description: This field restricts web application access (ports 80 and 443) to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources.
+    description: This field restricts web application access (ports 80 and 443) to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or '0.0.0.0/0' for all sources. For example, '10.0.0.0/0'.
     type: string
   network1:
-    description: Specify the Network name for BIG-IP application traffic
+    description: Specify the network name for BIG-IP application traffic, for example 'my-application-network'.
     type: string
   subnet1:
-    description: Subnet of the Network BIG-IP should use for application traffic
+    description: Specify the subnet of the network that the BIG-IP should use for application traffic, for example 'my-application-subnetwork'.
     type: string
   subnet1Address:
-    description: Static IP address to use (optional). Note, for dynamic address provisioning use the default value of 'DYNAMIC'
+    description: Enter the Static IP address to use, for example, '10.0.2.100'. Note - For dynamic address provisioning use the default value of 'DYNAMIC'.
     type: string
     default: DYNAMIC
   provisionPublicIP:
-    description: Provision Public IP addresses for BIG-IP Network Interfaces. By default it is set to provision public IPs
+    description: Provision Public IP addresses for BIG-IP Network Interfaces. By default it is set to provision public IPs.
     type: [string, boolean]
     default: 'yes'
   imageName:
-    description: BIG-IP image name
+    description: Enter the BIG-IP image name.
     type: string
   instanceType:
-    description: Instance type assigned to BIG-IP, example n1-standard-4.
+    description: Instance type assigned to BIG-IP, for example 'n1-standard-4'.
     type: string
   mgmtGuiPort:
-    description: BIG-IP Management Port
+    description: Enter the BIG-IP Management Port, the default is '443'.
     type: integer
     default: 443
   applicationPort:
-    description: List application port(s) separated by a space
+    description: List application port(s) separated by a space, for example '443' or '443 444 445'.
     default: 80 443
   ntpServer:
-    description: List NTP servers separated by a space
+    description: (Optional) List NTP servers separated by a space, for example 'pool.ntp.org'. The default is 'time.google.com'.
     type: string
     default: time.google.com
   timezone:
-    description: Enter the Olson timezone string from /usr/share/zoneinfo
+    description: (Optional) Enter the Olson timezone string from /usr/share/zoneinfo. The default is 'UTC'. See the TZ column here (https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) for legal values. For example, 'US/Eastern'.
     type: string
     default: UTC
   bigIpModules:
-    description: Comma separated list of modules and levels to provision, for example, 'ltm:nominal,asm:nominal'
+    description: Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'.
     type: string
     default: ltm:nominal
   allowUsageAnalytics:
-    description: This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent
+    description: This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent.
     type: [string, boolean]
     default: 'yes'
   logLevel:
-    description: Log setting, used to set log level on scripts used during deployment. Acceptable values are error, warn, info, verbose, debug, or silly.
+    description: (Optional) Log setting, used to set log level on scripts used during deployment. Acceptable values are - error, warn, info, verbose, debug, silly. The default is 'info'.
     type: string
     default: info
   declarationUrl:
-    description: URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration.
+    description: URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration. For example, 'https://cdn.f5.com/product/cloudsolutions/
     type: string
     default: default
 documentation:

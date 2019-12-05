@@ -1,6 +1,6 @@
 # Copyright 2019 F5 Networks All rights reserved.
 #
-# Version 3.1.0
+# Version 3.2.0
 
 imports:
 - path: f5-existing-stack-payg-2nic-bigip.py
@@ -8,27 +8,27 @@ resources:
 - name: f5-existing-stack-payg-2nic-bigip
   type: f5-existing-stack-payg-2nic-bigip.py
   properties:
-   ### Google Region to deploy BIG-IP, for example us-west1
+   ### Enter the Google Region in which you want to deploy BIG-IP, for example 'us-west1'.
    region: <region>
-   ### Google Zone in specified region to deploy BIG-IP, for example us-west1-a
+   ### Enter the Google availability zone where you want to deploy the BIG-IP VE instance, for example 'us-west1-a'.
    availabilityZone1: <availability zone>
-   ### Specify the network to use for management traffic
+   ### Specify the name of the network to use for management traffic, for example 'my-management-network'.
    mgmtNetwork: <network>
-   ### Specify the subnet to use for management traffic
+   ### Specify the name of the subnet to use for management traffic, for example 'my-management-subnetwork'.
    mgmtSubnet: <subnet>
-   ### Static IP address to use (optional). Note: For dynamic address provisioning use the default value of 'DYNAMIC'
+   ### (Optional) Enter the static IP address to use. Note - For dynamic address provisioning use the default value of 'DYNAMIC'. For example, '10.0.1.100'.
    mgmtSubnetAddress: <DYNAMIC or address>
-   ### This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources
+   ### This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or '0.0.0.0/0' for all sources. For example, '10.0.0.0/0'.
    restrictedSrcAddress: <address/mask address/mask>
-   ### This field restricts web application access (ports 80 and 443) to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources.
+   ### This field restricts web application access (ports 80 and 443) to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or '0.0.0.0/0' for all sources. For example, '10.0.0.0/0'.
    restrictedSrcAddressApp: <address/mask address/mask>
-   ### Specify the Network name for BIG-IP application traffic
+   ### Specify the network name for BIG-IP application traffic, for example 'my-application-network'.
    network1: <network>
-   ### Subnet of the Network BIG-IP should use for application traffic
+   ### Specify the subnet of the network that the BIG-IP should use for application traffic, for example 'my-application-subnetwork'.
    subnet1: <subnet>
-   ### Static IP address to use (optional). Note: For dynamic address provisioning use the default value of 'DYNAMIC'
+   ### Enter the Static IP address to use, for example, '10.0.2.100'. Note - For dynamic address provisioning use the default value of 'DYNAMIC'.
    subnet1Address: <DYNAMIC or address>
-   ## Provision Public IP addresses for BIG-IP Network Interfaces. By default it is set to provision public IPs
+   ## Provision Public IP addresses for BIG-IP Network Interfaces. By default it is set to provision public IPs.
    provisionPublicIP: 'yes'
    ### BIG-IP image, valid choices include:
    # f5-bigip-15-0-1-0-0-11-payg-best-10gbps-190803012348
@@ -50,21 +50,21 @@ resources:
    # f5-bigip-15-0-1-0-0-11-payg-pve-ltm-200mbps-190803010901
    # f5-bigip-15-0-1-0-0-11-payg-pve-ltm-25mbps-190803010901
    imageName: <image>
-   ### Instance type assigned to BIG-IP, example n1-standard-4.
+   ### Instance type assigned to BIG-IP, for example 'n1-standard-4'.
    instanceType: <instance>
-   ### BIG-IP Management Port, the default is 443
+   ### Enter the BIG-IP Management Port, the default is '443'.
    mgmtGuiPort: <port>
-   ### List application port(s) separated by a space.
+   ### List application port(s) separated by a space, for example '443' or '443 444 445'.
    applicationPort: <port port>
-   ## (Optional, Defaults to time.google.com) List NTP servers separated by a space.
-   ntpServer: <server server>
-   ## (Optional, Defaults to UTC) Enter the Olson timezone string from /usr/share/zoneinfo
+   ## (Optional) List NTP servers separated by a space, for example 'pool.ntp.org'. The default is 'time.google.com'.
+   ntpServer: t<server server>
+   ## (Optional) Enter the Olson timezone string from /usr/share/zoneinfo. The default is 'UTC'. See the TZ column here (https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) for legal values. For example, 'US/Eastern'.
    timezone: <timezone>
-   ## Enter the modules and provisioning level
+   ## Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'.
    bigIpModules: ltm:nominal
    ### This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent.
    allowUsageAnalytics: 'yes'
-   ### (Optional, Defaults to Info) Log setting, used to set log level on scripts used during deployment. Acceptable values:error, warn, info, verbose, debug, silly.
+   ### (Optional) Log setting, used to set log level on scripts used during deployment. Acceptable values are - error, warn, info, verbose, debug, silly. The default is 'info'.
    logLevel: <level>
-   ### URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration.
+   ### URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration. For example, 'https://cdn.f5.com/product/cloudsolutions/declarations/sample_01.json'
    declarationUrl: default

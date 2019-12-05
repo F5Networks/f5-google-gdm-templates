@@ -1,6 +1,6 @@
 # Copyright 2019 F5 Networks All rights reserved.
 #
-# Version 3.1.0
+# Version 3.2.0
 
 imports:
 - path: f5-full-stack-byol-1nic-bigip.py
@@ -8,10 +8,10 @@ resources:
 - name: bigip-1nic-setup
   type: f5-full-stack-byol-1nic-bigip.py
   properties:
-   ### Zone to deploy BIG-IP and supporting resources, for example us-west1-a
+   ### Enter the availability zone where you want to deploy the BIG-IP VE instance, for example 'us-west1-a'.
    availabilityZone1: <availability zone>
-   ### BIG-IP license key
-   licenseKey1: '<lic key>'
+   ### Enter the BIG-IP license key, for example 'CTASW-GVZHE-FYVIM-XMOUP-SJSTBXX'.
+   licenseKey1: <lic key>
    ### BIG-IP image, valid choices include:
    
    # f5-bigip-15-0-1-0-0-11-byol-all-modules-1boot-loc-190803011657
@@ -19,13 +19,13 @@ resources:
    # f5-bigip-15-0-1-0-0-11-byol-ltm-1boot-loc-190803010901
    # f5-bigip-15-0-1-0-0-11-byol-ltm-2boot-loc-190803011605
    imageName: <image>
-   ### Instance type assigned to BIG-IP
+   ### Instance type assigned to the BIG-IP, for example 'n1-standard-4'.
    instanceType: n1-standard-4
-   ### BIG-IP Management Port, the default is 8443
-   manGuiPort: '8443'
+   ### Enter the BIG-IP Management Port, the default is '8443'.
+   manGuiPort: 8443
    ### This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent.
    allowUsageAnalytics: 'yes'
-   ### URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration.
+   ### URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration. For example, 'https://cdn.f5.com/product/cloudsolutions/declarations/sample_01.json'
    declarationUrl: default
-   ## Enter the modules and povisioning level
+   ## Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'.
    bigIpModules: asm:nominal

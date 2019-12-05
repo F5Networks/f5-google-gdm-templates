@@ -1,6 +1,6 @@
 # Copyright 2019 F5 Networks All rights reserved.
 #
-# Version 3.1.0
+# Version 3.2.0
 ## note deployment name can not excede 23 charactors.
 
 imports:
@@ -9,13 +9,13 @@ resources:
 - name: f5-payg-autoscale-bigip-waf
   type: f5-payg-autoscale-bigip-waf.py
   properties:
-   ### Google Region to deploy BIG-IP, for example us-west1
+   ### Enter the Google Region in which you want to deploy BIG-IP, for example 'us-west1'.  
    region: <region>
-   ### Google Zone in specified region to deploy BIG-IP, for example us-west1-a
+   ### Enter the availability zone where you want to deploy the BIG-IP VE instance, for example 'us-west1-a'.
    availabilityZone1: <availability zone>
-   ### Specify the network to use for management traffic
-   mgmtNetwork: <management network>
-   ### Specify the subnet to use for management traffic
+   ### Specify the name of the network to use for management traffic, for example 'my-management-network'.
+   mgmtNetwork: <managment network>
+   ### Specify the name of the subnet to use for management traffic, for example 'my-management-subnetwork'.
    mgmtSubnet: <management subnet>
    ### BIG-IP image, valid choices include:
    # f5-bigip-15-0-1-0-0-11-payg-best-10gbps-190803012348
@@ -32,32 +32,32 @@ resources:
    # f5-bigip-15-0-1-0-0-11-payg-pve-adv-waf-200mbps-190803011657
    # f5-bigip-15-0-1-0-0-11-payg-pve-adv-waf-25mbps-190803011657
    imageName: <image>
-   ### Instance type assigned to BIG-IP, example n1-standard-4.
+   ### Instance type assigned to BIG-IP, for example 'n1-standard-4'.
    instanceType: n1-standard-4
-   ### BIG-IP Management Port, the default is 8443
+   ### Enter the BIG-IP Management Port, the default is '8443'.
    manGuiPort: 8443
-   ## Enter the modules and povisioning level
+   ## Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'.
    bigIpModules: asm:nominal
-   ### Enter the Google service account to use for autoscale API calls.
-   serviceAccount: '<service acount>'
-   ### Number of instances to start
+   ### Enter the Google service account to use for autoscale API calls, for example 'username@projectname.iam.gserviceaccount.com'.
+   serviceAccount: <service account>
+   ### Enter the number of instances to start.
    targetSize: 2
-   ### Minimum number of instances autoscale policy will scale down to.
+   ### Enter the minimum number of instances autoscale policy will scale down to.
    minReplicas: 2
-   ### Maximum number of instances autoscale poilcy will allow.
+   ### Enter the maximum number of instances autoscale policy will allow.
    maxReplicas: 8
-   ### Target percent of BIG-IP managed instance group utilization. A new instance is created once this target is met for the entire group.
+   ### Enter the target percent of BIG-IP managed instance group utilization. A new instance is created once this target is met for the entire group.
    cpuUtilization: 0.8
-   ### How long to wait before collecting information from a new instance. This should be at least the time it takes to initialize the instance. In most cases, default value of 10 minutes should be used.
+   ### Enter the amount of time, in seconds, before collecting information from a new instance. This should be at least the time it takes to initialize the instance. In most cases, the default value of 10 minutes should be used.
    coolDownPeriod: 600
    ### Choose asm policy
-   # valid values include:high, meduium, or low
+   # valid values include: 'high', 'medium', or 'low'.
    policyLevel: <policy level>
-   ### List application port
+   ### List application port(s) separated by a space, for example '443' or '443 444 445'.
    applicationPort: 80
    ### What DNS will this application use?
-   applicationDnsName: <dns value of your application>
+   applicationDnsName: <DNS value of your application>
    ### This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent.
    allowUsageAnalytics: yes
-   ### URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration.
+   ### URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration. For example, 'https://cdn.f5.com/product/cloudsolutions/declarations/sample_01.json'
    declarationUrl: default

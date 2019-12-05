@@ -92,14 +92,14 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 
 | Parameter | Required | Description |
 | --- | --- | --- |
-| availabilityZone1 | Yes | Google Zone in specified region to deploy BIG-IP, for example us-west1-a |
-| imageName | Yes | BIG-IP image name |
-| instanceType | Yes | Instance type assigned to BIG-IP, example n1-standard-4. |
-| manGuiPort | Yes | BIG-IP management port.  The default is 8443 |
-| bigIpModules | Yes | Comma separated list of modules and levels to provision, for example, 'ltm:nominal,asm:nominal' |
-| allowUsageAnalytics | Yes | This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent |
-| logLevel | No | Log setting, used to set log level on scripts used during deployment. Acceptable values are error, warn, info, verbose, debug, or silly. |
-| declarationUrl | Yes | URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration. |
+| availabilityZone1 | Yes | Enter the availability zone where you want to deploy the BIG-IP VE instance, for example 'us-west1-a'. |
+| imageName | Yes | Enter the BIG-IP image name |
+| instanceType | Yes | Instance type assigned to the BIG-IP, for example 'n1-standard-4'. |
+| manGuiPort | Yes | Enter the BIG-IP Management Port, the default is '8443'. |
+| bigIpModules | Yes | Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'. |
+| allowUsageAnalytics | Yes | This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent. |
+| logLevel | No | Log setting, used to set log level on scripts used during deployment. Acceptable values are - error, warn, info, verbose, debug, silly. The default is 'info'. |
+| declarationUrl | Yes | URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration. For example, 'https://cdn.f5.com/product/cloudsolutions/declarations/sample_01.json' |
 
 
 ### Save the YAML and Python files

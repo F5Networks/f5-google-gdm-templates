@@ -91,34 +91,34 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 
 | Parameter | Required | Description |
 | --- | --- | --- |
-| region | Yes | The Google region in which you want to deploy BIG-IP, for example us-west1 |
-| availabilityZone1 | Yes | The availability zone where you want to deploy the BIG-IP VE instance, for example us-west1-a |
-| mgmtNetwork | Yes | Specify the network to use for management traffic |
-| mgmtSubnet | Yes | Specify the subnet to use for management traffic |
-| restrictedSrcAddress | Yes | This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources |
-| restrictedSrcAddressApp | Yes | Restricts web application access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources. |
-| restrictedSrcAddressIntApp | No | Restricts web application access to a specific private network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources. Only required when using internal loadbalancer (numberOfForwardingRules equals 1). |
-| network1 | Yes | Specify the Network name for BIG-IP application traffic |
-| subnet1 | Yes | Subnet of the Network BIG-IP should use for application traffic |
-| network2 | Yes | Specify the Network name for BIG-IP internal application traffic |
-| subnet2 | Yes | Subnet of the Network BIG-IP should use for internal application traffic |
-| licenseKey1 | Yes | BIG-IP license key |
-| licenseKey2 | Yes | BIG-IP license key |
-| numberOfForwardingRules | Yes | Number of forwarding rules to create, for example '1'.  All integers from 1 to the max quota for the forwarding rules resource type are allowed. |
-| numberOfIntForwardingRules | Yes | Number of forwarding rules to create, for example '1'.  Integers 0 and 1 are valid choices. |
+| region | Yes | Enter the Google Region in which you want to deploy BIG-IP, for example 'us-west1'. |
+| availabilityZone1 | Yes | Enter the availability zone where you want to deploy the BIG-IP VE instance, for example 'us-west1-a'. |
+| mgmtNetwork | Yes | Specify the name of the network to use for management traffic, for example 'my-management-network'. |
+| mgmtSubnet | Yes | Specify the name of the subnet to use for management traffic, for example 'my-management-subnetwork'. |
+| restrictedSrcAddress | Yes | This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or '0.0.0.0/0' for all sources. For example, '10.0.0.0/0'. |
+| restrictedSrcAddressApp | Yes | This field restricts web application access (ports 80 and 443) to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or '0.0.0.0/0' for all sources. |
+| restrictedSrcAddressIntApp | No | This field restricts web application access to a specific private network or address. Enter an IP address or address range in CIDR notation separated by a space, or '0.0.0.0/0' for all sources. This is only required when using an internal load balancer (numberOfForwardingRules equals 1). |
+| network1 | Yes | Specify the Network name for BIG-IP application traffic, for example 'my-application-network'. |
+| subnet1 | Yes | Specify the subnet of the Network that the BIG-IP should use for application traffic, for example 'my-application-subnetwork'. |
+| network2 | Yes | Specify the Network name for BIG-IP internal application traffic, for example 'my-internal-network'. |
+| subnet2 | Yes | Specify the name of the Subnet of the Network that BIG-IP should use for internal application traffic, for example 'my-internal-subnetwork'. |
+| licenseKey1 | Yes | Enter the BIG-IP license key, for example 'CTASW-GVZHE-FYVIM-XMOUP-SJSTBXX'. |
+| licenseKey2 | Yes | Enter the second BIG-IP license key. |
+| numberOfForwardingRules | Yes | Enter the number of forwarding rules to create, for example '1'.  All integers from 1 to the max quota for the forwarding rules resource type are allowed. |
+| numberOfIntForwardingRules | Yes | Specify the number of forwarding rules to create for internal application traffic, for example, '0' or '1'. |
 | provisionPublicIP | Yes | Provision Public IP addresses for BIG-IP Network Interfaces. By default it is set to provision public IPs. |
 | imageName | Yes | BIG-IP image name |
-| instanceType | Yes | Instance type assigned to BIG-IP, example n1-standard-4. |
-| mgmtGuiPort | No | (optional) BIG-IP Management Port |
+| instanceType | Yes | Instance type assigned to BIG-IP, for example 'n1-standard-4'. |
+| mgmtGuiPort | No | (Optional) Enter the BIG-IP Management Port, the default is '443'. |
 | applicationPort | No | List application port(s) separated by a space |
-| applicationIntPort | No | List application port(s) for internal google load balancer separated by a space. A max of 5 ports can be specified. Only required when using internal loadbalancer (numberOfForwardingRules equals 1). |
-| ntpServer | No | (optional) List NTP servers separated by a space |
-| timezone | No | (optional) Enter the Olson timezone string from /usr/share/zoneinfo |
-| bigIpModules | No | Comma separated list of modules and levels to provision, for example, 'ltm:nominal,asm:nominal' |
-| serviceAccount | Yes | Enter service account with correct roles. |
-| allowUsageAnalytics | Yes | This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent |
-| logLevel | No | Log setting, used to set log level on scripts used during deployment. Acceptable values are error, warn, info, verbose, debug, or silly. |
-| declarationUrl | Yes | URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration. |
+| applicationIntPort | No | List application port(s) for internal google load balancer separated by a space. A maximum of 5 ports can be specified. This is only required when using internal loadbalancer (numberOfForwardingRules equals 1). |
+| ntpServer | No | (Optional) List NTP servers separated by a space, for example 'pool.ntp.org'. The default is 'time.google.com'. |
+| timezone | No | (Optional) Enter the Olson timezone string from /usr/share/zoneinfo. The default is 'UTC'. See the TZ column here (https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) for legal values. For example, 'US/Eastern'. |
+| bigIpModules | No | Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'. |
+| serviceAccount | Yes | Enter the Google service account to use for autoscale API calls, for example 'username@projectname.iam.serviceaccount.com'. |
+| allowUsageAnalytics | Yes | This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent. |
+| logLevel | No | (Optional) Log setting, used to set log level on scripts used during deployment. Acceptable values are - error, warn, info, verbose, debug, silly. The default is 'info'. |
+| declarationUrl | Yes | URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration. For example, 'https://cdn.f5.com/product/cloudsolutions/declarations/sample_01.json' |
 
 
 ### Save the YAML and Python files

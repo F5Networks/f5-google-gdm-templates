@@ -1,6 +1,6 @@
 # Copyright 2019 F5 Networks All rights reserved.
 #
-# Version 3.1.0
+# Version 3.2.0
 
 imports:
 - path: f5-existing-stack-same-net-cluster-byol-3nic-bigip.py
@@ -8,40 +8,40 @@ resources:
 - name: same-net-cluster-3nic-setup
   type: f5-existing-stack-same-net-cluster-byol-3nic-bigip.py
   properties:
-   ### Google Region to deploy BIG-IP, for example us-west1
+   ### Enter the Google Region in which you want to deploy BIG-IP, for example 'us-west1'.
    region: <region>
-   ### Google Zone in specified region to deploy BIG-IP, for example us-west1-a
+   ### Enter the availability zone where you want to deploy the BIG-IP VE instance, for example 'us-west1-a'.
    availabilityZone1: <availability zone>
-   ### Specify the network to use for management traffic
+   ### Specify the name of the network to use for management traffic, for example 'my-management-network'.
    mgmtNetwork: <network>
-   ### Specify the subnet to use for management traffic
+   ### Specify the name of the subnet to use for management traffic, for example 'my-management-subnetwork'.
    mgmtSubnet: <subnet>
-   ### This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources
+   ### This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or '0.0.0.0/0' for all sources. For example, '10.0.0.0/0'.
    restrictedSrcAddress: <address/mask address/mask>
-   ### This field restricts web application access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources.
+   ### This field restricts web application access (ports 80 and 443) to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or '0.0.0.0/0' for all sources.
    restrictedSrcAddressApp: <address/mask address/mask>
-   ### Restricts web application access to a specific private network or address. Enter an IP address or address range in CIDR notation separated by a space, or 0.0.0.0/0 for all sources. Only required when using internal loadbalancer (numberOfForwardingRules equals 1).
+   ### This field restricts web application access to a specific private network or address. Enter an IP address or address range in CIDR notation separated by a space, or '0.0.0.0/0' for all sources. This is only required when using an internal load balancer (numberOfForwardingRules equals 1).
    restrictedSrcAddressIntApp: <address/mask address/mask>
-   ### Specify the Network name for BIG-IP application traffic
+   ### Specify the Network name for BIG-IP application traffic, for example 'my-application-network'.
    network1: <network>
-   ### Subnet of the Network BIG-IP should use for application traffic
+   ### Specify the subnet of the Network that the BIG-IP should use for application traffic, for example 'my-application-subnetwork'.
    subnet1: <subnet>
-   ### Enter alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'.  A list of alias IPs can be provided, separated by a space: IE 10.x.x.16/28 10.x.x.32/28.
+   ### Enter the alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'. A list of alias IPs can be provided, separated by a space. For example, 'IE 10.x.x.16/28 10.x.x.32/28'.
    aliasIp: <address/mask address/mask>
-   ### Number of forwarding rules to create, for example '1'.  All integers from 1 to the max quota for the forwarding rules resource type are allowed.
-   numberOfForwardingRules: <Number of forwarding rules>
+   ### Enter the number of forwarding rules to create, for example '1'.  All integers from 1 to the max quota for the forwarding rules resource type are allowed.
+   numberOfForwardingRules: <number of forwarding rules>
+   ### Specify the number of forwarding rules to create for internal application traffic, for example, '0' or '1'.
+   numberOfIntForwardingRules: <number of internal rules>
    ### Specify Network name to for BIG-IP internal application traffic
-   numberOfIntForwardingRules: <Number of internal rules>
-   ### Specify Network name to for BIG-IP internal application traffic
-   ### Specify the Network name for BIG-IP internal application traffic
+   ### Specify the Network name for BIG-IP internal application traffic, for example 'my-internal-network'.
    network2: <network>
-   ### Subnet of the Network BIG-IP should use for internal application traffic
+   ### Specify the name of the Subnet of the Network that BIG-IP should use for internal application traffic, for example 'my-internal-subnetwork'.
    subnet2: <subnet>
-   ### BIG-IP license key
-   licenseKey1: '<lic key>'
-   ### BIG-IP license key
-   licenseKey2: '<lic key>'
-   ## Provision Public IP addresses for BIG-IP Network Interfaces. By default it is set to provision public IPs
+   ### Enter the BIG-IP license key, for example 'CTASW-GVZHE-FYVIM-XMOUP-SJSTBXX'.
+   licenseKey1: <lic key>
+   ### Enter the second BIG-IP license key.
+   licenseKey2: <lic key>
+   ## Provision Public IP addresses for BIG-IP Network Interfaces. By default it is set to provision public IPs.
    provisionPublicIP: 'yes'
    ### BIG-IP image, valid choices include:
    
@@ -50,25 +50,25 @@ resources:
    # f5-bigip-15-0-1-0-0-11-byol-ltm-1boot-loc-190803010901
    # f5-bigip-15-0-1-0-0-11-byol-ltm-2boot-loc-190803011605
    imageName: <image>
-   ### Instance type assigned to BIG-IP, example n1-standard-4.
+   ### Instance type assigned to BIG-IP, for example 'n1-standard-4'.
    instanceType: n1-standard-4
-   ### (Optional, Defaults to 443) BIG-IP Management Port, the default is 443
+   ### (Optional) Enter the BIG-IP Management Port, the default is '443'.
    mgmtGuiPort: 443
-   ### List application port(s) separated by a space.
+   ### List application port(s) separated by a space, for example '443' or '443 444 445'.
    applicationPort: <port port>
-   ### List application port(s) for internal google load balancer separated by a space. A max of 5 ports can be specified. Only required when using internal loadbalancer (numberOfForwardingRules equals 1).
+   ### List application port(s) for internal google load balancer separated by a space. A maximum of 5 ports can be specified. This is only required when using internal loadbalancer (numberOfForwardingRules equals 1).
    applicationIntPort: <port port>
-   ## (Optional, Defaults to time.google.com) List NTP servers separated by a space.
+   ## (Optional) List NTP servers separated by a space, for example 'pool.ntp.org'. The default is 'time.google.com'.
    ntpServer: <server server>
-   ## Enter the Olson timezone string from /usr/share/zoneinfo
+   ## (Optional) Enter the Olson timezone string from /usr/share/zoneinfo. The default is 'UTC'. See the TZ column here (https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) for legal values. For example, 'US/Eastern'.
    timezone: <timezone>
-   ## Enter the modules and povisioning level
+   ## Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'.
    bigIpModules: ltm:nominal
-   ### Enter service account with correct roles.
+   ### Enter the Google service account to use for autoscale API calls, for example 'username@projectname.iam.serviceaccount.com'.
    serviceAccount: <service account>
    ### This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent.
    allowUsageAnalytics: 'yes'
-   ### (Optional, Defaults to Info) Log setting, used to set log level on scripts used during deployment. Acceptable values:error, warn, info, verbose, debug, silly.
+   ### (Optional) Log setting, used to set log level on scripts used during deployment. Acceptable values are - error, warn, info, verbose, debug, silly. The default is 'info'.
    logLevel: <level>
-   ### URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration.
+   ### URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration. For example, 'https://cdn.f5.com/product/cloudsolutions/declarations/sample_01.json'
    declarationUrl: default

@@ -101,26 +101,26 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 
 | Parameter | Required | Description |
 | --- | --- | --- |
-| region | Yes | The Google region in which you want to deploy BIG-IP, for example us-west1 |
-| availabilityZone1 | Yes | The availability zone where you want to deploy the BIG-IP VE instance, for example us-west1-a |
-| mgmtNetwork | Yes | Specify the network to use for management traffic |
-| manGuiPort | Yes | BIG-IP management port.  The default is 8443 |
-| mgmtSubnet | Yes | Specify the subnet to use for management traffic |
-| imageName | Yes | BIG-IP image name |
-| instanceType | Yes | Instance type assigned to BIG-IP, example n1-standard-4. |
-| bigIpModules | No | Comma separated list of modules and levels to provision, for example, 'ltm:nominal,asm:nominal' |
-| serviceAccount | Yes | Enter service account with correct roles. |
-| targetSize | Yes | Minimum number of instances autoscale policy will scale down to |
-| minReplicas | Yes | Number of instances to start |
-| maxReplicas | Yes | Maximum number of instances autoscale poilcy will allow. |
-| cpuUtilization | Yes | Target percent of BIG-IP managed instance group utilization. A new instance is created once this target is met for the entire group. |
-| coolDownPeriod | Yes | How long to wait before collecting information from a new instance. This should be at least the time it takes to initialize the instance. In most cases, default value of 10 minutes should be used. |
-| policyLevel | Yes | Choose asm policy; valid values include:high, meduium, or low |
-| applicationPort | Yes | List application port |
-| applicationDnsName | No | DNS name used by application |
-| allowUsageAnalytics | Yes | This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent |
-| logLevel | No | Log setting, used to set log level on scripts used during deployment. Acceptable values are error, warn, info, verbose, debug, or silly. |
-| declarationUrl | Yes | URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration. |
+| region | Yes | Enter the Google Region in which you want to deploy BIG-IP, for example 'us-west1'. |
+| availabilityZone1 | Yes | Enter the availability zone where you want to deploy the BIG-IP VE instance, for example 'us-west1-a'. |
+| mgmtNetwork | Yes | Specify the name of the network to use for management traffic, for example 'my-management-network'. |
+| manGuiPort | Yes | Enter the BIG-IP Management Port, the default is '8443'. |
+| mgmtSubnet | Yes | Specify the name of the subnet to use for management traffic, for example 'my-management-subnetwork'. |
+| imageName | Yes | BIG-IP image name. |
+| instanceType | Yes | Instance type assigned to BIG-IP, for example 'n1-standard-4'. |
+| bigIpModules | No | Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'. |
+| serviceAccount | Yes | Enter the Google service account to use for autoscale API calls, for example 'username@projectname.iam.gserviceaccount.com'. |
+| targetSize | Yes | Enter the number of instances to start. |
+| minReplicas | Yes | Enter the minimum number of instances autoscale policy will scale down to. |
+| maxReplicas | Yes | Enter the maximum number of instances autoscale policy will allow. |
+| cpuUtilization | Yes | Enter the target percent of BIG-IP managed instance group utilization. A new instance is created once this target is met for the entire group. |
+| coolDownPeriod | Yes | Enter the amount of time, in seconds, before collecting information from a new instance. This should be at least the time it takes to initialize the instance. In most cases, the default value of 10 minutes should be used. |
+| policyLevel | Yes | Choose asm policy; valid values include - 'high', 'medium', or 'low'. |
+| applicationPort | Yes | List application port(s) separated by a space, for example '443' or '443 444 445'. |
+| applicationDnsName | No | Enter the DNS name used by application. |
+| allowUsageAnalytics | Yes | This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent. |
+| logLevel | No | Log setting, used to set log level on scripts used during deployment. Acceptable values are - error, warn, info, verbose, debug, silly. The default is 'info'. |
+| declarationUrl | Yes | URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration. For example, 'https://cdn.f5.com/product/cloudsolutions/declarations/sample_01.json' |
 
 
 ### Save the YAML and Python files
