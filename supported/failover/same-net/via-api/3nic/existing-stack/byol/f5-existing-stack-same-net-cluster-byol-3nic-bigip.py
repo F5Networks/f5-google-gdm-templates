@@ -1,9 +1,10 @@
 # Copyright 2019 F5 Networks All rights reserved.
 #
-# Version 3.2.0
+# Version 3.3.0
 
 """Creates BIG-IP"""
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
+
 
 def FirewallRuleMgmt(context):
     # Build Management firewall rule
@@ -16,10 +17,10 @@ def FirewallRuleMgmt(context):
                                 context.env['project'], '/global/networks/',
                                 context.properties['mgmtNetwork']]),
             'sourceRanges': source_list,
-            'targetTags': ['mgmtfw-'+ context.env['deployment']],
+            'targetTags': ['mgmtfw-' + context.env['deployment']],
             'allowed': [{
                 "IPProtocol": "TCP",
-                "ports": [str(context.properties['mgmtGuiPort']),'22'],
+                "ports": [str(context.properties['mgmtGuiPort']), '22'],
                 },
             ]
         }
@@ -34,10 +35,20 @@ def Metadata(context,group, storageName, licenseType):
   ALLOWUSAGEANALYTICS = str(context.properties['allowUsageAnalytics']).lower()
   if ALLOWUSAGEANALYTICS in ['yes', 'true']:
       CUSTHASH = 'CUSTOMERID=`curl -s "http://metadata.google.internal/computeMetadata/v1/project/numeric-project-id" -H "Metadata-Flavor: Google" |sha512sum|cut -d " " -f 1`;\nDEPLOYMENTID=`curl -s "http://metadata.google.internal/computeMetadata/v1/instance/id" -H "Metadata-Flavor: Google"|sha512sum|cut -d " " -f 1`;'
-      SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-existing-stack-same-net-cluster-byol-3nic-bigip.py,templateVersion:3.2.0,licenseType:byol"'
+      SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-existing-stack-same-net-cluster-byol-3nic-bigip.py,templateVersion:3.3.0,licenseType:byol"'
   else:
       CUSTHASH = '# No template analytics'
       SENDANALYTICS = ''
+
+  ## ntp servers
+  ntp_servers = str(context.properties['ntpServer']).split()
+  ntp_list = ''
+  for ntp_server in ntp_servers:
+      ntp_list = ntp_list + ' --ntp ' + ntp_server
+  timezone = ' --tz UTC'
+  if context.properties['timezone']:
+      timezone = " --tz {0}".format(str(context.properties['timezone']))
+
 
   ## Onboard
   if group == "create" and licenseType == "byol":
@@ -52,43 +63,49 @@ def Metadata(context,group, storageName, licenseType):
 
   ## Cluster
   if group == "create":
-    CLUSTERJS = ' '.join(["HOSTNAME=$(curl -s -f --retry 20 \"http://metadata.google.internal/computeMetadata/v1/instance/hostname\" -H \"Metadata-Flavor: Google\");NET2ADDRESS=$(curl -s -f --retry 20 \"http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/2/ip\" -H \"Metadata-Flavor: Google\");nohup /config/waitThenRun.sh",
+    CLUSTERJS = ' '.join(["nohup /config/waitThenRun.sh",
                         "f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/cluster.js",
                         "-o /var/log/cloud/google/cluster.log",
-                        "--log-level silly",
+                        "--log-level " + str(context.properties['logLevel']),
                         "--host localhost",
+                        "--wait-for CUSTOM_CONFIG_DONE",
+                        "--signal CLUSTER_DONE",
                         "--user admin",
                         "--password-url file:///config/cloud/gce/.adminPassword",
                         "--password-encrypted",
                         "--cloud gce",
                         "--provider-options 'region:" + context.properties['region'] + ",storageBucket:" + storageName  + "'",
                         "--master",
-                        "--config-sync-ip ${NET2ADDRESS}",
+                        "--config-sync-ip ${INT2ADDRESS}",
                         "--create-group",
                         "--device-group failover_group",
                         "--sync-type sync-failover",
                         "--network-failover",
                         "--device ${HOSTNAME}",
                         "--auto-sync",
-                        "2>&1 >> /var/log/cloud/google/install.log < /dev/null"
+                        "--no-reboot",
+                        "2>&1 >> /var/log/cloud/google/install.log < /dev/null &"
       ])
   elif group == "join":
-     CLUSTERJS = ' '.join(["NET2ADDRESS=$(curl -s -f --retry 20 \"http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/2/ip\" -H \"Metadata-Flavor: Google\");nohup /config/waitThenRun.sh",
+     CLUSTERJS = ' '.join(["nohup /config/waitThenRun.sh",
                         "f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/cluster.js",
                         "-o /var/log/cloud/google/cluster.log",
-                        "--log-level silly",
+                        "--log-level " + str(context.properties['logLevel']),
                         "--host localhost",
+                        "--wait-for CUSTOM_CONFIG_DONE",
+                        "--signal CLUSTER_DONE",
                         "--user admin",
                         "--password-url file:///config/cloud/gce/.adminPassword",
                         "--password-encrypted",
                         "--cloud gce",
                         "--provider-options 'region:" + context.properties['region'] + ",storageBucket:" + storageName  + "'",
-                        "--config-sync-ip ${NET2ADDRESS}",
+                        "--config-sync-ip ${INT2ADDRESS}",
                         "--join-group",
                         "--device-group failover_group",
                         "--remote-host ",
                         "$(ref.bigip1-" + context.env['deployment'] + ".networkInterfaces[1].networkIP)",
-                        "2>&1 >> /var/log/cloud/google/install.log < /dev/null"
+                        "--no-reboot",
+                        "2>&1 >> /var/log/cloud/google/install.log < /dev/null &"
              ])
   else:
       CLUSTERJS = ''
@@ -101,6 +118,7 @@ def Metadata(context,group, storageName, licenseType):
                                     'if [ -f /config/startupFinished ]; then',
                                     '    exit',
                                     'fi',
+                                    'if [ ! -f /config/cloud/gce/FIRST_BOOT_COMPLETE ]; then',
                                     'mkdir -p /config/cloud/gce',
                                     'cat <<\'EOF\' > /config/installCloudLibs.sh',
                                     '#!/bin/bash',
@@ -139,7 +157,7 @@ def Metadata(context,group, storageName, licenseType):
                                     'tar xvfz /config/cloud/f5-cloud-libs-gce.tar.gz -C /config/cloud/gce/node_modules/@f5devcentral',
                                     'touch /config/cloud/cloudLibsReady',
                                     'EOF',
-                                    'echo \'Y2xpIHNjcmlwdCAvQ29tbW9uL3ZlcmlmeUhhc2ggewpwcm9jIHNjcmlwdDo6cnVuIHt9IHsKICAgICAgICBpZiB7W2NhdGNoIHsKICAgICAgICAgICAgc2V0IGhhc2hlcyhmNS1jbG91ZC1saWJzLnRhci5neikgYWRjZmEwNmMxOGQyNmMwOTIyYWQxNDFhZDMxYjliNjIxZjNlMTcxM2EyMWZiODE5ZjBiM2I0MjUxMTI5NjQ5NjcxNzI3MTAwMzVmOTdkMGZiOWRmY2RlZDgxMGFlMzI4MGY0NjZkNGI1MWJmNWExMDlhZTg0YmMzNTQyMTcwNjEKICAgICAgICAgICAgc2V0IGhhc2hlcyhmNS1jbG91ZC1saWJzLWF3cy50YXIuZ3opIDJiOTM0MzA3NDc3ZmFmNzcyZTE1NThhYjM2MzY3MTY5ODEyMTVkNmIxNWYyYTE4NDc1MDQ3MzkxMWQxZDM4YmZiZDZhMmRjNzk2MTRiMWQxNTc1ZGNlOGYzODI0ZWQ4MDVkYWEzZDljYTQ4YzdlOTRjNjY5MmYwM2I5ZTRlZDdhCiAgICAgICAgICAgIHNldCBoYXNoZXMoZjUtY2xvdWQtbGlicy1henVyZS50YXIuZ3opIDNlY2Q4ZjM3MzcxNGE3NGUyMzlmOGJmNmIyNTFiYzIxMmI4YWVlMWMwMzFkM2U5YzA2ZGEzMDRiMDFlZjZhNzE1ZTA0MTUzMjhmNTUyM2JkM2ExYmVhOGVlYjg1M2IyNDAxYjc0ZjkwNGJmODhiN2FiY2Q0OGQ0NTg0YTAwZGJkCiAgICAgICAgICAgIHNldCBoYXNoZXMoZjUtY2xvdWQtbGlicy1nY2UudGFyLmd6KSBhNWNmYWVkMWZlMzNkYTY3N2IzZjEwZGMxYTdjYTgyZjU3MzlmZjI0ZTQ1ZTkxYjNhOGY3YjA2ZDZiMmUyODBlNWYxZWFmNWZlMmQzMzAwOWIyY2M2N2MxMGYyZDkwNmFhYjI2Zjk0MmQ1OTFiNjhmYThhN2ZkZGZkNTRhMGVmZQogICAgICAgICAgICBzZXQgaGFzaGVzKGY1LWNsb3VkLWxpYnMtb3BlbnN0YWNrLnRhci5neikgNWM4M2ZlNmE5M2E2ZmNlYjVhMmU4NDM3YjVlZDhjYzlmYWY0YzE2MjFiZmM5ZTZhMDc3OWY2YzIxMzdiNDVlYWI4YWUwZTdlZDc0NWM4Y2Y4MjFiOTM3MTI0NWNhMjk3NDljYTBiN2U1NjYzOTQ5ZDc3NDk2Yjg3MjhmNGIwZjkKICAgICAgICAgICAgc2V0IGhhc2hlcyhmNS1jbG91ZC1saWJzLWNvbnN1bC50YXIuZ3opIGEzMmFhYjM5NzA3M2RmOTJjYmJiYTUwNjdlNTgyM2U5YjVmYWZjYTg2MmEyNThiNjBiNmI0MGFhMDk3NWMzOTg5ZDFlMTEwZjcwNjE3N2IyZmZiZTRkZGU2NTMwNWEyNjBhNTg1NjU5NGNlN2FkNGVmMGM0N2I2OTRhZTRhNTEzCiAgICAgICAgICAgIHNldCBoYXNoZXMoYXNtLXBvbGljeS1saW51eC50YXIuZ3opIDYzYjVjMmE1MWNhMDljNDNiZDg5YWYzNzczYmJhYjg3YzcxYTZlN2Y2YWQ5NDEwYjIyOWI0ZTBhMWM0ODNkNDZmMWE5ZmZmMzlkOTk0NDA0MWIwMmVlOTI2MDcyNDAyNzQxNGRlNTkyZTk5ZjRjMjQ3NTQxNTMyM2UxOGE3MmUwCiAgICAgICAgICAgIHNldCBoYXNoZXMoZjUuaHR0cC52MS4yLjByYzQudG1wbCkgNDdjMTlhODNlYmZjN2JkMWU5ZTljMzVmMzQyNDk0NWVmODY5NGFhNDM3ZWVkZDE3YjZhMzg3Nzg4ZDRkYjEzOTZmZWZlNDQ1MTk5YjQ5NzA2NGQ3Njk2N2IwZDUwMjM4MTU0MTkwY2EwYmQ3Mzk0MTI5OGZjMjU3ZGY0ZGMwMzQKICAgICAgICAgICAgc2V0IGhhc2hlcyhmNS5odHRwLnYxLjIuMHJjNi50bXBsKSA4MTFiMTRiZmZhYWI1ZWQwMzY1ZjAxMDZiYjVjZTVlNGVjMjIzODU2NTVlYTNhYzA0ZGUyYTM5YmQ5OTQ0ZjUxZTM3MTQ2MTlkYWU3Y2E0MzY2MmM5NTZiNTIxMjIyODg1OGYwNTkyNjcyYTI1NzlkNGE4Nzc2OTE4NmUyY2JmZQogICAgICAgICAgICBzZXQgaGFzaGVzKGY1Lmh0dHAudjEuMi4wcmM3LnRtcGwpIDIxZjQxMzM0MmU5YTdhMjgxYTBmMGUxMzAxZTc0NWFhODZhZjIxYTY5N2QyZTZmZGMyMWRkMjc5NzM0OTM2NjMxZTkyZjM0YmYxYzJkMjUwNGMyMDFmNTZjY2Q3NWM1YzEzYmFhMmZlNzY1MzIxMzY4OWVjM2M5ZTI3ZGZmNzdkCiAgICAgICAgICAgIHNldCBoYXNoZXMoZjUuYXdzX2FkdmFuY2VkX2hhLnYxLjMuMHJjMS50bXBsKSA5ZTU1MTQ5YzAxMGMxZDM5NWFiZGFlM2MzZDJjYjgzZWMxM2QzMWVkMzk0MjQ2OTVlODg2ODBjZjNlZDVhMDEzZDYyNmIzMjY3MTFkM2Q0MGVmMmRmNDZiNzJkNDE0YjRjYjhlNGY0NDVlYTA3MzhkY2JkMjVjNGM4NDNhYzM5ZAogICAgICAgICAgICBzZXQgaGFzaGVzKGY1LmF3c19hZHZhbmNlZF9oYS52MS40LjByYzEudG1wbCkgZGUwNjg0NTUyNTc0MTJhOTQ5ZjFlYWRjY2FlZTg1MDYzNDdlMDRmZDY5YmZiNjQ1MDAxYjc2ZjIwMDEyNzY2OGU0YTA2YmUyYmJiOTRlMTBmZWZjMjE1Y2ZjMzY2NWIwNzk0NWU2ZDczM2NiZTFhNGZhMWI4OGU4ODE1OTAzOTYKICAgICAgICAgICAgc2V0IGhhc2hlcyhmNS5hd3NfYWR2YW5jZWRfaGEudjEuNC4wcmMyLnRtcGwpIDZhYjBiZmZjNDI2ZGY3ZDMxOTEzZjlhNDc0YjFhMDc4NjA0MzVlMzY2YjA3ZDc3YjMyMDY0YWNmYjI5NTJjMWYyMDdiZWFlZDc3MDEzYTE1ZTQ0ZDgwZDc0ZjMyNTNlN2NmOWZiYmUxMmE5MGVjNzEyOGRlNmZhY2QwOTdkNjhmCiAgICAgICAgICAgIHNldCBoYXNoZXMoZjUuYXdzX2FkdmFuY2VkX2hhLnYxLjQuMHJjMy50bXBsKSAyZjIzMzliNGJjM2EyM2M5Y2ZkNDJhYWUyYTZkZTM5YmEwNjU4MzY2ZjI1OTg1ZGUyZWE1MzQxMGE3NDVmMGYxOGVlZGM0OTFiMjBmNGE4ZGJhOGRiNDg5NzAwOTZlMmVmZGNhN2I4ZWZmZmExYTgzYTc4ZTVhYWRmMjE4YjEzNAogICAgICAgICAgICBzZXQgaGFzaGVzKGY1LmF3c19hZHZhbmNlZF9oYS52MS40LjByYzQudG1wbCkgMjQxOGFjOGIxZjE4ODRjNWMwOTZjYmFjNmE5NGQ0MDU5YWFhZjA1OTI3YTZhNDUwOGZkMWYyNWI4Y2M2MDc3NDk4ODM5ZmJkZGE4MTc2ZDJjZjJkMjc0YTI3ZTZhMWRhZTJhMWUzYTBhOTk5MWJjNjVmYzc0ZmMwZDAyY2U5NjMKICAgICAgICAgICAgc2V0IGhhc2hlcyhmNS5hd3NfYWR2YW5jZWRfaGEudjEuNC4wcmM1LnRtcGwpIDVlNTgyMTg3YWUxYTYzMjNlMDk1ZDQxZWRkZDQxMTUxZDZiZDM4ZWI4M2M2MzQ0MTBkNDUyN2EzZDBlMjQ2YThmYzYyNjg1YWIwODQ5ZGUyYWRlNjJiMDI3NWY1MTI2NGQyZGVhY2NiYzE2Yjc3MzQxN2Y4NDdhNGExZWE5YmM0CiAgICAgICAgICAgIHNldCBoYXNoZXMoYXNtLXBvbGljeS50YXIuZ3opIDJkMzllYzYwZDAwNmQwNWQ4YTE1NjdhMWQ4YWFlNzIyNDE5ZThiMDYyYWQ3N2Q2ZDlhMzE2NTI5NzFlNWU2N2JjNDA0M2Q4MTY3MWJhMmE4YjEyZGQyMjllYTQ2ZDIwNTE0NGY3NTM3NGVkNGNhZTU4Y2VmYThmOWFiNjUzM2U2CiAgICAgICAgICAgIHNldCBoYXNoZXMoZGVwbG95X3dhZi5zaCkgMWEzYTNjNjI3NGFiMDhhN2RjMmNiNzNhZWRjOGQyYjJhMjNjZDllMGViMDZhMmUxNTM0YjM2MzJmMjUwZjFkODk3MDU2ZjIxOWQ1YjM1ZDNlZWQxMjA3MDI2ZTg5OTg5Zjc1NDg0MGZkOTI5NjljNTE1YWU0ZDgyOTIxNGZiNzQKICAgICAgICAgICAgc2V0IGhhc2hlcyhmNS5wb2xpY3lfY3JlYXRvci50bXBsKSAwNjUzOWUwOGQxMTVlZmFmZTU1YWE1MDdlY2I0ZTQ0M2U4M2JkYjFmNTgyNWE5NTE0OTU0ZWY2Y2E1NmQyNDBlZDAwYzdiNWQ2N2JkOGY2N2I4MTVlZTlkZDQ2NDUxOTg0NzAxZDA1OGM4OWRhZTI0MzRjODk3MTVkMzc1YTYyMAogICAgICAgICAgICBzZXQgaGFzaGVzKGY1LnNlcnZpY2VfZGlzY292ZXJ5LnRtcGwpIDQ4MTFhOTUzNzJkMWRiZGJiNGY2MmY4YmNjNDhkNGJjOTE5ZmE0OTJjZGEwMTJjODFlM2EyZmU2M2Q3OTY2Y2MzNmJhODY3N2VkMDQ5YTgxNGE5MzA0NzMyMzRmMzAwZDNmOGJjZWQyYjBkYjYzMTc2ZDUyYWM5OTY0MGNlODFiCiAgICAgICAgICAgIHNldCBoYXNoZXMoZjUuY2xvdWRfbG9nZ2VyLnYxLjAuMC50bXBsKSA2NGEwZWQzYjVlMzJhMDM3YmE0ZTcxZDQ2MDM4NWZlOGI1ZTFhZWNjMjdkYzBlODUxNGI1MTE4NjM5NTJlNDE5YTg5ZjRhMmE0MzMyNmFiYjU0M2JiYTliYzM0Mzc2YWZhMTE0Y2VkYTk1MGQyYzNiZDA4ZGFiNzM1ZmY1YWQyMAogICAgICAgICAgICBzZXQgaGFzaGVzKGY1LWFwcHN2Y3MtMy41LjEtNS5ub2FyY2gucnBtKSBiYTcxYzZlMWM1MmQwYzcwNzdjZGIyNWE1ODcwOWI4ZmI3YzM3YjM0NDE4YTgzMzhiYmY2NzY2ODMzOTY3NmQyMDhjMWE0ZmVmNGU1NDcwYzE1MmFhYzg0MDIwYjRjY2I4MDc0Y2UzODdkZTI0YmUzMzk3MTEyNTZjMGZhNzhjOAoKICAgICAgICAgICAgc2V0IGZpbGVfcGF0aCBbbGluZGV4ICR0bXNoOjphcmd2IDFdCiAgICAgICAgICAgIHNldCBmaWxlX25hbWUgW2ZpbGUgdGFpbCAkZmlsZV9wYXRoXQoKICAgICAgICAgICAgaWYgeyFbaW5mbyBleGlzdHMgaGFzaGVzKCRmaWxlX25hbWUpXX0gewogICAgICAgICAgICAgICAgdG1zaDo6bG9nIGVyciAiTm8gaGFzaCBmb3VuZCBmb3IgJGZpbGVfbmFtZSIKICAgICAgICAgICAgICAgIGV4aXQgMQogICAgICAgICAgICB9CgogICAgICAgICAgICBzZXQgZXhwZWN0ZWRfaGFzaCAkaGFzaGVzKCRmaWxlX25hbWUpCiAgICAgICAgICAgIHNldCBjb21wdXRlZF9oYXNoIFtsaW5kZXggW2V4ZWMgL3Vzci9iaW4vb3BlbnNzbCBkZ3N0IC1yIC1zaGE1MTIgJGZpbGVfcGF0aF0gMF0KICAgICAgICAgICAgaWYgeyAkZXhwZWN0ZWRfaGFzaCBlcSAkY29tcHV0ZWRfaGFzaCB9IHsKICAgICAgICAgICAgICAgIGV4aXQgMAogICAgICAgICAgICB9CiAgICAgICAgICAgIHRtc2g6OmxvZyBlcnIgIkhhc2ggZG9lcyBub3QgbWF0Y2ggZm9yICRmaWxlX3BhdGgiCiAgICAgICAgICAgIGV4aXQgMQogICAgICAgIH1dfSB7CiAgICAgICAgICAgIHRtc2g6OmxvZyBlcnIge1VuZXhwZWN0ZWQgZXJyb3IgaW4gdmVyaWZ5SGFzaH0KICAgICAgICAgICAgZXhpdCAxCiAgICAgICAgfQogICAgfQogICAgc2NyaXB0LXNpZ25hdHVyZSBkVUpYamhPMmNpWVZNbHJwaGMxMGZxWTEwTHBScEtlRXZlRDdQYXhBYlB2VWtNL1lsNHhJUHdlYnlPTktFRFhWNUFkTXNxUlEyL05FQkUvSEo3TWQ2RDZxd3ZFMmRBZCtkN1Rka2xYZ29IajFwS0RJNEhnaFJiS3RqMVlwWkNJZ2cweGZjb0psVTdzRXlIaFJZRUs1M2JHLy9ENWFLVjVVbnZTOThPTEV1b2lLQU9tNjVXdzJGWjFqeWJQaUFhNE1NNlRzMzB0ekNDRmZFK2t3VnlKSytQR0Y4Zks1YVR1aktnNmFXekJjVkl1eFY2MmJNWnZYclR0R1JZdWFXdXc0RHloeGdDZ2xuWkVpUTRyVTE5dHhjVkd2MGRGZE93eFdNaU03UkJxMUR0V2FVcW5RSlNOcW5pTnl5MUpCK0RzekRycEtuT2xyUVB3YmtxNmhsZDBGdmc9PQogICAgc2lnbmluZy1rZXkgL0NvbW1vbi9mNS1pcnVsZQp9\' | base64 -d > /config/verifyHash',
+                                    'echo \'Y2xpIHNjcmlwdCAvQ29tbW9uL3ZlcmlmeUhhc2ggewpwcm9jIHNjcmlwdDo6cnVuIHt9IHsKICAgICAgICBpZiB7W2NhdGNoIHsKICAgICAgICAgICAgc2V0IGhhc2hlcyhmNS1jbG91ZC1saWJzLnRhci5neikgZmFmNDE0YjdhYjVmNTMwZDNiMGM4OGZlMjVlYTY1OGJjNzc2MDY3ODg3MDk2ZjU5N2ZjYmRhMzU3ODBmYWY0YzE0ZWU3ZjdlNTVmMDIxMWM2MTQyMzdmY2M2NTgwZWQwMjg4NjgwZTY0MmUzYWQ0NDc4MWFlNWE5OWY4YjZiOTgKICAgICAgICAgICAgc2V0IGhhc2hlcyhmNS1jbG91ZC1saWJzLWF3cy50YXIuZ3opIDJmZjRlNjI2OWNlNzQ4NTBmYzM3OTQwNDVkMGEzOTRlY2QwYjQ3MmJhOWVmYTE2YjM0Nzg2YjM4ZDA3MDg4YjNhNDkzMzliNDE3MDg5NzNjNGJmZmU1NWE1Mzk0NzFjMmY5ZWM2MGEwMDlkZGQwODc5MTJjMWZjYTcyMmI0OGVmCiAgICAgICAgICAgIHNldCBoYXNoZXMoZjUtY2xvdWQtbGlicy1henVyZS50YXIuZ3opIGY2ZDEwMzQ3MTgxYTEwMWI5NzQ0NzhjYzdjMGQ0NGM5YzhjZmQ3NzA1YTZiY2NjOWQ0OGIyZThhZjE3NTA2NmY1MjYxMmIyOGU5YTBmYWEyNTc2NzViOWE5Nzk4MDM5NTJhMzFkOWQwY2YyY2M1ZmYxODIzMWZiYjQyZTc4NmM5CiAgICAgICAgICAgIHNldCBoYXNoZXMoZjUtY2xvdWQtbGlicy1nY2UudGFyLmd6KSBhNWNmYWVkMWZlMzNkYTY3N2IzZjEwZGMxYTdjYTgyZjU3MzlmZjI0ZTQ1ZTkxYjNhOGY3YjA2ZDZiMmUyODBlNWYxZWFmNWZlMmQzMzAwOWIyY2M2N2MxMGYyZDkwNmFhYjI2Zjk0MmQ1OTFiNjhmYThhN2ZkZGZkNTRhMGVmZQogICAgICAgICAgICBzZXQgaGFzaGVzKGY1LWNsb3VkLWxpYnMtb3BlbnN0YWNrLnRhci5neikgNWM4M2ZlNmE5M2E2ZmNlYjVhMmU4NDM3YjVlZDhjYzlmYWY0YzE2MjFiZmM5ZTZhMDc3OWY2YzIxMzdiNDVlYWI4YWUwZTdlZDc0NWM4Y2Y4MjFiOTM3MTI0NWNhMjk3NDljYTBiN2U1NjYzOTQ5ZDc3NDk2Yjg3MjhmNGIwZjkKICAgICAgICAgICAgc2V0IGhhc2hlcyhmNS1jbG91ZC1saWJzLWNvbnN1bC50YXIuZ3opIGEzMmFhYjM5NzA3M2RmOTJjYmJiYTUwNjdlNTgyM2U5YjVmYWZjYTg2MmEyNThiNjBiNmI0MGFhMDk3NWMzOTg5ZDFlMTEwZjcwNjE3N2IyZmZiZTRkZGU2NTMwNWEyNjBhNTg1NjU5NGNlN2FkNGVmMGM0N2I2OTRhZTRhNTEzCiAgICAgICAgICAgIHNldCBoYXNoZXMoYXNtLXBvbGljeS1saW51eC50YXIuZ3opIDYzYjVjMmE1MWNhMDljNDNiZDg5YWYzNzczYmJhYjg3YzcxYTZlN2Y2YWQ5NDEwYjIyOWI0ZTBhMWM0ODNkNDZmMWE5ZmZmMzlkOTk0NDA0MWIwMmVlOTI2MDcyNDAyNzQxNGRlNTkyZTk5ZjRjMjQ3NTQxNTMyM2UxOGE3MmUwCiAgICAgICAgICAgIHNldCBoYXNoZXMoZjUuaHR0cC52MS4yLjByYzQudG1wbCkgNDdjMTlhODNlYmZjN2JkMWU5ZTljMzVmMzQyNDk0NWVmODY5NGFhNDM3ZWVkZDE3YjZhMzg3Nzg4ZDRkYjEzOTZmZWZlNDQ1MTk5YjQ5NzA2NGQ3Njk2N2IwZDUwMjM4MTU0MTkwY2EwYmQ3Mzk0MTI5OGZjMjU3ZGY0ZGMwMzQKICAgICAgICAgICAgc2V0IGhhc2hlcyhmNS5odHRwLnYxLjIuMHJjNi50bXBsKSA4MTFiMTRiZmZhYWI1ZWQwMzY1ZjAxMDZiYjVjZTVlNGVjMjIzODU2NTVlYTNhYzA0ZGUyYTM5YmQ5OTQ0ZjUxZTM3MTQ2MTlkYWU3Y2E0MzY2MmM5NTZiNTIxMjIyODg1OGYwNTkyNjcyYTI1NzlkNGE4Nzc2OTE4NmUyY2JmZQogICAgICAgICAgICBzZXQgaGFzaGVzKGY1Lmh0dHAudjEuMi4wcmM3LnRtcGwpIDIxZjQxMzM0MmU5YTdhMjgxYTBmMGUxMzAxZTc0NWFhODZhZjIxYTY5N2QyZTZmZGMyMWRkMjc5NzM0OTM2NjMxZTkyZjM0YmYxYzJkMjUwNGMyMDFmNTZjY2Q3NWM1YzEzYmFhMmZlNzY1MzIxMzY4OWVjM2M5ZTI3ZGZmNzdkCiAgICAgICAgICAgIHNldCBoYXNoZXMoZjUuYXdzX2FkdmFuY2VkX2hhLnYxLjMuMHJjMS50bXBsKSA5ZTU1MTQ5YzAxMGMxZDM5NWFiZGFlM2MzZDJjYjgzZWMxM2QzMWVkMzk0MjQ2OTVlODg2ODBjZjNlZDVhMDEzZDYyNmIzMjY3MTFkM2Q0MGVmMmRmNDZiNzJkNDE0YjRjYjhlNGY0NDVlYTA3MzhkY2JkMjVjNGM4NDNhYzM5ZAogICAgICAgICAgICBzZXQgaGFzaGVzKGY1LmF3c19hZHZhbmNlZF9oYS52MS40LjByYzEudG1wbCkgZGUwNjg0NTUyNTc0MTJhOTQ5ZjFlYWRjY2FlZTg1MDYzNDdlMDRmZDY5YmZiNjQ1MDAxYjc2ZjIwMDEyNzY2OGU0YTA2YmUyYmJiOTRlMTBmZWZjMjE1Y2ZjMzY2NWIwNzk0NWU2ZDczM2NiZTFhNGZhMWI4OGU4ODE1OTAzOTYKICAgICAgICAgICAgc2V0IGhhc2hlcyhmNS5hd3NfYWR2YW5jZWRfaGEudjEuNC4wcmMyLnRtcGwpIDZhYjBiZmZjNDI2ZGY3ZDMxOTEzZjlhNDc0YjFhMDc4NjA0MzVlMzY2YjA3ZDc3YjMyMDY0YWNmYjI5NTJjMWYyMDdiZWFlZDc3MDEzYTE1ZTQ0ZDgwZDc0ZjMyNTNlN2NmOWZiYmUxMmE5MGVjNzEyOGRlNmZhY2QwOTdkNjhmCiAgICAgICAgICAgIHNldCBoYXNoZXMoZjUuYXdzX2FkdmFuY2VkX2hhLnYxLjQuMHJjMy50bXBsKSAyZjIzMzliNGJjM2EyM2M5Y2ZkNDJhYWUyYTZkZTM5YmEwNjU4MzY2ZjI1OTg1ZGUyZWE1MzQxMGE3NDVmMGYxOGVlZGM0OTFiMjBmNGE4ZGJhOGRiNDg5NzAwOTZlMmVmZGNhN2I4ZWZmZmExYTgzYTc4ZTVhYWRmMjE4YjEzNAogICAgICAgICAgICBzZXQgaGFzaGVzKGY1LmF3c19hZHZhbmNlZF9oYS52MS40LjByYzQudG1wbCkgMjQxOGFjOGIxZjE4ODRjNWMwOTZjYmFjNmE5NGQ0MDU5YWFhZjA1OTI3YTZhNDUwOGZkMWYyNWI4Y2M2MDc3NDk4ODM5ZmJkZGE4MTc2ZDJjZjJkMjc0YTI3ZTZhMWRhZTJhMWUzYTBhOTk5MWJjNjVmYzc0ZmMwZDAyY2U5NjMKICAgICAgICAgICAgc2V0IGhhc2hlcyhmNS5hd3NfYWR2YW5jZWRfaGEudjEuNC4wcmM1LnRtcGwpIDVlNTgyMTg3YWUxYTYzMjNlMDk1ZDQxZWRkZDQxMTUxZDZiZDM4ZWI4M2M2MzQ0MTBkNDUyN2EzZDBlMjQ2YThmYzYyNjg1YWIwODQ5ZGUyYWRlNjJiMDI3NWY1MTI2NGQyZGVhY2NiYzE2Yjc3MzQxN2Y4NDdhNGExZWE5YmM0CiAgICAgICAgICAgIHNldCBoYXNoZXMoYXNtLXBvbGljeS50YXIuZ3opIDJkMzllYzYwZDAwNmQwNWQ4YTE1NjdhMWQ4YWFlNzIyNDE5ZThiMDYyYWQ3N2Q2ZDlhMzE2NTI5NzFlNWU2N2JjNDA0M2Q4MTY3MWJhMmE4YjEyZGQyMjllYTQ2ZDIwNTE0NGY3NTM3NGVkNGNhZTU4Y2VmYThmOWFiNjUzM2U2CiAgICAgICAgICAgIHNldCBoYXNoZXMoZGVwbG95X3dhZi5zaCkgMWEzYTNjNjI3NGFiMDhhN2RjMmNiNzNhZWRjOGQyYjJhMjNjZDllMGViMDZhMmUxNTM0YjM2MzJmMjUwZjFkODk3MDU2ZjIxOWQ1YjM1ZDNlZWQxMjA3MDI2ZTg5OTg5Zjc1NDg0MGZkOTI5NjljNTE1YWU0ZDgyOTIxNGZiNzQKICAgICAgICAgICAgc2V0IGhhc2hlcyhmNS5wb2xpY3lfY3JlYXRvci50bXBsKSAwNjUzOWUwOGQxMTVlZmFmZTU1YWE1MDdlY2I0ZTQ0M2U4M2JkYjFmNTgyNWE5NTE0OTU0ZWY2Y2E1NmQyNDBlZDAwYzdiNWQ2N2JkOGY2N2I4MTVlZTlkZDQ2NDUxOTg0NzAxZDA1OGM4OWRhZTI0MzRjODk3MTVkMzc1YTYyMAogICAgICAgICAgICBzZXQgaGFzaGVzKGY1LnNlcnZpY2VfZGlzY292ZXJ5LnRtcGwpIDQ4MTFhOTUzNzJkMWRiZGJiNGY2MmY4YmNjNDhkNGJjOTE5ZmE0OTJjZGEwMTJjODFlM2EyZmU2M2Q3OTY2Y2MzNmJhODY3N2VkMDQ5YTgxNGE5MzA0NzMyMzRmMzAwZDNmOGJjZWQyYjBkYjYzMTc2ZDUyYWM5OTY0MGNlODFiCiAgICAgICAgICAgIHNldCBoYXNoZXMoZjUuY2xvdWRfbG9nZ2VyLnYxLjAuMC50bXBsKSA2NGEwZWQzYjVlMzJhMDM3YmE0ZTcxZDQ2MDM4NWZlOGI1ZTFhZWNjMjdkYzBlODUxNGI1MTE4NjM5NTJlNDE5YTg5ZjRhMmE0MzMyNmFiYjU0M2JiYTliYzM0Mzc2YWZhMTE0Y2VkYTk1MGQyYzNiZDA4ZGFiNzM1ZmY1YWQyMAogICAgICAgICAgICBzZXQgaGFzaGVzKGY1LWFwcHN2Y3MtMy41LjEtNS5ub2FyY2gucnBtKSBiYTcxYzZlMWM1MmQwYzcwNzdjZGIyNWE1ODcwOWI4ZmI3YzM3YjM0NDE4YTgzMzhiYmY2NzY2ODMzOTY3NmQyMDhjMWE0ZmVmNGU1NDcwYzE1MmFhYzg0MDIwYjRjY2I4MDc0Y2UzODdkZTI0YmUzMzk3MTEyNTZjMGZhNzhjOAoKICAgICAgICAgICAgc2V0IGZpbGVfcGF0aCBbbGluZGV4ICR0bXNoOjphcmd2IDFdCiAgICAgICAgICAgIHNldCBmaWxlX25hbWUgW2ZpbGUgdGFpbCAkZmlsZV9wYXRoXQoKICAgICAgICAgICAgaWYgeyFbaW5mbyBleGlzdHMgaGFzaGVzKCRmaWxlX25hbWUpXX0gewogICAgICAgICAgICAgICAgdG1zaDo6bG9nIGVyciAiTm8gaGFzaCBmb3VuZCBmb3IgJGZpbGVfbmFtZSIKICAgICAgICAgICAgICAgIGV4aXQgMQogICAgICAgICAgICB9CgogICAgICAgICAgICBzZXQgZXhwZWN0ZWRfaGFzaCAkaGFzaGVzKCRmaWxlX25hbWUpCiAgICAgICAgICAgIHNldCBjb21wdXRlZF9oYXNoIFtsaW5kZXggW2V4ZWMgL3Vzci9iaW4vb3BlbnNzbCBkZ3N0IC1yIC1zaGE1MTIgJGZpbGVfcGF0aF0gMF0KICAgICAgICAgICAgaWYgeyAkZXhwZWN0ZWRfaGFzaCBlcSAkY29tcHV0ZWRfaGFzaCB9IHsKICAgICAgICAgICAgICAgIGV4aXQgMAogICAgICAgICAgICB9CiAgICAgICAgICAgIHRtc2g6OmxvZyBlcnIgIkhhc2ggZG9lcyBub3QgbWF0Y2ggZm9yICRmaWxlX3BhdGgiCiAgICAgICAgICAgIGV4aXQgMQogICAgICAgIH1dfSB7CiAgICAgICAgICAgIHRtc2g6OmxvZyBlcnIge1VuZXhwZWN0ZWQgZXJyb3IgaW4gdmVyaWZ5SGFzaH0KICAgICAgICAgICAgZXhpdCAxCiAgICAgICAgfQogICAgfQogICAgc2NyaXB0LXNpZ25hdHVyZSBLaFRKOW1Tb0hTQjI0UllzNWpLbXdLQ2gwWnVGblJtdGFKRzJCS3RqSE5RejFidkZkZC96QVYvNXE5c211WThlbE1OSkJLd3VnRHUzcHVpY2pFNHJOWFNIYm1WdlJGM045SmU4STk2T2NxZVFESkpNNTJFeHl6NVNTVk16aXAyME5sdUhRam9XNHdITExMME0vSEZmV0hocmV0UW9FNlJxbUZxM3cwMXB1dW8yOEFDdHloZkNnSm45bGxXMWcwbHBNd2JvemhJWkM2Q090bFh1SVZSVHhRZG0wTzhMR2dKcDU3UUMvdlJtVERSR3ZVSHBoamlUSk9lMFU3OXdzOEUyRWpaRHZ1eC9FZXBCZ0xpTnZaTy9ESmQ1MzU1aE90RzlSZVlVd1d5SU9yYnEvL0l5MkZjdkl6OGk3RWtweHArU0NqSVN2WXNqVStWV3lJUGI4QXhNb2c9PQogICAgc2lnbmluZy1rZXkgL0NvbW1vbi9mNS1pcnVsZQp9\' | base64 -d > /config/verifyHash',
                                     'cat <<\'EOF\' > /config/waitThenRun.sh',
                                     '#!/bin/bash',
                                     'while true; do echo \"waiting for cloud libs install to complete\"',
@@ -151,46 +169,35 @@ def Metadata(context,group, storageName, licenseType):
                                     'done',
                                     '\"$@\"',
                                     'EOF',
-                                    'cat <<\'EOF\' > /config/cloud/gce/pre-nic-swap.sh',
+                                    'cat <<\'EOF\' > /config/cloud/gce/collect-interface.sh',
                                     '#!/bin/bash',
+                                    'COMPUTE_BASE_URL=\"http://metadata.google.internal/computeMetadata/v1\"',
+                                    'echo "MGMTADDRESS=$(curl -s -f --retry 20 \'http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/1/ip\' -H \'Metadata-Flavor: Google\')" >> /config/cloud/gce/interface.config',
+                                    'echo "MGMTMASK=$(curl -s -f --retry 20 \'http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/1/subnetmask\' -H \'Metadata-Flavor: Google\')" >> /config/cloud/gce/interface.config',
+                                    'echo "MGMTGATEWAY=$(curl -s -f --retry 20 \'http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/1/gateway\' -H \'Metadata-Flavor: Google\')" >> /config/cloud/gce/interface.config',
+                                    'echo "INT1ADDRESS=$(curl -s -f --retry 20 \'http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/0/ip\' -H \'Metadata-Flavor: Google\')" >> /config/cloud/gce/interface.config',
+                                    'echo "INT1MASK=$(curl -s -f --retry 20 \'http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/0/subnetmask\' -H \'Metadata-Flavor: Google\')" >> /config/cloud/gce/interface.config',
+                                    'echo "INT1GATEWAY=$(curl -s -f --retry 20 \'http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/0/gateway\' -H \'Metadata-Flavor: Google\')" >> /config/cloud/gce/interface.config',
+                                    'echo "INT2ADDRESS=$(curl -s -f --retry 20 \'http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/2/ip\' -H \'Metadata-Flavor: Google\')" >> /config/cloud/gce/interface.config',
+                                    'echo "INT2MASK=$(curl -s -f --retry 20 \'http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/2/subnetmask\' -H \'Metadata-Flavor: Google\')" >> /config/cloud/gce/interface.config',
+                                    'echo "INT2GATEWAY=$(curl -s -f --retry 20 \'http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/2/gateway\' -H \'Metadata-Flavor: Google\')" >> /config/cloud/gce/interface.config',
+                                    'echo "HOSTNAME=$(curl -s -f --retry 10 \"${COMPUTE_BASE_URL}/instance/hostname\" -H \'Metadata-Flavor: Google\')" >> /config/cloud/gce/interface.config',
                                     'CONFIG_FILE=\'/config/cloud/.deployment\'',
+                                    'echo \'{"tagKey":"f5_deployment","tagValue":"' + context.env['deployment'] + '"}\' > $CONFIG_FILE',   
                                     'CLOUD_LIBS_DIR=\'/config/cloud/gce/node_modules/@f5devcentral\'',
-                                    'echo \'{"tagKey":"f5_deployment","tagValue":"' + context.env['deployment'] + '"}\' > $CONFIG_FILE',
                                     'echo "/usr/bin/f5-rest-node ${CLOUD_LIBS_DIR}/f5-cloud-libs-gce/scripts/failover.js" >> /config/failover/tgactive',
                                     'echo "/usr/bin/f5-rest-node ${CLOUD_LIBS_DIR}/f5-cloud-libs-gce/scripts/failover.js" >> /config/failover/tgrefresh',
-                                    '# save management route to file',
-                                    'MGMT_GW=$(/usr/bin/curl -s -f --retry 20 \"http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/1/gateway\" -H \'Metadata-Flavor: Google\')',
-                                    'CONFIG=$(cat $CONFIG_FILE | jq --arg mgmtGw $MGMT_GW \'. + {mgmtGw: $mgmtGw}\')',
-                                    'echo $CONFIG > $CONFIG_FILE',
-                                    '/usr/bin/tmsh delete sys management-route all',
-                                    'echo \"pre-nic-swap done\"',
-                                    'EOF',
-                                    'cat <<\'EOF\' > /config/cloud/gce/post-nic-swap.sh',
-                                    '#!/bin/bash',
-                                    'CLOUD_LIBS_DIR=\'/config/cloud/gce/node_modules/@f5devcentral\'',
-                                    'source ${CLOUD_LIBS_DIR}/f5-cloud-libs/scripts/util.sh',
-                                    'wait_mcp_running',
-                                    'wait_for_management_ip',
-                                    'MGMT_GW=$(cat /config/cloud/.deployment | jq .mgmtGw -r)',
-                                    '# create default management route to allow connections to metadata, etc.',
-                                    '/usr/bin/tmsh create sys management-route default network default gateway $MGMT_GW',
-                                    '/usr/bin/tmsh save sys config',
+                                    'chmod 755 /config/cloud/gce/interface.config',
+                                    'reboot',
                                     'EOF',
                                     'cat <<\'EOF\' > /config/cloud/gce/custom-config.sh',
                                     '#!/bin/bash',
                                     'source /usr/lib/bigstart/bigip-ready-functions',
                                     'wait_bigip_ready',
-                                    'echo \"Getting information from metadata\"',
-                                    'COMPUTE_BASE_URL=\"http://metadata.google.internal/computeMetadata/v1\"',
-                                    'HOSTNAME=$(curl -s -f --retry 10 \"${COMPUTE_BASE_URL}/instance/hostname\" -H \'Metadata-Flavor: Google\')',
-                                    'NET0ADDRESS=$(curl -s -f --retry 10 \"${COMPUTE_BASE_URL}/instance/network-interfaces/0/ip\" -H \'Metadata-Flavor: Google\')',
-                                    'NET0MASK=$(curl -s -f --retry 10 \"${COMPUTE_BASE_URL}/instance/network-interfaces/0/subnetmask\" -H \'Metadata-Flavor: Google\')',
-                                    'NET0GATEWAY=$(curl -s -f --retry 10 \"${COMPUTE_BASE_URL}/instance/network-interfaces/0/gateway\" -H \'Metadata-Flavor: Google\')',
-                                    'NET2ADDRESS=$(curl -s -f --retry 10 \"${COMPUTE_BASE_URL}/instance/network-interfaces/2/ip\" -H \'Metadata-Flavor: Google\')',
-                                    'NET2MASK=$(curl -s -f --retry 10 \"${COMPUTE_BASE_URL}/instance/network-interfaces/2/subnetmask\" -H \'Metadata-Flavor: Google\')',
-                                    'NET2GATEWAY=$(curl -s -f --retry 10 \"${COMPUTE_BASE_URL}/instance/network-interfaces/2/gateway\" -H \'Metadata-Flavor: Google\')',
-                                    'NET0NETWORK=$(/bin/ipcalc -n ${NET0ADDRESS} ${NET0MASK} | cut -d= -f2)',
-                                    'NET2NETWORK=$(/bin/ipcalc -n ${NET2ADDRESS} ${NET2MASK} | cut -d= -f2)',
+                                    'source /config/cloud/gce/interface.config',
+                                    'MGMTNETWORK=$(/bin/ipcalc -n ${MGMTADDRESS} ${MGMTMASK} | cut -d= -f2)',
+                                    'INT1NETWORK=$(/bin/ipcalc -n ${INT1ADDRESS} ${INT1MASK} | cut -d= -f2)',
+                                    'INT2NETWORK=$(/bin/ipcalc -n ${INT2ADDRESS} ${INT2MASK} | cut -d= -f2)',
                                     'PROGNAME=$(basename $0)',
                                     'function error_exit {',
                                     'echo \"${PROGNAME}: ${1:-\\\"Unknown Error\\\"}\" 1>&2',
@@ -223,22 +230,32 @@ def Metadata(context,group, storageName, licenseType):
                                     '}',
                                     'date',
                                     'declare -a tmsh=()',
-                                    'tmsh+=(\'tmsh load sys application template /config/cloud/f5.service_discovery.tmpl\')',
+                                    'echo \'starting custom-config.sh\'',
+                                    'wait_bigip_ready',
                                     'tmsh+=(',
-                                    '\"tmsh create net vlan external interfaces add { 1.0 } mtu 1460\"',
-                                    '\"tmsh create net self ${NET0ADDRESS}/32 vlan external\"',
-                                    '\"tmsh create net route ext_gw_int network ${NET0GATEWAY}/32 interface external\"',
-                                    '\"tmsh create net route ext_rt network ${NET0NETWORK}/${NET0MASK} gw ${NET0GATEWAY}\"',
-                                    '\"tmsh create net route default gw ${NET0GATEWAY}\"',
-                                    '\"tmsh create net vlan internal interfaces add { 1.2 } mtu 1460\"',
-                                    '\"tmsh create net self ${NET2ADDRESS}/32 vlan internal allow-service add { tcp:4353 udp:1026 }\"',
-                                    '\"tmsh create net route int_gw_int network ${NET2GATEWAY}/32 interface internal\"',
-                                    '\"tmsh create net route int_rt network ${NET2NETWORK}/${NET2MASK} gw ${NET2GATEWAY}\"',
-                                    '\"tmsh modify cm device ${HOSTNAME} unicast-address { { effective-ip ${NET2ADDRESS} effective-port 1026 ip ${NET2ADDRESS} } }\"',
-                                    '\"tmsh modify sys global-settings remote-host add { metadata.google.internal { hostname metadata.google.internal addr 169.254.169.254 } }\"',
-                                    '\"tmsh modify sys db failover.selinuxallowscripts value enable\"',
-                                    '\"tmsh save /sys config\"',
-                                    '\'bigstart restart restnoded\')',
+                                    '"tmsh load sys application template /config/cloud/f5.service_discovery.tmpl"',                                   
+                                    '"tmsh modify sys global-settings mgmt-dhcp disabled"',
+                                    '"tmsh delete sys management-route all"',
+                                    '"tmsh delete sys management-ip all"',
+                                    '"tmsh create sys management-ip ${MGMTADDRESS}/32"',
+                                    '"tmsh create sys management-route mgmt_gw network ${MGMTGATEWAY}/32 type interface"',
+                                    '"tmsh create sys management-route mgmt_net network ${MGMTNETWORK}/${MGMTMASK} gateway ${MGMTGATEWAY}"',
+                                    '"tmsh create sys management-route default gateway ${MGMTGATEWAY}"',
+                                    '"tmsh create net vlan external interfaces add { 1.0 } mtu 1460"',
+                                    '"tmsh create net self self_external address ${INT1ADDRESS}/32 vlan external"',
+                                    '"tmsh create net route ext_gw_interface network ${INT1GATEWAY}/32 interface external"',
+                                    '"tmsh create net route ext_rt network ${INT1NETWORK}/${INT1MASK} gw ${INT1GATEWAY}"',
+                                    '"tmsh create net route default gw ${INT1GATEWAY}"',
+                                    '"tmsh create net vlan internal interfaces add { 1.2 } mtu 1460"',
+                                    '"tmsh create net self self_internal address ${INT2ADDRESS}/32 vlan internal allow-service add { tcp:4353 udp:1026 }"',
+                                    '"tmsh create net route int_gw_interface network ${INT2GATEWAY}/32 interface internal"',
+                                    '"tmsh create net route int_rt network ${INT2NETWORK}/${INT2MASK} gw ${INT2GATEWAY}"',
+                                    '"tmsh modify cm device ${HOSTNAME} unicast-address { { effective-ip ${INT2ADDRESS} effective-port 1026 ip ${INT2ADDRESS} } }"',
+                                    '"tmsh modify sys global-settings remote-host add { metadata.google.internal { hostname metadata.google.internal addr 169.254.169.254 } }"',
+                                    '"tmsh modify sys db failover.selinuxallowscripts value enable"',
+                                    '"tmsh modify sys management-dhcp sys-mgmt-dhcp-config request-options delete { ntp-servers }"',                                    
+                                    '\'tmsh save /sys config\'',
+                                    ')',
                                     'for CMD in "${tmsh[@]}"',
                                     'do',
                                     '    if $CMD;then',
@@ -247,8 +264,6 @@ def Metadata(context,group, storageName, licenseType):
                                     '        error_exit "$LINENO: An error has occurred while executing $CMD. Aborting!"',
                                     '    fi',
                                     'done',
-                                    'f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/onboard.js --host localhost --port 443 -o /var/log/cloud/google/onboard.log --log-level debug' + LICENSE + ' >> /var/log/cloud/google/install.log < /dev/null ',
-                                    'wait_bigip_ready',
                                     'date',
                                     '### START CUSTOM CONFIGURATION',
                                     'mgmtGuiPort="' + str(context.properties['mgmtGuiPort']) + '"',
@@ -282,8 +297,11 @@ def Metadata(context,group, storageName, licenseType):
                                     'cat <<\'EOF\' > /config/cloud/gce/rm-password.sh',
                                     '#!/bin/bash',
                                     'date',
+                                    'source /config/cloud/gce/interface.config',
                                     'echo \'starting rm-password.sh\'',
+                                    'tmsh modify cm device-group failover_group devices modify { $HOSTNAME { set-sync-leader } }',
                                     'rm /config/cloud/gce/.adminPassword',
+                                    'tmsh save /sys config',
                                     'date',
                                     'EOF', 
                                     'cat <<\'EOF\' > /config/cloud/gce/create-va.sh',
@@ -310,49 +328,35 @@ def Metadata(context,group, storageName, licenseType):
                                     '/config/failover/tgactive',
                                     'date',
                                     'EOF',
-                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs/v4.12.0/f5-cloud-libs.tar.gz',
+                                    'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs/v4.15.0/f5-cloud-libs.tar.gz',
                                     'curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs-gce.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs-gce/v2.4.0/f5-cloud-libs-gce.tar.gz',
                                     'curl -s -f --retry 20 -o /config/cloud/f5-appsvcs-3.5.1-5.noarch.rpm https://cdn.f5.com/product/cloudsolutions/f5-appsvcs-extension/v3.6.0/dist/lts/f5-appsvcs-3.5.1-5.noarch.rpm',
                                     'curl -s -f --retry 20 -o /config/cloud/f5.service_discovery.tmpl https://cdn.f5.com/product/cloudsolutions/iapps/common/f5-service-discovery/v2.3.2/f5.service_discovery.tmpl',
                                     'chmod 755 /config/verifyHash',
                                     'chmod 755 /config/installCloudLibs.sh',
                                     'chmod 755 /config/waitThenRun.sh',
-                                    'chmod 755 /config/cloud/gce/pre-nic-swap.sh',
-                                    'chmod 755 /config/cloud/gce/post-nic-swap.sh',
+                                    'chmod 755 /config/cloud/gce/collect-interface.sh',
                                     'chmod 755 /config/cloud/gce/custom-config.sh',
                                     'chmod 755 /config/cloud/gce/rm-password.sh',
                                     'chmod 755 /config/cloud/gce/create-va.sh',
                                     'mkdir -p /var/log/cloud/google',
                                     CUSTHASH,
+                                    'touch /config/cloud/gce/FIRST_BOOT_COMPLETE',
                                     'nohup /usr/bin/setdb provision.1nicautoconfig disable &>> /var/log/cloud/google/install.log < /dev/null &',
                                     'nohup /config/installCloudLibs.sh &>> /var/log/cloud/google/install.log < /dev/null &',
-                                    'cat <<\'EOF\' > /config/cloud/gce/first-run.sh',
-                                    'nohup /usr/bin/setdb provision.1nicautoconfig disable 2>&1 >> /var/log/cloud/google/install.log < /dev/null ',
-                                    'nohup /config/installCloudLibs.sh 2>&1 >> /var/log/cloud/google/install.log < /dev/null ',
-                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file f5-rest-node --cl-args \'/config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/generatePassword --file /config/cloud/gce/.adminPassword --encrypt\' --log-level verbose --output /var/log/cloud/google/generatePassword.log 2>&1 >> /var/log/cloud/google/install.log < /dev/null ',
-                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/createUser.sh --cl-args \'--user admin --password-file /config/cloud/gce/.adminPassword --password-encrypted\' --log-level debug --output /var/log/cloud/google/createUser.log 2>&1 >> /var/log/cloud/google/install.log < /dev/null ',
-                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/pre-nic-swap.sh --log-level debug --output /var/log/cloud/google/nic-swap.log 2>&1 >> /var/log/cloud/google/install.log < /dev/null ',
-                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/onboard.js --output /var/log/cloud/google/onboard.log --log-level debug --host localhost --user admin --password-url file:///config/cloud/gce/.adminPassword --password-encrypted --port 443 --db provision.managementeth:eth1 2>&1 >> /var/log/cloud/google/install.log < /dev/null ',
-                                    'reboot',
-                                    'EOF',
-                                    'cat <<\'EOF\' > /config/cloud/gce/second-run.sh',
-                                    'if [ ! -f /config/cloud/gce/CUSTOM_CONFIG_DONE ]; then',
-                                    '   source /usr/lib/bigstart/bigip-ready-functions',
-                                    '   wait_bigip_ready',
-                                    '   nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/post-nic-swap.sh --log-level debug --output /var/log/cloud/google/nic-swap.log 2>&1 >> /var/log/cloud/google/install.log < /dev/null ',
-                                    '   nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/onboard.js --output /var/log/cloud/google/onboard.log --log-level debug --install-ilx-package file:///config/cloud/f5-appsvcs-3.5.1-5.noarch.rpm --host localhost --user admin --password-url file:///config/cloud/gce/.adminPassword --password-encrypted --port 443 --ssl-port ' + str(context.properties['mgmtGuiPort']) + ' --hostname $(curl -s -f --retry 20 \"http://metadata.google.internal/computeMetadata/v1/instance/hostname\" -H \"Metadata-Flavor: Google\") --ntp 0.us.pool.ntp.org --ntp 1.us.pool.ntp.org --tz UTC ' + ' --modules ' + PROVISIONING_MODULES + SENDANALYTICS + ' 2>&1 >> /var/log/cloud/google/install.log < /dev/null ',
-                                    '   nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/custom-config.sh --cwd /config/cloud/gce --output /var/log/cloud/google/custom-config.log --log-level debug 2>&1 >> /var/log/cloud/google/install.log < /dev/null ',
+                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file f5-rest-node --cl-args \'/config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/generatePassword --file /config/cloud/gce/.adminPassword --encrypt\' --signal GENERATE_PASSWORD_DONE --log-level ' + str(context.properties['logLevel']) + ' --output /var/log/cloud/google/generatePassword.log 2>&1 >> /var/log/cloud/google/install.log < /dev/null &',
+                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/createUser.sh --cl-args \'--user admin --password-file /config/cloud/gce/.adminPassword --password-encrypted\' --signal CREATE_USER_DONE --wait-for GENERATE_PASSWORD_DONE --log-level ' + str(context.properties['logLevel']) + ' --output /var/log/cloud/google/createUser.log 2>&1 >> /var/log/cloud/google/install.log < /dev/null &',
+                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/onboard.js --db provision.managementeth:eth1 --host localhost ' + LICENSE + ' -o /var/log/cloud/google/mgmt-swap.log --log-level ' + str(context.properties['logLevel']) + ' --wait-for CREATE_USER_DONE --signal MGMT_SWAP_DONE >> /var/log/cloud/google/install.log < /dev/null &',
+                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/collect-interface.sh --cwd /config/cloud/gce -o /var/log/cloud/google/interface-config.log --wait-for MGMT_SWAP_DONE --log-level ' + str(context.properties['logLevel']) + ' >> /var/log/cloud/google/install.log < /dev/null &',
+                                    'else',
+                                    'source /config/cloud/gce/interface.config',
+                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/onboard.js -o /var/log/cloud/google/onboard.log --log-level ' + str(context.properties['logLevel']) + ' --signal ONBOARD_DONE --install-ilx-package file:///config/cloud/f5-appsvcs-3.5.1-5.noarch.rpm --host localhost --no-reboot --user admin --password-url file:///config/cloud/gce/.adminPassword --password-encrypted --port 443 --ssl-port ' + str(context.properties['mgmtGuiPort']) + ' --hostname $HOSTNAME ' + ntp_list + timezone + ' --modules ' + PROVISIONING_MODULES + SENDANALYTICS + ' 2>&1 >> /var/log/cloud/google/install.log < /dev/null &',
+                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/custom-config.sh --cwd /config/cloud/gce --wait-for ONBOARD_DONE --signal CUSTOM_CONFIG_DONE --log-level ' + str(context.properties['logLevel']) + ' -o /var/log/cloud/google/custom-config.log 2>&1 >> /var/log/cloud/google/install.log < /dev/null &',
                                     CLUSTERJS,
-                                    '   nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/rm-password.sh --cwd /config/cloud/gce --output /var/log/cloud/google/rm-password.log --log-level debug 2>&1 >> /var/log/cloud/google/install.log < /dev/null ',
-                                    '   nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/create-va.sh --cwd /config/cloud/gce --output /var/log/cloud/google/create-va.log --log-level debug 2>&1 >> /var/log/cloud/google/install.log < /dev/null ',
-                                    '   touch /config/cloud/gce/CUSTOM_CONFIG_DONE',
-                                    'fi',
-                                    'EOF',
-                                    'chmod 755 /config/cloud/gce/first-run.sh',
-                                    'chmod 755 /config/cloud/gce/second-run.sh',
-                                    'echo "/config/cloud/gce/second-run.sh 2>&1 | tee --append /var/log/cloud/google/install.log" >> /config/startup',
-                                    'nohup /config/cloud/gce/first-run.sh &',
+                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/create-va.sh --cwd /config/cloud/gce --output /var/log/cloud/google/create-va.log --wait-for CLUSTER_DONE --signal CREATE_VA_DONE --log-level ' + str(context.properties['logLevel']) + ' 2>&1 >> /var/log/cloud/google/install.log < /dev/null & ',
+                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/rm-password.sh --cwd /config/cloud/gce -o /var/log/cloud/google/rm-password.log --wait-for CREATE_VA_DONE --signal RM_PASSWORD_DONE --log-level ' + str(context.properties['logLevel']) + ' 2>&1 >> /var/log/cloud/google/install.log < /dev/null &',
                                     'touch /config/startupFinished',
+                                    'fi'
                                     ])
                             )
                 }]
@@ -461,9 +465,7 @@ def ForwardingRule(context, name, target):
 def GenerateConfig(context):
 
    ## set variables
-  import random
-  storageNumber = str(random.randint(10000, 99999))
-  storageName = 'f5-bigip-' + context.env['deployment'] + '-' + storageNumber
+  storageName = 'f5-bigip-storage-' + context.env['deployment']
   instanceName0 = 'bigip1-' + context.env['deployment']
   instanceName1 = 'bigip2-' + context.env['deployment']
   fwdRulesNamePrefix = context.env['deployment'] + '-fr'
@@ -527,5 +529,5 @@ def GenerateConfig(context):
     }
   ]
   # add forwarding rules
-  resources += forwardingRules
+  resources = resources + forwardingRules
   return {'resources': resources}

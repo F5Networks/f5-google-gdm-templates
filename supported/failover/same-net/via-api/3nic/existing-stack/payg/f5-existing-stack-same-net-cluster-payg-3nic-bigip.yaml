@@ -1,6 +1,6 @@
 # Copyright 2019 F5 Networks All rights reserved.
 #
-# Version 3.2.0
+# Version 3.3.0
 
 imports:
 - path: f5-existing-stack-same-net-cluster-payg-3nic-bigip.py
@@ -56,6 +56,10 @@ resources:
    instanceType: n1-standard-4
    ### (Optional) Enter the BIG-IP Management Port, the default is '443'.
    mgmtGuiPort: 443
+   ## (Optional) List NTP servers separated by a space, for example 'pool.ntp.org'. The default is 'time.google.com'.
+   ntpServer: <server server>
+   ## (Optional) Enter the Olson timezone string from /usr/share/zoneinfo. The default is 'UTC'. See the TZ column here (https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) for legal values. For example, 'US/Eastern'.
+   timezone: <timezone>
    ## Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'.
    bigIpModules: ltm:nominal
    ### Enter the Google service account to use for autoscale API calls, for example 'username@projectname.iam.serviceaccount.com'.
@@ -64,5 +68,5 @@ resources:
    allowUsageAnalytics: 'yes'
    ### (Optional) Log setting, used to set log level on scripts used during deployment. Acceptable values are - error, warn, info, verbose, debug, silly. The default is 'info'.
    logLevel: <level>
-   ### URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration. For example, 'https://cdn.f5.com/product/cloudsolutions/declarations/sample_01.json'
+   ### URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration. For example, ' https://cdn.f5.com/product/cloudsolutions/declarations/sample_01.json '
    declarationUrl: default
