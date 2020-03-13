@@ -1,6 +1,6 @@
 # Copyright 2019 F5 Networks All rights reserved.
 #
-# Version 3.3.0
+# Version 3.4.0
 
 imports:
 - path: f5-existing-stack-same-net-cluster-payg-3nic-bigip.py
@@ -12,6 +12,8 @@ resources:
    region: <region>
    ### Enter the availability zone where you want to deploy the BIG-IP VE instance, for example 'us-west1-a'.
    availabilityZone1: <availability zone>
+   ### Enter the availability zone where you want to deploy the BIG-IP VE instance, for example 'us-west1-b'.
+   availabilityZone2: <availability zone>
    ### Specify the name of the network to use for management traffic, for example 'my-management-network'.
    mgmtNetwork: <network>
    ### Specify the name of the subnet to use for management traffic, for example 'my-management-subnetwork'.

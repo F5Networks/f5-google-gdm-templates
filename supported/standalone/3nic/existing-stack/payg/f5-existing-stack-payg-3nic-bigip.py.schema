@@ -4,7 +4,7 @@ info:
   title: F5 BIG-IP 3NIC
   author: F5 Networks
   description: Creates a BIG-IP with 3 network interface(s).
-  version: 2.1.2
+  version: 3.4.0
 imports:
   - path: f5-existing-stack-payg-3nic-bigip.py
 required:

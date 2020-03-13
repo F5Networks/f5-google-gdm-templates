@@ -4,12 +4,13 @@ info:
   title: F5 BIG-IP 3NIC HA with Google API
   author: F5 Networks
   description: Creates HA pair of BIG-IP's with 3 network interfaces and supporting Google resources.
-  version: 3.3.0
+  version: 3.4.0
 imports:
   - path: f5-existing-stack-same-net-cluster-byol-3nic-bigip.py
 required:
   - region
   - availabilityZone1
+  - availabilityZone2
   - allowUsageAnalytics
   - mgmtNetwork
   - mgmtSubnet
@@ -30,7 +31,10 @@ properties:
     description: Enter the Google Region in which you want to deploy BIG-IP, for example 'us-west1'.
     type: string
   availabilityZone1:
-    description: Enter the availability zone where you want to deploy the BIG-IP VE instance, for example 'us-west1-a'.
+    description: Enter the availability zone where you want to deploy the first BIG-IP VE instance, for example 'us-west1-a'.
+    type: string
+  availabilityZone2:
+    description: Enter the availability zone where you want to deploy the second BIG-IP VE instance, for example 'us-west1-b'.
     type: string
   mgmtNetwork:
     description: Specify the name of the network to use for management traffic, for example 'my-management-network'.

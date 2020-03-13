@@ -91,7 +91,7 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | Parameter | Required | Description |
 | --- | --- | --- |
 | region | Yes | Enter the Google Region in which you want to deploy BIG-IP, for example 'us-west1'. |
-| availabilityZone1 | Yes | Enter the availability zone where you want to deploy the BIG-IP VE instance, for example 'us-west1-a'. |
+| availabilityZone1 | Yes | Enter the availability zone where you want to deploy the first BIG-IP VE instance, for example 'us-west1-a'. |
 | mgmtNetwork | Yes | Specify the name of the network to use for management traffic, for example 'my-management-network'. |
 | mgmtSubnet | Yes | Specify the name of the subnet to use for management traffic, for example 'my-management-subnetwork'. |
 | restrictedSrcAddress | Yes | This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or '0.0.0.0/0' for all sources. For example, '10.0.0.0/0'. |
