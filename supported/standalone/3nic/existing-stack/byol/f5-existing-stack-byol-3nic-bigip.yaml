@@ -1,6 +1,6 @@
 # Copyright 2019 F5 Networks All rights reserved.
 #
-# Version 3.4.0
+# Version 3.4.1
 
 imports:
 - path: f5-existing-stack-byol-3nic-bigip.py
@@ -59,6 +59,8 @@ resources:
    bigIpModules: ltm:nominal
    ### This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent.
    allowUsageAnalytics: 'yes'
+   ### This deployment can provide F5 with high-level device use information to optimize development resources. If you select **no** the information is not sent.
+   allowPhoneHome: 'yes'
    ### (Optional) Log setting, used to set log level on scripts used during deployment. Acceptable values are - error, warn, info, verbose, debug, silly. The default is 'info'.
    logLevel: <level>
    ### URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration. For example, ' https://cdn.f5.com/product/cloudsolutions/declarations/sample_01.json '

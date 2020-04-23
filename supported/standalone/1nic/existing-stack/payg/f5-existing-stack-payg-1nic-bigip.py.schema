@@ -4,7 +4,7 @@ info:
   title: F5 BIG-IP 1NIC
   author: F5 Networks
   description: Creates a BIG-IP with 1 network interface(s).
-  version: 3.4.0
+  version: 3.4.1
 imports:
   - path: f5-existing-stack-payg-1nic-bigip.py
 required:
@@ -73,6 +73,10 @@ properties:
     default: ltm:nominal
   allowUsageAnalytics:
     description: This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent.
+    type: [string, boolean]
+    default: 'yes'
+  allowPhoneHome:
+    description: This deployment can provide F5 with high-level device use information to optimize development resources. If you select **no** the information is not sent.
     type: [string, boolean]
     default: 'yes'
   logLevel:

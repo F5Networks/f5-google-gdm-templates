@@ -3,25 +3,23 @@
 # Version 3.4.1
 
 imports:
-- path: f5-existing-stack-same-net-cluster-payg-3nic-bigip.py
+- path: f5-existing-stack-same-net-cluster-payg-2nic-bigip.py
 resources:
-- name: same-net-cluster-3nic-setup
-  type: f5-existing-stack-same-net-cluster-payg-3nic-bigip.py
+- name: same-net-cluster-2nic-setup
+  type: f5-existing-stack-same-net-cluster-payg-2nic-bigip.py
   properties:
    ### Enter the Google Region in which you want to deploy BIG-IP, for example 'us-west1'.
    region: <region>
    ### Enter the availability zone where you want to deploy the BIG-IP VE instance, for example 'us-west1-a'.
    availabilityZone1: <availability zone>
+   ### Enter the availability zone where you want to deploy the BIG-IP VE instance, for example 'us-west1-b'.
+   availabilityZone2: <availability zone>
    ### Specify the name of the network to use for management traffic, for example 'my-management-network'.
    mgmtNetwork: <network>
    ### Specify the name of the subnet to use for management traffic, for example 'my-management-subnetwork'.
    mgmtSubnet: <subnet>
    ### This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or '0.0.0.0/0' for all sources. For example, '10.0.0.0/0'.
    restrictedSrcAddress: <address/mask address/mask>
-   ### This field restricts web application access (ports 80 and 443) to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or '0.0.0.0/0' for all sources.
-   restrictedSrcAddressApp: <address/mask address/mask>
-   ### This field restricts web application access to a specific private network or address. Enter an IP address or address range in CIDR notation separated by a space, or '0.0.0.0/0' for all sources. This is only required when using an internal load balancer (numberOfForwardingRules equals 1).
-   restrictedSrcAddressIntApp: <address/mask address/mask>
    ### Specify the Network name for BIG-IP application traffic, for example 'my-application-network'.
    network1: <network>
    ### Specify the subnet of the Network that the BIG-IP should use for application traffic, for example 'my-application-subnetwork'.
@@ -30,13 +28,6 @@ resources:
    aliasIp: <address/mask address/mask>
    ### Enter the number of forwarding rules to create, for example '1'.  All integers from 1 to the max quota for the forwarding rules resource type are allowed.
    numberOfForwardingRules: <number of forwarding rules>
-   ### Specify the number of forwarding rules to create for internal application traffic, for example, '0' or '1'.
-   numberOfIntForwardingRules: <number of internal rules>
-   ### Specify Network name to for BIG-IP internal application traffic
-   ### Specify the Network name for BIG-IP internal application traffic, for example 'my-internal-network'.
-   network2: <network>
-   ### Specify the name of the Subnet of the Network that BIG-IP should use for internal application traffic, for example 'my-internal-subnetwork'.
-   subnet2: <subnet>
    ## Provision Public IP addresses for BIG-IP Network Interfaces. By default it is set to provision public IPs.
    provisionPublicIP: 'yes'
    ### BIG-IP image, valid choices include:
@@ -63,10 +54,6 @@ resources:
    instanceType: n1-standard-4
    ### (Optional) Enter the BIG-IP Management Port, the default is '443'.
    mgmtGuiPort: 443
-   ### List application port(s) separated by a space, for example '443' or '443 444 445'.
-   applicationPort: <port port>
-   ### List application port(s) for internal google load balancer separated by a space. A maximum of 5 ports can be specified. This is only required when using internal loadbalancer (numberOfForwardingRules equals 1).
-   applicationIntPort: <port port>
    ## (Optional) List NTP servers separated by a space, for example 'pool.ntp.org'. The default is 'time.google.com'.
    ntpServer: <server server>
    ## (Optional) Enter the Olson timezone string from /usr/share/zoneinfo. The default is 'UTC'. See the TZ column here (https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) for legal values. For example, 'US/Eastern'.

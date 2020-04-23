@@ -1,28 +1,22 @@
 # Copyright 2019 F5 Networks All rights reserved.
 
 info:
-  title: F5 BIG-IP 3NIC HA with Google LB
+  title: F5 BIG-IP 2NIC HA with Google API
   author: F5 Networks
   description: Creates HA pair of BIG-IP's with 3 network interfaces and supporting Google resources.
   version: 3.4.1
 imports:
-  - path: f5-existing-stack-same-net-cluster-byol-3nic-bigip.py
+  - path: f5-existing-stack-same-net-cluster-payg-2nic-bigip.py
 required:
   - region
   - availabilityZone1
+  - availabilityZone2
   - allowUsageAnalytics
   - mgmtNetwork
   - mgmtSubnet
   - restrictedSrcAddress
-  - restrictedSrcAddressApp
   - network1
   - subnet1
-  - network2
-  - subnet2
-  - licenseKey1
-  - licenseKey2
-  - numberOfForwardingRules
-  - numberOfIntForwardingRules
   - provisionPublicIP
   - imageName
   - instanceType
@@ -35,6 +29,9 @@ properties:
   availabilityZone1:
     description: Enter the availability zone where you want to deploy the first BIG-IP VE instance, for example 'us-west1-a'.
     type: string
+  availabilityZone2:
+    description: Enter the availability zone where you want to deploy the second BIG-IP VE instance, for example 'us-west1-b'.
+    type: string
   mgmtNetwork:
     description: Specify the name of the network to use for management traffic, for example 'my-management-network'.
     type: string
@@ -44,38 +41,19 @@ properties:
   restrictedSrcAddress:
     description: This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or '0.0.0.0/0' for all sources. For example, '10.0.0.0/0'.
     type: string
-  restrictedSrcAddressApp:
-    description: This field restricts web application access (ports 80 and 443) to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or '0.0.0.0/0' for all sources.
-    type: string
-  restrictedSrcAddressIntApp:
-    description: This field restricts web application access to a specific private network or address. Enter an IP address or address range in CIDR notation separated by a space, or '0.0.0.0/0' for all sources. This is only required when using an internal load balancer (numberOfForwardingRules equals 1).
   network1:
     description: Specify the Network name for BIG-IP application traffic, for example 'my-application-network'.
     type: string
   subnet1:
     description: Specify the subnet of the Network that the BIG-IP should use for application traffic, for example 'my-application-subnetwork'.
     type: string
-  network2:
-    description: Specify the Network name for BIG-IP internal application traffic, for example 'my-internal-network'.
-    type: string
-  subnet2:
-    description: Specify the name of the Subnet of the Network that BIG-IP should use for internal application traffic, for example 'my-internal-subnetwork'.
-    type: string
-  licenseKey1:
-    description: Enter the BIG-IP license key, for example 'CTASW-GVZHE-FYVIM-XMOUP-SJSTBXX'.
-    type: string
-  licenseKey2:
-    description: Enter the second BIG-IP license key.
+  aliasIp:
+    description: Enter the alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'. A list of alias IPs can be provided, separated by a space. For example, 'IE 10.x.x.16/28 10.x.x.32/28'.
     type: string
   numberOfForwardingRules:
     description: Enter the number of forwarding rules to create, for example '1'.  All integers from 1 to the max quota for the forwarding rules resource type are allowed.
     type: integer
     minimum: 1
-  numberOfIntForwardingRules:
-    description: Specify the number of forwarding rules to create for internal application traffic, for example, '0' or '1'.
-    type: integer
-    minimum: 0
-    maximum: 1
   provisionPublicIP:
     description: Provision Public IP addresses for BIG-IP Network Interfaces. By default it is set to provision public IPs.
     type: [string, boolean]
@@ -90,10 +68,6 @@ properties:
     description: (Optional) Enter the BIG-IP Management Port, the default is '443'.
     type: integer
     default: 443
-  applicationPort:
-    description: List application port(s) separated by a space
-  applicationIntPort:
-    description: List application port(s) for internal google load balancer separated by a space. A maximum of 5 ports can be specified. This is only required when using internal loadbalancer (numberOfForwardingRules equals 1).
   ntpServer:
     description: (Optional) List NTP servers separated by a space, for example 'pool.ntp.org'. The default is 'time.google.com'.
     type: string
@@ -128,4 +102,4 @@ properties:
 documentation:
   - README.md
 examples:
-  - f5-existing-stack-same-net-az-cluster-byol-3nic-bigip.yaml
+  - f5-existing-stack-same-net-az-cluster-payg-2nic-bigip.yaml
