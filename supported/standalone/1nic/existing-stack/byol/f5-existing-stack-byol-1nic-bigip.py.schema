@@ -4,7 +4,7 @@ info:
   title: F5 BIG-IP 1NIC
   author: F5 Networks
   description: Creates a BIG-IP with 1 network interface(s).
-  version: 3.4.1
+  version: 3.6.0
 imports:
   - path: f5-existing-stack-byol-1nic-bigip.py
 required:
@@ -30,6 +30,10 @@ properties:
   mgmtNetwork:
     description: Specify the name of the network to use for management traffic, for example 'my-management-network'.
     type: string
+  mgmtSharedVpc:
+    description: If using a shared VPC, specify the name of the host project to use for management traffic. Leave default value of None when not using shared VPC. **Note** template does not create firewall policy for shared VPC. Create policy on shared VPC within in host project to allow appropriate traffic.
+    type: string
+    default: None
   mgmtSubnet:
     description: Specify the name of the subnet to use for management traffic, for example 'my-management-subnetwork'.
     type: string

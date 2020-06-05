@@ -1,6 +1,6 @@
 # Copyright 2019 F5 Networks All rights reserved.
 #
-# Version 3.4.1
+# Version 3.6.0
 
 imports:
 - path: f5-existing-stack-same-net-cluster-byol-2nic-bigip.py
@@ -22,9 +22,11 @@ resources:
    restrictedSrcAddress: <address/mask address/mask>
    ### Specify the Network name for BIG-IP application traffic, for example 'my-application-network'.
    network1: <network>
+   ### If using a shared VPC, specify the name of the host project to use for management traffic. Leave default value of None when not using shared VPC. **Note** template does not create firewall policy for shared VPC. Create policy on shared VPC within in host project to allow appropriate traffic.
+   network1SharedVpc: None
    ### Specify the subnet of the Network that the BIG-IP should use for application traffic, for example 'my-application-subnetwork'.
    subnet1: <subnet>
-   ### Enter the alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'. A list of alias IPs can be provided, separated by a space. For example, 'IE 10.x.x.16/28 10.x.x.32/28'.
+   ### Enter None if alias IP failover is not required. Enter the alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'. A list of alias IPs can be provided, separated by a space. For example, 'IE 10.x.x.16/28 10.x.x.32/28'.
    aliasIp: <address/mask address/mask>
    ### Enter the number of forwarding rules to create, for example '1'.  All integers from 1 to the max quota for the forwarding rules resource type are allowed.
    numberOfForwardingRules: <number of forwarding rules>

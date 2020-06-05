@@ -4,7 +4,7 @@ info:
   title: F5 BIG-IP 3NIC
   author: F5 Networks
   description: Creates a BIG-IP with 3 network interface(s).
-  version: 3.4.1
+  version: 3.6.0
 imports:
   - path: f5-existing-stack-payg-3nic-bigip.py
 required:
@@ -48,7 +48,11 @@ properties:
     type: string
   network1:
     description: Specify the network name for BIG-IP application traffic, for example 'my-application-network'.
+    type: string  
+  network1SharedVpc:
+    description: If using a shared VPC, specify the name of the host project to use for management traffic. Leave default value of None when not using shared VPC. **Note** template does not create firewall policy for shared VPC. Create policy on shared VPC within in host project to allow appropriate traffic.
     type: string
+    default: None
   subnet1:
     description: Specify the subnet of the network that the BIG-IP should use for application traffic, for example 'my-application-subnetwork'.
     type: string

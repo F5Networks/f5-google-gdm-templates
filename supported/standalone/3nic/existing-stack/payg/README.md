@@ -100,6 +100,7 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | restrictedSrcAddress | Yes | This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or '0.0.0.0/0' for all sources. For example, '10.0.0.0/0'. |
 | restrictedSrcAddressApp | Yes | This field restricts web application access (ports 80 and 443) to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or '0.0.0.0/0' for all sources. For example, '10.0.0.0/0'. |
 | network1 | Yes | Specify the network name for BIG-IP application traffic, for example 'my-application-network'. |
+| network1SharedVpc | No | If using a shared VPC, specify the name of the host project to use for management traffic. Leave default value of None when not using shared VPC. **Note** template does not create firewall policy for shared VPC. Create policy on shared VPC within in host project to allow appropriate traffic. |
 | subnet1 | Yes | Specify the subnet of the network that the BIG-IP should use for application traffic, for example 'my-application-subnetwork'. |
 | subnet1Address | No | Enter the Static IP address to use, for example, '10.0.2.100'. Note - For dynamic address provisioning use the default value of 'DYNAMIC'. |
 | network2 | Yes | Specify the network name for BIG-IP application traffic, for example 'my-application-network'. |

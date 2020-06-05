@@ -105,8 +105,9 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | mgmtSubnet | Yes | Specify the name of the subnet to use for management traffic, for example 'my-management-subnetwork'. |
 | restrictedSrcAddress | Yes | This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or '0.0.0.0/0' for all sources. For example, '10.0.0.0/0'. |
 | network1 | Yes | Specify the Network name for BIG-IP application traffic, for example 'my-application-network'. |
+| network1SharedVpc | No | If using a shared VPC, specify the name of the host project to use for management traffic. Leave default value of None when not using shared VPC. **Note** template does not create firewall policy for shared VPC. Create policy on shared VPC within in host project to allow appropriate traffic. |
 | subnet1 | Yes | Specify the subnet of the Network that the BIG-IP should use for application traffic, for example 'my-application-subnetwork'. |
-| aliasIp | No | Enter the alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'. A list of alias IPs can be provided, separated by a space. For example, 'IE 10.x.x.16/28 10.x.x.32/28'. |
+| aliasIp | No | Enter None if alias IP failover is not required. Enter the alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'. A list of alias IPs can be provided, separated by a space. For example, 'IE 10.x.x.16/28 10.x.x.32/28'. |
 | numberOfForwardingRules | No | Enter the number of forwarding rules to create, for example '1'.  All integers from 1 to the max quota for the forwarding rules resource type are allowed. |
 | provisionPublicIP | Yes | Provision Public IP addresses for BIG-IP Network Interfaces. By default it is set to provision public IPs. |
 | imageName | Yes | BIG-IP image name |

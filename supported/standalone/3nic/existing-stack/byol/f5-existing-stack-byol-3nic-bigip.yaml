@@ -1,6 +1,6 @@
 # Copyright 2019 F5 Networks All rights reserved.
 #
-# Version 3.4.1
+# Version 3.6.0
 
 imports:
 - path: f5-existing-stack-byol-3nic-bigip.py
@@ -24,13 +24,15 @@ resources:
    restrictedSrcAddressApp: <address/mask address/mask>
    ### Specify the network name for BIG-IP application traffic, for example 'my-application-network'.
    network1: <network>
+   ### If using a shared VPC, specify the name of the host project to use for management traffic. Leave default value of None when not using shared VPC. **Note**: template does not create firewall policy when using shared VPC. Create policy on shared VPC within in host project to allow appropriate traffic.
+   network1SharedVpc: None
    ### Specify the subnet of the network that the BIG-IP should use for application traffic, for example 'my-application-subnetwork'.
    subnet1: <subnet>
    ### Enter the Static IP address to use, for example, '10.0.2.100'. Note - For dynamic address provisioning use the default value of 'DYNAMIC'.
    subnet1Address: <DYNAMIC or address>
    ### Specify the Network name for BIG-IP internal application traffic, for example 'my-internal-network'.
    network2: <network>
-   ### Specify the subnet of the network that BIG-IP should use for internal application traffic, for example 'my-internal-subnetwork'.
+   ### If using a shared VPC, specify the name of the host project to use for management traffic. Leave default value of None when not using shared VPC.
    subnet2: <subnet>
    ### Static IP address to use (optional). Note - For dynamic address provisioning use the default value of 'DYNAMIC'
    subnet2Address: <DYNAMIC or address>

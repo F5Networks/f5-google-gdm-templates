@@ -1,6 +1,6 @@
 # Copyright 2019 F5 Networks All rights reserved.
 #
-# Version 3.4.1
+# Version 3.6.0
 
 imports:
 - path: f5-existing-stack-payg-1nic-bigip.py
@@ -14,6 +14,8 @@ resources:
    availabilityZone1: <availability zone>
    ### Specify the name of the network to use for management traffic, for example 'my-management-network'.
    mgmtNetwork: <network>
+   ### If using a shared VPC, specify the name of the host project to use for management traffic. Leave default value of None when not using shared VPC. **Note** template does not create firewall policy for shared VPC. Create policy on shared VPC within in host project to allow appropriate traffic.
+   mgmtSharedVpc: None
    ### Specify the name of the subnet to use for management traffic, for example 'my-management-subnetwork'.
    mgmtSubnet: <subnet>
    ### (Optional) Enter the static IP address to use. Note - For dynamic address provisioning use the default value of 'DYNAMIC'. For example, '10.0.1.100'.

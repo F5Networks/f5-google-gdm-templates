@@ -4,7 +4,7 @@ info:
   title: F5 BIG-IP 2NIC HA with Google API
   author: F5 Networks
   description: Creates HA pair of BIG-IP's with 3 network interfaces and supporting Google resources.
-  version: 3.4.1
+  version: 3.6.0
 imports:
   - path: f5-existing-stack-same-net-cluster-byol-2nic-bigip.py
 required:
@@ -46,6 +46,10 @@ properties:
   network1:
     description: Specify the Network name for BIG-IP application traffic, for example 'my-application-network'.
     type: string
+  network1SharedVpc:
+    description: If using a shared VPC, specify the name of the host project to use for management traffic. Leave default value of None when not using shared VPC. **Note** template does not create firewall policy for shared VPC. Create policy on shared VPC within in host project to allow appropriate traffic.
+    type: string
+    default: None
   subnet1:
     description: Specify the subnet of the Network that the BIG-IP should use for application traffic, for example 'my-application-subnetwork'.
     type: string
@@ -56,8 +60,9 @@ properties:
     description: Enter the second BIG-IP license key.
     type: string
   aliasIp:
-    description: Enter the alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'. A list of alias IPs can be provided, separated by a space. For example, 'IE 10.x.x.16/28 10.x.x.32/28'.
+    description: Enter None if alias IP failover is not required. Enter the alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'. A list of alias IPs can be provided, separated by a space. For example, 'IE 10.x.x.16/28 10.x.x.32/28'.
     type: string
+    default: 'None'
   numberOfForwardingRules:
     description: Enter the number of forwarding rules to create, for example '1'.  All integers from 1 to the max quota for the forwarding rules resource type are allowed.
     type: integer

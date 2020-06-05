@@ -100,6 +100,7 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | region | Yes | Enter the Google Region in which you want to deploy BIG-IP, for example 'us-west1'. |
 | availabilityZone1 | Yes | Enter the Google availability zone where you want to deploy the BIG-IP VE instance, for example 'us-west1-a'. |
 | mgmtNetwork | Yes | Specify the name of the network to use for management traffic, for example 'my-management-network'. |
+| mgmtSharedVpc | No | If using a shared VPC, specify the name of the host project to use for management traffic. Leave default value of None when not using shared VPC. **Note** template does not create firewall policy for shared VPC. Create policy on shared VPC within in host project to allow appropriate traffic. |
 | mgmtSubnet | Yes | Specify the name of the subnet to use for management traffic, for example 'my-management-subnetwork'. |
 | mgmtSubnetAddress | No | (Optional) Enter the static IP address to use. Note - For dynamic address provisioning use the default value of 'DYNAMIC'. For example, '10.0.1.100'. |
 | restrictedSrcAddress | Yes | This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or '0.0.0.0/0' for all sources. For example, '10.0.0.0/0'. |

@@ -1,6 +1,6 @@
 # Copyright 2019 F5 Networks All rights reserved.
 #
-# Version 3.4.1
+# Version 3.6.0
 
 imports:
 - path: f5-full-stack-byol-1nic-bigip.py
