@@ -52,7 +52,7 @@ properties:
     description: Specify the subnet of the Network that the BIG-IP should use for application traffic, for example 'my-application-subnetwork'.
     type: string
   aliasIp:
-    description: Enter None if alias IP failover is not required. Enter the alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'. A list of alias IPs can be provided, separated by a space. For example, 'IE 10.x.x.16/28 10.x.x.32/28'.
+    description: Enter None if alias IP failover is not required. Enter the alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'. A list of alias IPs can be provided, separated by a semicolon. For example, '10.x.x.16/28;10.x.x.32/28'.
     type: string
     default: 'None'
   numberOfForwardingRules:
