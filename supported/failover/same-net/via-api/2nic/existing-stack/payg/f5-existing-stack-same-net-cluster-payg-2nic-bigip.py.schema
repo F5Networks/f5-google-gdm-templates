@@ -4,7 +4,7 @@ info:
   title: F5 BIG-IP 2NIC HA with Google API
   author: F5 Networks
   description: Creates HA pair of BIG-IP's with 3 network interfaces and supporting Google resources.
-  version: 3.6.0
+  version: 3.7.0
 imports:
   - path: f5-existing-stack-same-net-cluster-payg-2nic-bigip.py
 required:
@@ -39,7 +39,7 @@ properties:
     description: Specify the name of the subnet to use for management traffic, for example 'my-management-subnetwork'.
     type: string
   restrictedSrcAddress:
-    description: This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or '0.0.0.0/0' for all sources. For example, '10.0.0.0/0'.
+    description: This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space. For example, '10.0.0.0/0'.
     type: string
   network1:
     description: Specify the Network name for BIG-IP application traffic, for example 'my-application-network'.

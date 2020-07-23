@@ -5,10 +5,6 @@
 [![Slack Status](https://f5cloudsolutions.herokuapp.com/badge.svg)](https://f5cloudsolutions.herokuapp.com)
 [![Releases](https://img.shields.io/github/release/f5networks/f5-google-gdm-templates.svg)](https://github.com/f5networks/f5-google-gdm-templates/releases)
 [![Issues](https://img.shields.io/github/issues/f5networks/f5-google-gdm-templates.svg)](https://github.com/f5networks/f5-google-gdm-templates/issues)
-
-## CVE-2020-5902
-**Warning:** due to [CVE-2020-5902](https://support.f5.com/csp/article/K52145254), do not use templates unless using an updated image. Updated images are pending publication. Please see [CVE-2020-5902](https://support.f5.com/csp/article/K52145254) and Cloud Provider for latest updates.
-
 ## Introduction
 
 Welcome to the GitHub repository for F5's Google Cloud Deployment Manager (GDM) templates for deploying F5 instances

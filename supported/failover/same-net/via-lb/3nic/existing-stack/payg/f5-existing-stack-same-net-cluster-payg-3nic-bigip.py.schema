@@ -4,7 +4,7 @@ info:
   title: F5 BIG-IP 3NIC HA with Google LB
   author: F5 Networks
   description: Creates HA pair of BIG-IP's with 3 network interfaces and supporting Google resources.
-  version: 3.6.0
+  version: 3.7.0
 imports:
   - path: f5-existing-stack-same-net-cluster-payg-3nic-bigip.py
 required:
@@ -40,13 +40,13 @@ properties:
     description: Specify the name of the subnet to use for management traffic, for example 'my-management-subnetwork'.
     type: string
   restrictedSrcAddress:
-    description: This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or '0.0.0.0/0' for all sources. For example, '10.0.0.0/0'.
+    description: This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space. For example, '10.0.0.0/0'.
     type: string
   restrictedSrcAddressApp:
-    description: This field restricts web application access (ports 80 and 443) to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or '0.0.0.0/0' for all sources.
+    description: This field restricts web application access (ports 80 and 443) to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space.
     type: string
   restrictedSrcAddressIntApp:
-    description: This field restricts web application access to a specific private network or address. Enter an IP address or address range in CIDR notation separated by a space, or '0.0.0.0/0' for all sources. This is only required when using an internal load balancer (numberOfForwardingRules equals 1).
+    description: This field restricts web application access to a specific private network or address. Enter an IP address or address range in CIDR notation separated by a space. This is only required when using an internal load balancer (numberOfForwardingRules equals 1).
   network1:
     description: Specify the Network name for BIG-IP application traffic, for example 'my-application-network'.
     type: string

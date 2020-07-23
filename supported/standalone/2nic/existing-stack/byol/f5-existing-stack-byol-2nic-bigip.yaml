@@ -1,6 +1,6 @@
 # Copyright 2019 F5 Networks All rights reserved.
 #
-# Version 3.6.0
+# Version 3.7.0
 
 imports:
 - path: f5-existing-stack-byol-2nic-bigip.py
@@ -18,9 +18,9 @@ resources:
    mgmtSubnet: <subnet>
    ### (Optional) Enter the static IP address to use. Note - For dynamic address provisioning use the default value of 'DYNAMIC'. For example, '10.0.1.100'.
    mgmtSubnetAddress: <DYNAMIC or address>
-   ### This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or '0.0.0.0/0' for all sources. For example, '10.0.0.0/0'.
+   ### This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space. For example, '10.0.11.0/24'.
    restrictedSrcAddress: <address/mask address/mask>
-   ### This field restricts web application access (ports 80 and 443) to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space, or '0.0.0.0/0' for all sources. For example, '10.0.0.0/0'.
+   ### This field restricts web application access (ports 80 and 443) to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space. For example, '10.0.11.0/24'.
    restrictedSrcAddressApp: <address/mask address/mask>
    ### Specify the network name for BIG-IP application traffic, for example 'my-application-network'.
    network1: <network>
@@ -34,10 +34,10 @@ resources:
    provisionPublicIP: 'yes'
    ### BIG-IP image, valid choices include:
    
-   # f5-bigip-15-0-1-0-0-11-byol-all-modules-1boot-loc-190803011657
-   # f5-bigip-15-0-1-0-0-11-byol-all-modules-2boot-loc-190803012348
-   # f5-bigip-15-0-1-0-0-11-byol-ltm-1boot-loc-190803010901
-   # f5-bigip-15-0-1-0-0-11-byol-ltm-2boot-loc-190803011605
+   # f5-bigip-15-1-0-4-0-0-6-byol-all-modules-1boot-loc-00618231552
+   # f5-bigip-15-1-0-4-0-0-6-byol-all-modules-2boot-loc-00618231635
+   # f5-bigip-15-1-0-4-0-0-6-byol-ltm-1boot-loc-200618231128
+   # f5-bigip-15-1-0-4-0-0-6-byol-ltm-2boot-loc-200618231522
    imageName: <image>
    ### Instance type assigned to BIG-IP, for example 'n1-standard-4'.
    instanceType: <instance>
