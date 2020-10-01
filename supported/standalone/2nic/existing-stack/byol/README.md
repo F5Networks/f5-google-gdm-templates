@@ -63,6 +63,16 @@ This GDM template downloads helper code to configure the BIG-IP system. If you w
 
 Additionally, F5 provides checksums for all of our supported Google Deployment Manager templates. For instructions and the checksums to compare against, see this [link](https://devcentral.f5.com/codeshare/checksums-for-f5-supported-cft-and-arm-templates-on-github-1014).
 
+## Tested BIG-IP versions
+
+The following table lists the versions of BIG-IP that have been tested and validated against F5 Google Cloud solution templates.
+
+| BIG-IP Version | Build | Solution | Status | Notes |
+| --- | --- | --- | --- | --- |
+| 15.1.0 | 0.0.4 | Standalone, Failover, Autoscale | |
+| 14.1.2 | 0.0.6 | Standalone, Failover, Autoscale | |
+| 13.1.3 | 0.0.4 | Standalone, Failover, Autoscale | F5 CFE requires BIG-IP 14.1 or later |
+| 12.1.5 | 0.0.2 | Standalone, Failover, Autoscale | Not Validated | F5 CFE requires BIG-IP 14.1 or later |
 
 
 ### Help

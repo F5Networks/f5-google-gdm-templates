@@ -4,7 +4,7 @@ info:
   title: F5 BIG-IP 2NIC
   author: F5 Networks
   description: Creates a BIG-IP with 2 network interface(s).
-  version: 3.7.1
+  version: 3.8.0
 imports:
   - path: f5-existing-stack-byol-2nic-bigip.py
 required:
