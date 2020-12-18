@@ -96,7 +96,7 @@ properties:
     type: string
     default: UTC
   bigIpModules:
-    description: Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'.
+    description: Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'. 'gtm:nominal' to enable GSLB.
     type: string
     default: ltm:nominal
   allowUsageAnalytics:

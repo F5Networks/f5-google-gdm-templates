@@ -49,7 +49,7 @@ properties:
     description: Instance type assigned to BIG-IP, for example 'n1-standard-4'.
     type: string
   bigIpModules:
-    description: Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'.
+    description: Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'. 'gtm:nominal' to enable GSLB.
     type: string
     default: ltm:nominal
   serviceAccount:

@@ -36,7 +36,7 @@ resources:
    instanceType: n1-standard-4
    ### Enter the BIG-IP Management Port, the default is '8443'.
    manGuiPort: 8443
-   ## Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'.
+   ## Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'. 'gtm:nominal' to enable GSLB.
    bigIpModules: asm:nominal
    ### Enter the Google service account to use for autoscale API calls, for example 'username@projectname.iam.gserviceaccount.com'.
    serviceAccount: <service account>

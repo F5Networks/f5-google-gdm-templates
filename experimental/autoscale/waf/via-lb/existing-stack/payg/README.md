@@ -109,7 +109,7 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | mgmtSubnet | Yes | Specify the name of the subnet to use for management traffic, for example 'my-management-subnetwork'. |
 | imageName | Yes | BIG-IP image name. |
 | instanceType | Yes | Instance type assigned to BIG-IP, for example 'n1-standard-4'. |
-| bigIpModules | No | Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'. |
+| bigIpModules | No | Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'. 'gtm:nominal' to enable GSLB. |
 | serviceAccount | Yes | Enter the Google service account to use for autoscale API calls, for example 'username@projectname.iam.gserviceaccount.com'. |
 | targetSize | Yes | Enter the number of instances to start. |
 | minReplicas | Yes | Enter the minimum number of instances autoscale policy will scale down to. |
