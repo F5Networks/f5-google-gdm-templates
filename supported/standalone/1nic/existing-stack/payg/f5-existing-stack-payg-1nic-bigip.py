@@ -1,6 +1,6 @@
 # Copyright 2019 F5 Networks All rights reserved.
 #
-# Version 3.9.0
+# Version 3.10.0
 
 """ Creates Deployment """
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
@@ -121,7 +121,7 @@ def Metadata(context):
     ALLOWUSAGEANALYTICS = str(context.properties['allowUsageAnalytics']).lower()
     if ALLOWUSAGEANALYTICS == 'yes':
         CUSTHASH = 'CUSTOMERID=`/usr/bin/curl -s "http://metadata.google.internal/computeMetadata/v1/project/numeric-project-id" -H "Metadata-Flavor: Google" |sha512sum|cut -d " " -f 1`;\nDEPLOYMENTID=`/usr/bin/curl -s "http://metadata.google.internal/computeMetadata/v1/instance/id" -H "Metadata-Flavor: Google"|sha512sum|cut -d " " -f 1`;'
-        SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-existing-stack-payg-1nic-bigip.py,templateVersion:3.9.0,licenseType:payg"'
+        SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-existing-stack-payg-1nic-bigip.py,templateVersion:3.10.0,licenseType:payg"'
     else:
         CUSTHASH = 'echo "No analytics."'
         SENDANALYTICS = ''
@@ -174,7 +174,7 @@ def Metadata(context):
                                     '    exit',
                                     'fi',
                                     'echo loaded verifyHash',
-                                    'declare -a filesToVerify=(\"/config/cloud/f5-cloud-libs.tar.gz\" \"/config/cloud/f5-cloud-libs-gce.tar.gz\" \"/config/cloud/f5-appsvcs-3.20.0-3.noarch.rpm\")',
+                                    'declare -a filesToVerify=(\"/config/cloud/f5-cloud-libs.tar.gz\" \"/config/cloud/f5-cloud-libs-gce.tar.gz\" \"/var/config/rest/downloads/f5-appsvcs-3.20.0-3.noarch.rpm\")',
                                     'for fileToVerify in \"${filesToVerify[@]}\"',
                                     'do',
                                     '    echo verifying \"$fileToVerify\"',
@@ -285,9 +285,20 @@ def Metadata(context):
                                     '    fi',
                                     '### END CUSTOM TMSH CONFIGURATION',
                                     'EOF',
+                                    'checks=0',
+                                    'while [ $checks -lt 120 ]; do echo checking downloads directory',
+                                    '    ls /var/config/rest/downloads',
+                                    '    if [ $? == 0 ]; then',
+                                    '        echo downloads directory ready',
+                                    '        break',
+                                    '    fi',
+                                    '    echo downloads directory not ready yet',
+                                    '    let checks=checks+1',
+                                    '    sleep 10',
+                                    'done',
                                     '/usr/bin/curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs/v4.23.1/f5-cloud-libs.tar.gz',
                                     '/usr/bin/curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs-gce.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs-gce/v2.7.0/f5-cloud-libs-gce.tar.gz',
-                                    '/usr/bin/curl -s -f --retry 20 -o /config/cloud/f5-appsvcs-3.20.0-3.noarch.rpm https://cdn.f5.com/product/cloudsolutions/f5-appsvcs-extension/v3.20.0/f5-appsvcs-3.20.0-3.noarch.rpm',
+                                    '/usr/bin/curl -s -f --retry 20 -o /var/config/rest/downloads/f5-appsvcs-3.20.0-3.noarch.rpm https://cdn.f5.com/product/cloudsolutions/f5-appsvcs-extension/v3.20.0/f5-appsvcs-3.20.0-3.noarch.rpm',
                                     'chmod 755 /config/verifyHash',
                                     'chmod 755 /config/installCloudLibs.sh',
                                     'chmod 755 /config/waitThenRun.sh',
@@ -299,7 +310,7 @@ def Metadata(context):
                                     'nohup /usr/bin/setdb restjavad.useextramb true &>> /var/log/cloud/google/install.log < /dev/null &',
                                     'nohup /usr/bin/curl -s -f -u admin: -H "Content-Type: application/json" -d \'{"maxMessageBodySize":134217728}\' -X POST http://localhost:8100/mgmt/shared/server/messaging/settings/8100 | jq . &>> /var/log/cloud/google/install.log < /dev/null &',
                                     'nohup /config/installCloudLibs.sh >> /var/log/cloud/google/install.log < /dev/null &',
-                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/onboard.js --host localhost --signal ONBOARD_DONE --port 8443 --ssl-port ' + str(context.properties['mgmtGuiPort']) + ' -o /var/log/cloud/google/onboard.log --log-level ' + str(context.properties['logLevel']) + ' --install-ilx-package file:///config/cloud/f5-appsvcs-3.20.0-3.noarch.rpm ' + ntp_list + timezone + ' --modules ' + PROVISIONING_MODULES + SENDANALYTICS + ' >> /var/log/cloud/google/install.log < /dev/null & ',                                    
+                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/onboard.js --host localhost --signal ONBOARD_DONE --port 8443 --ssl-port ' + str(context.properties['mgmtGuiPort']) + ' -o /var/log/cloud/google/onboard.log --log-level ' + str(context.properties['logLevel']) + ' --install-ilx-package file:///var/config/rest/downloads/f5-appsvcs-3.20.0-3.noarch.rpm ' + ntp_list + timezone + ' --modules ' + PROVISIONING_MODULES + SENDANALYTICS + ' >> /var/log/cloud/google/install.log < /dev/null & ',                                    
                                     'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/custom-config.sh --cwd /config/cloud/gce -o /var/log/cloud/google/custom-config.log --wait-for ONBOARD_DONE --signal CUSTOM_CONFIG_DONE --log-level ' + str(context.properties['logLevel']) + ' >> /var/log/cloud/google/install.log < /dev/null &',
                                     'touch /config/startupFinished',
                                     'fi'

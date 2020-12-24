@@ -4,7 +4,7 @@ info:
   title: F5 BIG-IP 3NIC HA with Google LB
   author: F5 Networks
   description: Creates HA pair of BIG-IP's with 3 network interfaces and supporting Google resources.
-  version: 3.9.0
+  version: 3.10.0
 imports:
   - path: f5-existing-stack-same-net-cluster-payg-3nic-bigip.py
 required:

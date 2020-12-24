@@ -1,6 +1,6 @@
 # Copyright 2019 F5 Networks All rights reserved.
 #
-# Version 3.9.0
+# Version 3.10.0
 
 """Creates BIG-IP"""
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
@@ -35,7 +35,7 @@ def Metadata(context,group, storageName, licenseType):
   ALLOWUSAGEANALYTICS = str(context.properties['allowUsageAnalytics']).lower()
   if ALLOWUSAGEANALYTICS in ['yes', 'true']:
       CUSTHASH = 'CUSTOMERID=`/usr/bin/curl -s "http://metadata.google.internal/computeMetadata/v1/project/numeric-project-id" -H "Metadata-Flavor: Google" |sha512sum|cut -d " " -f 1`;\nDEPLOYMENTID=`/usr/bin/curl -s "http://metadata.google.internal/computeMetadata/v1/instance/id" -H "Metadata-Flavor: Google"|sha512sum|cut -d " " -f 1`;'
-      SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-existing-stack-same-net-cluster-payg-2nic-bigip.py,templateVersion:3.9.0,licenseType:payg"'
+      SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-existing-stack-same-net-cluster-payg-2nic-bigip.py,templateVersion:3.10.0,licenseType:payg"'
   else:
       CUSTHASH = '# No template analytics'
       SENDANALYTICS = ''
@@ -311,7 +311,7 @@ def Metadata(context,group, storageName, licenseType):
                                     '    exit',
                                     'fi',
                                     'echo loaded verifyHash',
-                                    'declare -a filesToVerify=(\"/config/cloud/f5-cloud-libs.tar.gz\" \"/config/cloud/f5-cloud-libs-gce.tar.gz\" \"/config/cloud/f5-appsvcs-3.20.0-3.noarch.rpm\" \"/config/cloud/f5-cloud-failover-1.6.1-1.noarch.rpm\")',
+                                    'declare -a filesToVerify=(\"/config/cloud/f5-cloud-libs.tar.gz\" \"/config/cloud/f5-cloud-libs-gce.tar.gz\" \"/var/config/rest/downloads/f5-appsvcs-3.20.0-3.noarch.rpm\" \"/var/config/rest/downloads/f5-cloud-failover-1.6.1-1.noarch.rpm\")',
                                     'for fileToVerify in \"${filesToVerify[@]}\"',
                                     'do',
                                     '    echo verifying \"$fileToVerify\"',
@@ -486,10 +486,21 @@ def Metadata(context,group, storageName, licenseType):
                                     'date',
                                     'EOF', 
                                     CREATEVA,
+                                    'checks=0',
+                                    'while [ $checks -lt 120 ]; do echo checking downloads directory',
+                                    '    ls /var/config/rest/downloads',
+                                    '    if [ $? == 0 ]; then',
+                                    '        echo downloads directory ready',
+                                    '        break',
+                                    '    fi',
+                                    '    echo downloads directory not ready yet',
+                                    '    let checks=checks+1',
+                                    '    sleep 10',
+                                    'done',
                                     '/usr/bin/curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs/v4.23.1/f5-cloud-libs.tar.gz',
                                     '/usr/bin/curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs-gce.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs-gce/v2.7.0/f5-cloud-libs-gce.tar.gz',
-                                    '/usr/bin/curl -s -f --retry 20 -o /config/cloud/f5-appsvcs-3.20.0-3.noarch.rpm https://cdn.f5.com/product/cloudsolutions/f5-appsvcs-extension/v3.20.0/f5-appsvcs-3.20.0-3.noarch.rpm',
-                                    '/usr/bin/curl -s -f -L --retry 20 -o /config/cloud/f5-cloud-failover-1.6.1-1.noarch.rpm https://github.com/F5Networks/f5-cloud-failover-extension/releases/download/v1.6.1/f5-cloud-failover-1.6.1-1.noarch.rpm',
+                                    '/usr/bin/curl -s -f --retry 20 -o /var/config/rest/downloads/f5-appsvcs-3.20.0-3.noarch.rpm https://cdn.f5.com/product/cloudsolutions/f5-appsvcs-extension/v3.20.0/f5-appsvcs-3.20.0-3.noarch.rpm',
+                                    '/usr/bin/curl -s -f -L --retry 20 -o /var/config/rest/downloads/f5-cloud-failover-1.6.1-1.noarch.rpm https://github.com/F5Networks/f5-cloud-failover-extension/releases/download/v1.6.1/f5-cloud-failover-1.6.1-1.noarch.rpm',
                                     'chmod 755 /config/verifyHash',
                                     'chmod 755 /config/installCloudLibs.sh',
                                     'chmod 755 /config/waitThenRun.sh',
@@ -512,7 +523,7 @@ def Metadata(context,group, storageName, licenseType):
                                     'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/collect-interface.sh --cwd /config/cloud/gce -o /var/log/cloud/google/interface-config.log --wait-for MGMT_SWAP_DONE --log-level ' + str(context.properties['logLevel']) + ' >> /var/log/cloud/google/install.log < /dev/null &',
                                     'elif [ ! -f /config/cloud/gce/SECOND_BOOT_COMPLETE ]; then',
                                     'source /config/cloud/gce/interface.config',
-                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/onboard.js -o /var/log/cloud/google/onboard.log --log-level ' + str(context.properties['logLevel']) + ' --signal ONBOARD_DONE --install-ilx-package file:///config/cloud/f5-appsvcs-3.20.0-3.noarch.rpm --install-ilx-package file:///config/cloud/f5-cloud-failover-1.6.1-1.noarch.rpm --host localhost --no-reboot --user admin --password-url file:///config/cloud/gce/.adminPassword --password-encrypted --port 443 --ssl-port ' + str(context.properties['mgmtGuiPort']) + ' --hostname $HOSTNAME ' + ntp_list + timezone + ' --modules ' + PROVISIONING_MODULES + SENDANALYTICS + ' 2>&1 >> /var/log/cloud/google/install.log < /dev/null &',
+                                    'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/onboard.js -o /var/log/cloud/google/onboard.log --log-level ' + str(context.properties['logLevel']) + ' --signal ONBOARD_DONE --install-ilx-package file:///var/config/rest/downloads/f5-appsvcs-3.20.0-3.noarch.rpm --install-ilx-package file:///var/config/rest/downloads/f5-cloud-failover-1.6.1-1.noarch.rpm --host localhost --no-reboot --user admin --password-url file:///config/cloud/gce/.adminPassword --password-encrypted --port 443 --ssl-port ' + str(context.properties['mgmtGuiPort']) + ' --hostname $HOSTNAME ' + ntp_list + timezone + ' --modules ' + PROVISIONING_MODULES + SENDANALYTICS + ' 2>&1 >> /var/log/cloud/google/install.log < /dev/null &',
                                     'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/custom-config.sh --cwd /config/cloud/gce --wait-for ONBOARD_DONE --signal CUSTOM_CONFIG_DONE --log-level ' + str(context.properties['logLevel']) + ' -o /var/log/cloud/google/custom-config.log 2>&1 >> /var/log/cloud/google/install.log < /dev/null &',
                                     CLUSTERJS,
                                     RUNCREATEVA,
