@@ -4,7 +4,7 @@ info:
   title: F5 BIG-IP 1NIC
   author: F5 Networks
   description: Creates a BIG-IP with 1 network interface(s).
-  version: 3.10.0
+  version: 3.11.0
 imports:
   - path: f5-existing-stack-payg-1nic-bigip.py
 required:

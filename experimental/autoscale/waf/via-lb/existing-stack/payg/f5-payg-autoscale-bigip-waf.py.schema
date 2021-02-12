@@ -53,7 +53,7 @@ properties:
     type: string
     default: ltm:nominal
   serviceAccount:
-    description: Enter the Google service account to use for autoscale API calls, for example 'username@projectname.iam.gserviceaccount.com'.
+    description: Enter the Google service account to use for autoscale API calls, for example 'username@projectname.iam.serviceaccount.com'. Please note that this service account is necessary for one BIG-IP to communicate with the other, so the permissions should include access to the storage bucket. Refer [here](https://clouddocs.f5.com/products/extensions/f5-cloud-failover/latest/userguide/gcp.html#create-and-assign-an-iam-role) for instructions on how to create the IAM service account with sufficient access.
     type: string
   targetSize:
     description: Enter the number of instances to start.

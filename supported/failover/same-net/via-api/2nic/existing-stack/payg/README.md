@@ -21,7 +21,7 @@
 
 ## Introduction
 
-This solution uses a Google Deployment Manager (GDM) Template to launch two BIG-IP VEs in an Active/Standby configuration with network failover enabled (the template also supports [multiple traffic groups](#traffic-group-configuration) which enables Active/Active deployments) in a Google Virtual Private Cloud, using PAYG (pay as you go) hourly (utility) licensing.
+This solution uses a Google Deployment Manager (GDM) Template to launch two BIG-IP VEs in an Active/Standby configuration with network failover enabled (the template also supports [multiple traffic groups](#traffic-group-configuration)) in a Google Virtual Private Cloud, using PAYG (pay as you go) hourly (utility) licensing.
 Traffic flows from the BIG-IP VE(s) to the application servers. Each BIG-IP VE has 2 network interfaces (NICs), one for management, one for external traffic, and one for internal traffic.
  **Networking Stack Type:** This template deploys into an existing networking stack; so the networking infrastructure MUST be available prior to deploying. See the [Template Parameters Section](#template-parameters) for required networking objects.
 
@@ -73,7 +73,7 @@ The following table lists the versions of BIG-IP that have been tested and valid
 
 | BIG-IP Version | Build | Solution | Status | Notes |
 | --- | --- | --- | --- | --- |
-| 15.1.2 | 0.0.9 | Standalone, Failover, Autoscale | |
+| 15.1.2.1 | 0.0.10 | Standalone, Failover, Autoscale | |
 | 14.1.3 | 0.0.7 | Standalone, Failover, Autoscale | |
 | 13.1.3 | 0.0.4 | Standalone, Failover, Autoscale | F5 CFE requires BIG-IP 14.1 or later |
 | 12.1.5 | 0.0.2 | Standalone, Failover, Autoscale | Not Validated | F5 CFE requires BIG-IP 14.1 or later |
@@ -113,7 +113,7 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | availabilityZone2 | Yes | Enter the availability zone where you want to deploy the second BIG-IP VE instance, for example 'us-west1-b'. |
 | mgmtNetwork | Yes | Specify the name of the network to use for management traffic, for example 'my-management-network'. |
 | mgmtSubnet | Yes | Specify the name of the subnet to use for management traffic, for example 'my-management-subnetwork'. |
-| restrictedSrcAddress | Yes | This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space. For example, '10.0.0.0/0'. |
+| restrictedSrcAddress | Yes | This field restricts management access to specific networks or addresses. Enter an IP address or address range in CIDR notation separated by a space.  **IMPORTANT** This solution requires your Management's subnet at a minimum in order for the peers to cluster.  For example, '10.0.11.0/24 55.55.55.55/32' where 10.0.11.0/24 is your local management subnet and 55.55.55.55/32 is a specific address (ex. orchestration host/desktop/etc.). |
 | network1 | Yes | Specify the Network name for BIG-IP application traffic, for example 'my-application-network'. |
 | network1SharedVpc | No | If using a shared VPC, specify the name of the host project to use for management traffic. Leave default value of None when not using shared VPC. **Note** template does not create firewall policy for shared VPC. Create policy on shared VPC within in host project to allow appropriate traffic. |
 | subnet1 | Yes | Specify the subnet of the Network that the BIG-IP should use for application traffic, for example 'my-application-subnetwork'. |
@@ -126,7 +126,7 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | ntpServer | No | (Optional) List NTP servers separated by a space, for example 'pool.ntp.org'. The default is 'time.google.com'. |
 | timezone | No | (Optional) Enter the Olson timezone string from /usr/share/zoneinfo. The default is 'UTC'. See the TZ column here (https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) for legal values. For example, 'US/Eastern'. |
 | bigIpModules | No | Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'. |
-| serviceAccount | Yes | Enter the Google service account to use for autoscale API calls, for example 'username@projectname.iam.serviceaccount.com'. |
+| serviceAccount | Yes | Enter the Google service account to use for autoscale API calls, for example 'username@projectname.iam.serviceaccount.com'. Please note that this service account is necessary for one BIG-IP to communicate with the other, so the permissions should include access to the storage bucket. Refer [here](https://clouddocs.f5.com/products/extensions/f5-cloud-failover/latest/userguide/gcp.html#create-and-assign-an-iam-role) for instructions on how to create the IAM service account with sufficient access. |
 | allowUsageAnalytics | Yes | This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent. |
 | allowPhoneHome | No | This deployment can provide F5 with high-level device use information to optimize development resources. If you select **no** the information is not sent. |
 | logLevel | No | (Optional) Log setting, used to set log level on scripts used during deployment. Acceptable values are - error, warn, info, verbose, debug, silly. The default is 'info'. |

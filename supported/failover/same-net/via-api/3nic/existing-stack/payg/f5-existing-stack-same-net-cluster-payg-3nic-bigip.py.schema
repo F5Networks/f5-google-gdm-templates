@@ -4,7 +4,7 @@ info:
   title: F5 BIG-IP 3NIC HA with Google API
   author: F5 Networks
   description: Creates HA pair of BIG-IP's with 3 network interfaces and supporting Google resources.
-  version: 3.10.0
+  version: 3.11.0
 imports:
   - path: f5-existing-stack-same-net-cluster-payg-3nic-bigip.py
 required:
@@ -41,7 +41,7 @@ properties:
     description: Specify the name of the subnet to use for management traffic, for example 'my-management-subnetwork'.
     type: string
   restrictedSrcAddress:
-    description: This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space. For example, '10.0.0.0/0'.
+    description: This field restricts management access to specific networks or addresses. Enter an IP address or address range in CIDR notation separated by a space.  **IMPORTANT** This solution requires your Management's subnet at a minimum in order for the peers to cluster.  For example, '10.0.11.0/24 55.55.55.55/32' where 10.0.11.0/24 is your local management subnet and 55.55.55.55/32 is a specific address (ex. orchestration host/desktop/etc.).
     type: string
   network1:
     description: Specify the Network name for BIG-IP application traffic, for example 'my-application-network'.
@@ -94,7 +94,7 @@ properties:
     type: string
     default: ltm:nominal
   serviceAccount:
-    description: Enter the Google service account to use for autoscale API calls, for example 'username@projectname.iam.serviceaccount.com'.
+    description: Enter the Google service account to use for autoscale API calls, for example 'username@projectname.iam.serviceaccount.com'. Please note that this service account is necessary for one BIG-IP to communicate with the other, so the permissions should include access to the storage bucket. Refer [here](https://clouddocs.f5.com/products/extensions/f5-cloud-failover/latest/userguide/gcp.html#create-and-assign-an-iam-role) for instructions on how to create the IAM service account with sufficient access.
     type: string
   allowUsageAnalytics:
     description: This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent.

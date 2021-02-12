@@ -1,6 +1,6 @@
 # Copyright 2019 F5 Networks All rights reserved.
 #
-# Version 3.10.0
+# Version 3.11.0
 
 # NOTE: When filling out the parameter values for this deployment:
 # Deployments leverage .schema files to help enforce requirements/parameter typing and defaults.
@@ -30,7 +30,7 @@ resources:
    mgmtNetwork:
    ### (REQUIRED) Specify the name of the subnet to use for management traffic, for example 'my-management-subnetwork'.
    mgmtSubnet:
-   ### (REQUIRED) This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space. For example, '10.0.11.0/24'.
+   ### (REQUIRED) This field restricts management access to specific networks or addresses. Enter an IP address or address range in CIDR notation separated by a space.  **IMPORTANT** This solution requires your Management's subnet at a minimum in order for the peers to cluster.  For example, '10.0.11.0/24 55.55.55.55/32' where 10.0.11.0/24 is your local management subnet and 55.55.55.55/32 is a specific address (ex. orchestration host/desktop/etc.).
    restrictedSrcAddress:
    ### (REQUIRED) Specify the Network name for BIG-IP application traffic, for example 'my-application-network'.
    network1:
@@ -50,11 +50,11 @@ resources:
    provisionPublicIP: yes
    ### (OPTIONAL) BIG-IP image, valid choices include:
    
-    # f5-bigip-15-1-2-0-0-9-byol-all-modules-1boot-loc-201110225902
-    # f5-bigip-15-1-2-0-0-9-byol-all-modules-2boot-loc-201110230057
-    # f5-bigip-15-1-2-0-0-9-byol-ltm-1boot-loc-201110225242
-    # f5-bigip-15-1-2-0-0-9-byol-ltm-2boot-loc-201110225418
-   imageName: f5-bigip-15-1-2-0-0-9-byol-all-modules-2boot-loc-201110230057
+    # f5-bigip-15-1-2-1-0-0-10-byol-all-modules-1boot-loc-0115161026
+    # f5-bigip-15-1-2-1-0-0-10-byol-all-modules-2boot-loc-0115161130
+    # f5-bigip-15-1-2-1-0-0-10-byol-ltm-1boot-loc-210115160621
+    # f5-bigip-15-1-2-1-0-0-10-byol-ltm-2boot-loc-210115160742
+   imageName: f5-bigip-15-1-2-1-0-0-10-byol-all-modules-2boot-loc-201110230057
    ### (OPTIONAL) Instance type assigned to BIG-IP, for example 'n1-standard-4'.
    instanceType: n1-standard-4
    ### (OPTIONAL) Enter the BIG-IP Management Port, the default is '443'.
@@ -65,9 +65,9 @@ resources:
    timezone: UTC
    ## (OPTIONAL) Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'.
    bigIpModules: ltm:nominal
-   ### (REQUIRED) Enter the Google service account to use for autoscale API calls, for example 'username@projectname.iam.serviceaccount.com'.
+   ### (REQUIRED) Enter the Google service account to use for failover API calls, for example 'username@projectname.iam.serviceaccount.com'.
    serviceAccount:
-   ### (OPTIONAL) This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent.
+   ### (OPTIONAL) Enter the Google service account to use for autoscale API calls, for example 'username@projectname.iam.serviceaccount.com'. Please note that this service account is necessary for one BIG-IP to communicate with the other, so the permissions should include access to the storage bucket. Refer [here](https://clouddocs.f5.com/products/extensions/f5-cloud-failover/latest/userguide/gcp.html#create-and-assign-an-iam-role) for instructions on how to create the IAM service account with sufficient access.
    allowUsageAnalytics: yes
    ### (OPTIONAL) This deployment can provide F5 with high-level device use information to optimize development resources. If you select **no** the information is not sent.
    allowPhoneHome: yes
@@ -77,10 +77,10 @@ resources:
    declarationUrl: default
 
 
-# TROUBLESHOOTING: 
+# TROUBLESHOOTING:
 # * If template did not successfully deploy, go to console.cloud.google.com Navigation Menu -> Deployment Manager -> Your Deployment Name for more details
 #   TIP: See "Expanded Config" to see what the final template that was rendered/created with python script and parameters you provided
-# * If template succeeded, wait ~ 6-10 Minutes (Instance needs to swap management NIC and reboot). 
+# * If template succeeded, wait ~ 6-10 Minutes (Instance needs to swap management NIC and reboot).
 #.      * Try Logging in via SSH to confirm BIG-IP deployment was successful (for instance, if startup scripts completed as expected on the BIG-IPs)
 #           To obtain Management IP (eth0 on Single NIC, eth1 on Multi-NIC BIG-IP):
 #           > Go to Console -> Compute Engine -> VM Instances -> YOUR_INSTANCE_NAME -> Network Interfaces

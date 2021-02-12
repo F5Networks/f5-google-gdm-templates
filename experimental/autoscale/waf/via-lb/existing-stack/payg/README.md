@@ -73,7 +73,7 @@ The following table lists the versions of BIG-IP that have been tested and valid
 
 | BIG-IP Version | Build | Solution | Status | Notes |
 | --- | --- | --- | --- | --- |
-| 15.1.2 | 0.0.9 | Standalone, Failover, Autoscale | |
+| 15.1.2.1 | 0.0.10 | Standalone, Failover, Autoscale | |
 | 14.1.3 | 0.0.7 | Standalone, Failover, Autoscale | |
 | 13.1.3 | 0.0.4 | Standalone, Failover, Autoscale | F5 CFE requires BIG-IP 14.1 or later |
 | 12.1.5 | 0.0.2 | Standalone, Failover, Autoscale | Not Validated | F5 CFE requires BIG-IP 14.1 or later |
@@ -116,7 +116,7 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | imageName | Yes | BIG-IP image name. |
 | instanceType | Yes | Instance type assigned to BIG-IP, for example 'n1-standard-4'. |
 | bigIpModules | No | Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'. |
-| serviceAccount | Yes | Enter the Google service account to use for autoscale API calls, for example 'username@projectname.iam.gserviceaccount.com'. |
+| serviceAccount | Yes | Enter the Google service account to use for autoscale API calls, for example 'username@projectname.iam.serviceaccount.com'. Please note that this service account is necessary for one BIG-IP to communicate with the other, so the permissions should include access to the storage bucket. Refer [here](https://clouddocs.f5.com/products/extensions/f5-cloud-failover/latest/userguide/gcp.html#create-and-assign-an-iam-role) for instructions on how to create the IAM service account with sufficient access. |
 | targetSize | Yes | Enter the number of instances to start. |
 | minReplicas | Yes | Enter the minimum number of instances autoscale policy will scale down to. |
 | maxReplicas | Yes | Enter the maximum number of instances autoscale policy will allow. |
