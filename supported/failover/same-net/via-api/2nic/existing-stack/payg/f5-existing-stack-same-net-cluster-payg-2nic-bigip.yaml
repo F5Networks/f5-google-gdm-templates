@@ -1,6 +1,6 @@
 # Copyright 2019 F5 Networks All rights reserved.
 #
-# Version 3.11.0
+# Version 3.11.1
 
 # NOTE: When filling out the parameter values for this deployment:
 # Deployments leverage .schema files to help enforce requirements/parameter typing and defaults.
@@ -44,26 +44,29 @@ resources:
    numberOfForwardingRules: 1
    ## (OPTIONAL) Provision Public IP addresses for BIG-IP Network Interfaces. By default it is set to provision public IPs.
    provisionPublicIP: yes
+   ### If you would like to view all available images, run the following command from the **gcloud** command line: ```$ gcloud compute images list --project f5-7626-networks-public | grep f5```
    ### (OPTIONAL) BIG-IP image, valid choices include:
-   # f5-bigip-15-1-2-1-0-0-10-payg-best-10gbps-210115161130
-    # f5-bigip-15-1-2-1-0-0-10-payg-best-1gbps-210115161130
-    # f5-bigip-15-1-2-1-0-0-10-payg-best-200mbps-210115161130
-    # f5-bigip-15-1-2-1-0-0-10-payg-best-25mbps-210115161130
+   # f5-bigip-15-1-2-1-0-0-10-payg-best-10gbps-210115161130   
+    # f5-bigip-15-1-2-1-0-0-10-payg-best-1gbps-210115161130    
+    # f5-bigip-15-1-2-1-0-0-10-payg-best-200mbps-210115161130  
+    # f5-bigip-15-1-2-1-0-0-10-payg-best-25mbps-210115161130   
     # f5-bigip-15-1-2-1-0-0-10-payg-best-5gbps-210115161130
-      # f5-bigip-15-1-2-1-0-0-10-payg-better-10gbps-210115161130
-      # f5-bigip-15-1-2-1-0-0-10-payg-better-1gbps-210115161130
+      # f5-bigip-15-1-2-1-0-0-10-payg-better-10gbps-210115161130 
+      # f5-bigip-15-1-2-1-0-0-10-payg-better-1gbps-210115161130  
       # f5-bigip-15-1-2-1-0-0-10-payg-better-200mbps-210115161130
-      # f5-bigip-15-1-2-1-0-0-10-payg-better-25mbps-210115161130
-      # f5-bigip-15-1-2-1-0-0-10-payg-better-5gbps-210115161130
-      # f5-bigip-15-1-2-1-0-0-10-payg-good-10gbps-210115160742
-      # f5-bigip-15-1-2-1-0-0-10-payg-good-1gbps-210115160742
-      # f5-bigip-15-1-2-1-0-0-10-payg-good-200mbps-210115160742
-      # f5-bigip-15-1-2-1-0-0-10-payg-good-25mbps-210115160742
-      # f5-bigip-15-1-2-1-0-0-10-payg-good-5gbps-210115160742
-      # f5-bigip-15-1-2-1-0-0-10-payg-hp-ltm-16vcpu-210115160742
-      # f5-bigip-15-1-2-1-0-0-10-payg-pve-ltm-200mbps-10115160621
-      # f5-bigip-15-1-2-1-0-0-10-payg-pve-ltm-25mbps-10115160621
-   imageName: f5-bigip-15-1-2-1-0-0-10-payg-best-25mbps-201110230057
+      # f5-bigip-15-1-2-1-0-0-10-payg-better-25mbps-210115161130 
+      # f5-bigip-15-1-2-1-0-0-10-payg-better-5gbps-210115161130 
+      # f5-bigip-15-1-2-1-0-0-10-payg-good-10gbps-210115160742   
+      # f5-bigip-15-1-2-1-0-0-10-payg-good-1gbps-210115160742    
+      # f5-bigip-15-1-2-1-0-0-10-payg-good-200mbps-210115160742  
+      # f5-bigip-15-1-2-1-0-0-10-payg-good-25mbps-210115160742   
+      # f5-bigip-15-1-2-1-0-0-10-payg-good-5gbps-210115160742    
+      # f5-bigip-15-1-2-1-0-0-10-payg-hp-ltm-16vcpu-210115160742 
+      # f5-bigip-15-1-2-1-0-0-10-payg-pve-awf-plus-200mbps-10115161026
+      # f5-bigip-15-1-2-1-0-0-10-payg-pve-awf-plus-25mbps-210115161026
+      # f5-bigip-15-1-2-1-0-0-10-payg-pve-ltm-200mbps-210115160621
+      # f5-bigip-15-1-2-1-0-0-10-payg-pve-ltm-25mbps-210115160621
+   imageName: f5-bigip-15-1-2-1-0-0-10-payg-best-25mbps-210115161130
    ### (OPTIONAL) Instance type assigned to BIG-IP, for example 'n1-standard-4'.
    instanceType: n1-standard-4
    ### (OPTIONAL) Enter the BIG-IP Management Port, the default is '443'.

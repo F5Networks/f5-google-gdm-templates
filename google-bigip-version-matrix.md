@@ -6,6 +6,7 @@ The following table contains all of the tagged releases of the F5 Google Deploym
 
 | Release Tag | Template Family | BIG-IP Versions | PAYG License Bundles and Throughput | BYOL Image options (v13.1.1 and later) |
 | --- | --- | --- | --- | --- |
+| [v3.11.0](https://github.com/F5Networks/f5-google-gdm-templates/releases/tag/v3.11.0) | Standalone, Failover | BIG-IP v15.1.2, BIG-IP v14.1.3 | Good/Better/Best: 5Gbps, 1Gbps, 200Mbps, 25Mbps | AllTwoBootLocations, LTMTwoBootLocations |
 | [v3.10.0](https://github.com/F5Networks/f5-google-gdm-templates/releases/tag/v3.10.0) | Standalone, Failover | BIG-IP v15.1.2, BIG-IP v14.1.3 | Good/Better/Best: 5Gbps, 1Gbps, 200Mbps, 25Mbps | AllTwoBootLocations, LTMTwoBootLocations |
 | [v3.9.0](https://github.com/F5Networks/f5-google-gdm-templates/releases/tag/v3.9.0) | Standalone, Failover | BIG-IP v15.1.0, BIG-IP v14.1.2.6 | Good/Better/Best: 5Gbps, 1Gbps, 200Mbps, 25Mbps | AllTwoBootLocations, LTMTwoBootLocations |
 | [v3.8.0](https://github.com/F5Networks/f5-google-gdm-templates/releases/tag/v3.8.0) | Standalone, Failover | BIG-IP v15.1.0, BIG-IP v14.1.2.6 | Good/Better/Best: 5Gbps, 1Gbps, 200Mbps, 25Mbps | AllTwoBootLocations, LTMTwoBootLocations |
