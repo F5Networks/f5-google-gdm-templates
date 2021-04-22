@@ -1,0 +1,52 @@
+# Post release test plan
+
+# Google standalone tests
+google-standalone-test:
+  test-url: "file://automated-test-scripts/f5-google-gdm-templates/supported/standalone/daily_test.yaml"
+  run: "random"
+  random-num-of-tests: 1
+  parameters-files:
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/1nic/existing-stack/payg/v15_postpub_parameters.yaml"
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/1nic/existing-stack/payg/v14_postpub_parameters.yaml"
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/1nic/existing-stack/payg/v13_postpub_parameters.yaml"
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/2nic/existing-stack/payg/v15_postpub_parameters.yaml"
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/2nic/existing-stack/payg/v14_postpub_parameters.yaml"
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/2nic/existing-stack/payg/v13_postpub_parameters.yaml"
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/3nic/existing-stack/payg/v15_postpub_parameters.yaml"
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/3nic/existing-stack/payg/v14_postpub_parameters.yaml"
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/3nic/existing-stack/payg/v13_postpub_parameters.yaml"
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/1nic/existing-stack/byol/v15_postpub_parameters.yaml"
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/1nic/existing-stack/byol/v14_postpub_parameters.yaml"
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/1nic/existing-stack/byol/v13_postpub_parameters.yaml"
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/2nic/existing-stack/byol/v15_postpub_parameters.yaml"
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/2nic/existing-stack/byol/v14_postpub_parameters.yaml"
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/2nic/existing-stack/byol/v13_postpub_parameters.yaml"
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/3nic/existing-stack/byol/v15_postpub_parameters.yaml"
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/3nic/existing-stack/byol/v14_postpub_parameters.yaml"
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/3nic/existing-stack/byol/v13_postpub_parameters.yaml"
+
+# Google failover-api tests
+google-failover-api-test:
+  test-url: "file://automated-test-scripts/f5-google-gdm-templates/supported/failover/via-api/daily_test.yaml"
+  run: "random"
+  random-num-of-tests: 1
+  parameters-files:
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-api/3nic/existing-stack/payg/v15_postpub_parameters.yaml"
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-api/3nic/existing-stack/payg/v14_postpub_parameters.yaml"
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-api/3nic/existing-stack/payg/v13_postpub_parameters.yaml"
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-api/3nic/existing-stack/byol/v15_postpub_parameters.yaml"
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-api/3nic/existing-stack/byol/v14_postpub_parameters.yaml"
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-api/3nic/existing-stack/byol/v13_postpub_parameters.yaml"
+
+# Google failover-lb tests
+google-failover-lb-test:
+  test-url: "file://automated-test-scripts/f5-google-gdm-templates/supported/failover/via-lb/daily_test.yaml"
+  run: "random"
+  random-num-of-tests: 1
+  parameters-files:
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-lb/3nic/existing-stack/byol/v15_postpub_parameters.yaml"
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-lb/3nic/existing-stack/byol/v14_postpub_parameters.yaml"
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-lb/3nic/existing-stack/byol/v13_postpub_parameters.yaml"
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-lb/3nic/existing-stack/payg/v15_postpub_parameters.yaml"
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-lb/3nic/existing-stack/payg/v14_postpub_parameters.yaml"
+  - "automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-lb/3nic/existing-stack/payg/v13_postpub_parameters.yaml"

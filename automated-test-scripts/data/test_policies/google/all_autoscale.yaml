@@ -1,0 +1,6 @@
+# Google autoscale test
+google-autoscale-test:
+    test-url: "file://automated-test-scripts/f5-google-gdm-templates/experimental/autoscale/daily_test.yaml"
+    run: "all"
+    parameters-files:
+        - "automated-test-scripts/data/f5-google-gdm-templates/experimental/autoscale/waf/via-lb/existing-stack/payg/prepub_parameters.yaml"
