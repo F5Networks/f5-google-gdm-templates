@@ -36,7 +36,7 @@ STACK NAME: dd-<DEWPOINT JOB ID>-<LICENSE TYPE>-<IMAGE TYPE>-<NIC COUNT>nic-<AZ
 SUBNET PARAM: ',network1:''<EXT NETWORK>'',network1SharedVpc:''<EXT NETWORK SHARED VPC>'',subnet1:''<EXT SUBNET>'',subnet1Address:''SUBNET1_SUBNET_ADDRESS'''
 SUBNET1 AZ1: subnet1
 SUPPORT: supported
-TEMPLATE URL: https://raw.githubusercontent.com/F5Networks/master/<SUPPORT>/standalone/<NIC
+TEMPLATE URL: https://raw.githubusercontent.com/F5Networks/f5-google-gdm-templates/master/<SUPPORT>/standalone/<NIC
   COUNT>nic/<STACK>/<LICENSE FOLDER>/f5-<STACK>-<LICENSE TYPE>-<NIC COUNT>nic-bigip.py
 TIMEZONE: UTC
 USE SCHEMA: 'no'

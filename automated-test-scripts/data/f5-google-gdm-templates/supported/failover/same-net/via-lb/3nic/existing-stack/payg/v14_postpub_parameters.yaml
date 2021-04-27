@@ -37,7 +37,7 @@ SUBNET PARAM: ',network1:''<EXT NETWORK>'',network1SharedVpc:''<EXT NETWORK SHAR
   NETWORK>'',subnet2:''<INT SUBNET>'''
 SUBNET1 AZ1: subnet1
 SUPPORT: supported
-TEMPLATE URL: https://raw.githubusercontent.com/F5Networks/master/<SUPPORT>/failover/same-net/via-lb/<NIC
+TEMPLATE URL: https://raw.githubusercontent.com/F5Networks/f5-google-gdm-templates/master/<SUPPORT>/failover/same-net/via-lb/<NIC
   COUNT>nic/<STACK>/<LICENSE FOLDER>/f5-<STACK>-same-net-cluster-<LICENSE TYPE>-<NIC
   COUNT>nic-bigip.py
 TIMEZONE: US/Pacific
