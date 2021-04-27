@@ -31,7 +31,7 @@ STACK NAME: dewdrop-<DEWPOINT JOB ID>
 SUBNET1 AZ1: subnet1
 SUPPORT: supported
 TEMPLATE PREFIX: existing-stack
-TEMPLATE URL: https://raw.githubusercontent.com/F5Networks/master/<SUPPORT>/failover/same-net/via-api/<NIC
+TEMPLATE URL: https://raw.githubusercontent.com/F5Networks/f5-google-gdm-templates/master/<SUPPORT>/failover/same-net/via-api/<NIC
   COUNT>nic/<STACK>/<LICENSE FOLDER>/f5-<TEMPLATE PREFIX>-same-net-cluster-<LICENSE
   TYPE>-<NIC COUNT>nic-bigip.py
 TIMEZONE: US/Pacific
