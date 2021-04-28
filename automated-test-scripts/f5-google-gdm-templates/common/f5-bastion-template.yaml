@@ -1,0 +1,12 @@
+imports:
+- path: f5-bastion-template.py
+resources:
+- name: f5-bastion
+  type: f5-bastion-template.py
+  properties:
+    zone: us-west1-b
+    network: dewpt
+    instanceType: n1-standard-1
+    subnet: subnet1
+    region: us-west1
+    osImage: projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts

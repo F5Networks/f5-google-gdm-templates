@@ -1,0 +1,43 @@
+---
+name: Google failover via-api <IMAGE NAME> <NIC COUNT>nic <LICENSE TYPE> <AVAILABILITY ZONE>
+# Since production-stack only for now, just check GDM template create happens and then delete
+onStart:
+- ../../../common/helper_init.sh
+- ../../../common/create_bastion.sh
+- ./create_stack.sh
+- ../../../common/verify_create.sh
+- ../../../common/get_mgmt_ip.sh
+- ../../../common/verify_bastion.sh
+- ../../../common/create_route_table.sh
+- ../../../../sleep/3_minutes.sh
+- ../../../common/verify_device_availability.sh
+- ../../../common/modify_shell.sh
+- ../../../common/verify_onboard.sh
+- ../../../../sleep/3_minutes.sh
+- ../../../common/reboot.sh
+- ../../../common/verify_device_availability.sh
+- ../../../common/verify_sync_status.sh
+- ../../../common/verify_phone_home.sh
+- ../../../common/verify_shared_vpc.sh
+- ../../../common/verify_AS3.sh
+- ../../../common/verify_declaration_url_AS3.sh
+- ../../../common/verify_CFE.sh
+- ../../../common/verify_declaration_url_CFE.sh
+- ../../../common/verify_metadata_host.sh
+- ../../../common/verify_failover1.sh
+- ../../../common/verify_route_table_failover1.sh
+- ../../../../sleep/1_minute.sh
+- ../../../common/verify_failover2.sh
+- ../../../common/verify_route_table_failover2.sh
+- ../../../common/verify_provisioned_modules.sh
+- ../../../common/delete_storage.sh
+- ../../../common/delete_stack.sh
+- ../../../common/delete_route_table.sh
+- ../../../common/verify_delete.sh
+onFail:
+- ../../../common/capture_logs.sh
+- ../../../common/run_failure_tests.sh
+- ../../../common/delete_storage.sh
+- ../../../common/delete_stack.sh
+- ../../../common/delete_route_table.sh
+- ../../../common/verify_delete.sh
