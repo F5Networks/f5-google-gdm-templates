@@ -1,0 +1,32 @@
+ANALYTICS: 'no'
+AVAILABILITY ZONE: <REGION>-b
+AZ SHORT NAME: us-w1
+BIGIP MODULES: ltm:nominal-asm:nominal
+BIGIP VERSION: 15-1-2-1-0-0-10
+BRANCH: master
+DECLARATION URL: default
+EXT NETWORK: dewpt2
+EXT PREFIX: '24'
+EXT SUBNET: subnet2
+IMAGE NAME: f5-bigip-<BIGIP VERSION>-payg-<IMAGE TYPE>-<IMAGE SUFFIX>
+IMAGE SUFFIX: '200618231635'
+IMAGE TYPE: best-1gbps
+INSTANCE TYPE: n1-standard-4
+INT NETWORK: dewpt3
+INT PREFIX: '24'
+INT SUBNET: subnet3
+LICENSE FOLDER: payg
+LICENSE TYPE: payg
+MGMT PORT: 8443
+NETWORK: dewpt
+NIC COUNT: 1
+PHONEHOME: 'No'
+REGION: us-west1
+SERVICE ACCOUNT: ''
+SET LIC KEY: Not Using for PAYG
+STACK: existing-stack
+STACK NAME: dewdrop-as-<DEWPOINT JOB ID>
+SUBNET1 AZ1: subnet1
+SUPPORT: experimental
+TEMPLATE URL: https://raw.githubusercontent.com/F5Networks/<BRANCH>/<SUPPORT>/autoscale/waf/via-lb/<STACK>/<LICENSE
+  FOLDER>/f5-<LICENSE TYPE>-autoscale-bigip-waf.py

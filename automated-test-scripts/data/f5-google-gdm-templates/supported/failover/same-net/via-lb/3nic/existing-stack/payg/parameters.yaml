@@ -1,0 +1,44 @@
+EXT NETWORK SHARED VPC: None
+ANALYTICS: 'no'
+APP INTERNAL PORT: 80
+APP PORT: 80
+AUTOFILL PASSWORD: hqxDg3pHNdas
+AVAILABILITY ZONE: <REGION>-b
+AZ SHORT NAME: us-e4
+BIGIP MODULES: ltm:nominal-afm:nominal
+BIGIP VERSION: 15-1-2-1-0-0-10
+DECLARATION URL: https://cdn.f5.com/product/cloudsolutions/declarations/sample_02.json
+EXT NETWORK: dewpt2
+EXT SUBNET: subnet2
+IMAGE NAME: f5-bigip-<BIGIP VERSION>-payg-<IMAGE TYPE>-<IMAGE SUFFIX>
+IMAGE SUFFIX: '200618231635'
+IMAGE TYPE: best-1gbps
+INSTANCE TYPE: n1-standard-4
+INT NETWORK: dewpt3
+INT SUBNET: subnet3
+LICENSE FOLDER: payg
+LICENSE PARAM: ''
+LICENSE TYPE: payg
+LOG LEVEL: silly
+MGMT PORT: 443
+NETWORK: dewpt
+NETWORK PARAM: ',mgmtNetwork:''<NETWORK>'',mgmtSubnet:''<SUBNET1 AZ1>''<SUBNET PARAM>'
+NIC COUNT: 3
+NTP SERVER: 0.us.pool.ntp.org
+NUM FORWARDING RULES: 1
+NUM INTERNAL FORWARDING RULES: 0
+PHONEHOME: 'no'
+PUBLIC IP: 'True'
+REGION: us-east4
+SERVICE ACCOUNT: dewpt-ha-service-account@f5-7656-pdsoleng-dev.iam.gserviceaccount.com
+STACK: existing-stack
+STACK NAME: dewdrop-<DEWPOINT JOB ID>
+SUBNET PARAM: ',network1:''<EXT NETWORK>'',network1SharedVpc:''<EXT NETWORK SHARED VPC>'',subnet1:''<EXT SUBNET>'',network2:''<INT
+  NETWORK>'',subnet2:''<INT SUBNET>'''
+SUBNET1 AZ1: subnet1
+SUPPORT: supported
+TEMPLATE URL: https://raw.githubusercontent.com/F5Networks/f5-google-gdm-templates/master/<SUPPORT>/failover/same-net/via-lb/<NIC
+  COUNT>nic/<STACK>/<LICENSE FOLDER>/f5-<STACK>-same-net-cluster-<LICENSE TYPE>-<NIC
+  COUNT>nic-bigip.py
+TIMEZONE: US/Pacific
+USE SCHEMA: 'yes'

@@ -1,0 +1,32 @@
+---
+name: Google standalone <IMAGE NAME> <NIC COUNT>-nic <LICENSE TYPE> <AVAILABILITY ZONE>
+onStart:
+- ../../common/helper_init.sh
+- ../../common/create_bastion.sh
+- ./create_stack.sh
+- ../../common/verify_create.sh
+- ../../common/get_mgmt_ip.sh
+- ../../common/verify_bastion.sh
+- ../../common/verify_device_availability.sh
+- ../../common/modify_shell.sh
+- ../../common/verify_onboard.sh
+- ../../../sleep/3_minutes.sh
+- ../../common/reboot.sh
+- ../../common/verify_device_availability.sh
+- ../../common/verify_ntp.sh
+- ../../common/verify_time_zone.sh
+- ../../common/verify_phone_home.sh
+- ../../common/verify_shared_vpc.sh
+- ../../common/verify_static_ip.sh
+- ../../common/verify_provisioned_modules.sh
+- ../../common/verify_AS3.sh
+- ../../common/verify_declaration_url_AS3.sh
+- ../../common/create_virtual_and_pool.sh
+- ../../common/traffic_test.sh
+- ../../common/delete_stack.sh
+- ../../common/verify_delete.sh
+onFail:
+- ../../common/capture_logs.sh
+- ../../common/run_failure_tests.sh
+- ../../common/delete_stack.sh
+- ../../common/verify_delete.sh

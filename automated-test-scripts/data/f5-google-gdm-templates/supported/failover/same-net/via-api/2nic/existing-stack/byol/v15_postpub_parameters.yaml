@@ -1,0 +1,41 @@
+EXT NETWORK SHARED VPC: f5-gcs-7511-ptg-shrdvpc-host
+ALIAS IP: 'False'
+ANALYTICS: 'no'
+AUTOFILL EVAL LICENSE KEY: null
+AUTOFILL EVAL LICENSE KEY 2: null
+AUTOFILL PASSWORD: <AUTOFILL PASSWORD>
+AVAILABILITY ZONE: <REGION>-b
+AVAILABILITY ZONE2: <REGION>-c
+AZ SHORT NAME: na-ne1
+BIGIP MODULES: ltm:nominal
+BIGIP VERSION: 15-1-2-1-0-0-10
+DECLARATION URL: https://cdn.f5.com/product/cloudsolutions/declarations/sample_02.json
+EXT NETWORK: dewpt2
+EXT PREFIX: 24
+EXT SUBNET: subnet2
+IMAGE NAME: f5-bigip-<BIGIP VERSION>-byol-<IMAGE TYPE>-<IMAGE SUFFIX>
+IMAGE SUFFIX: '0115161026'
+IMAGE TYPE: all-modules-1boot-loc
+INSTANCE TYPE: n1-standard-8
+LICENSE FOLDER: byol
+LICENSE PARAM: ',licenseKey1:''<AUTOFILL EVAL LICENSE KEY>'',licenseKey2:''<AUTOFILL
+  EVAL LICENSE KEY 2>'''
+LICENSE TYPE: byol
+MGMT PORT: 443
+NETWORK: dewpt
+NIC COUNT: 2
+NTP SERVER: 0.us.pool.ntp.org
+NUM FORWARDING RULES: 3
+PHONEHOME: 'no'
+PUBLIC IP: 'True'
+REGION: northamerica-northeast1
+SERVICE ACCOUNT: dewpt-ha-service-account@f5-7656-pdsoleng-dev.iam.gserviceaccount.com
+STACK: existing-stack
+STACK NAME: dewdrop-<DEWPOINT JOB ID>
+SUBNET1 AZ1: subnet1
+SUPPORT: supported
+TEMPLATE PREFIX: existing-stack
+TEMPLATE URL: https://raw.githubusercontent.com/F5Networks/f5-google-gdm-templates/master/<SUPPORT>/failover/same-net/via-api/<NIC
+  COUNT>nic/<STACK>/<LICENSE FOLDER>/f5-<TEMPLATE PREFIX>-same-net-cluster-<LICENSE
+  TYPE>-<NIC COUNT>nic-bigip.py
+TIMEZONE: US/Pacific

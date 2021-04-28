@@ -1,0 +1,297 @@
+---
+name: Google autoscale Branch <BRANCH> <IMAGE NAME> <AVAILABILITY ZONE>
+onStart:
+- ./create_stack.sh
+- ../../common/verify_create.sh
+- ../../../sleep/15_minutes.sh
+- ./verify_min_instances.sh
+- ./scale_out.sh
+- ../../../sleep/15_minutes.sh
+- ./verify_scale_out.sh
+- ../../common/delete_storage.sh
+- ../../common/delete_stack.sh
+- ../../common/verify_delete.sh
+onFail:
+- ../../common/run_failure_tests.sh
+- ../../common/delete_storage.sh
+- ../../common/delete_stack.sh
+- ../../common/verify_delete.sh
+params:
+- tag: ANALYTICS
+  values:
+  - yes
+  - no
+  - no
+  - no
+  - no
+  - no
+  - no
+  - no
+  - no
+  - no
+  - no
+- tag: AVAILABILITY ZONE
+  values:
+  - <REGION>-b
+- tag: AZ SHORT NAME
+  values:
+  - value: a-e1
+    when:
+      tag: REGION
+      values:
+      - asia-east1
+  - value: a-ne1
+    when:
+      tag: REGION
+      values:
+      - asia-northeast1
+  - value: a-s1
+    when:
+      tag: REGION
+      values:
+      - asia-south1
+  - value: a-se1
+    when:
+      tag: REGION
+      values:
+      - asia-southeast1
+  - value: au-se1
+    when:
+      tag: REGION
+      values:
+      - australia-southeast1
+  - value: eu-w1
+    when:
+      tag: REGION
+      values:
+      - europe-west1
+  - value: eu-w2
+    when:
+      tag: REGION
+      values:
+      - europe-west2
+  - value: eu-w3
+    when:
+      tag: REGION
+      values:
+      - europe-west3
+  - value: eu-w4
+    when:
+      tag: REGION
+      values:
+      - europe-west4
+  - value: na-ne1
+    when:
+      tag: REGION
+      values:
+      - northamerica-northeast1
+  - value: sa-e1
+    when:
+      tag: REGION
+      values:
+      - southamerica-east1
+  - value: us-c1
+    when:
+      tag: REGION
+      values:
+      - us-central1
+  - value: us-e1
+    when:
+      tag: REGION
+      values:
+      - us-east1
+  - value: us-e4
+    when:
+      tag: REGION
+      values:
+      - us-east4
+  - value: us-w1
+    when:
+      tag: REGION
+      values:
+      - us-west1
+- tag: IMAGE TYPE
+  values:
+  - best-1gbps
+  - best-200mbps
+  - best-25mbps
+  - best-5gbps
+- tag: BIGIP VERSION
+  values:
+  - 13-1-1-0-0-4
+- tag: BRANCH
+  values:
+  - master
+  - R19-1
+  - ESECLDTPLT-180
+  - R19.1.1
+- tag: INSTANCE TYPE
+  values:
+  - value: n1-standard-4
+    when:
+      tag: NIC COUNT
+      values:
+      - 3
+  - value: n1-standard-2
+    when:
+      tag: NIC COUNT
+      values:
+      - 1
+      - 2
+- tag: LICENSE TYPE
+  values:
+  - value: byol
+    when:
+      tag: IMAGE TYPE
+      values:
+      - all-1slot
+      - all-2slot
+      - ltm-1slot
+      - ltm-2slot
+  - value: payg
+    when:
+      tag: IMAGE TYPE
+      values:
+      - best-1gbps
+      - best-200mbps
+      - best-25mbps
+      - best-5gbps
+      - better-1gbps
+      - better-200mbps
+      - better-25mbps
+      - better-5gbps
+      - good-1gbps
+      - good-200mbps
+      - good-25mbps
+      - good-5gbps
+- tag: IMAGE NAME
+  values:
+  - value: f5-hourly-bigip-<BIGIP VERSION>-<IMAGE TYPE>
+    when:
+      tag: IMAGE TYPE
+      values:
+      - best-1gbps
+      - best-200mbps
+      - best-25mbps
+      - best-5gbps
+      - better-1gbps
+      - better-200mbps
+      - better-25mbps
+      - better-5gbps
+      - good-1gbps
+      - good-200mbps
+      - good-25mbps
+      - good-5gbps
+  - value: f5-byol-bigip-<BIGIP VERSION>-<IMAGE TYPE>
+    when:
+      tag: IMAGE TYPE
+      values:
+      - all-1slot
+      - all-2slot
+      - ltm-1slot
+      - ltm-2slot
+- tag: LICENSE FOLDER
+  values:
+  - value: byol
+    when:
+      tag: LICENSE TYPE
+      values:
+      - byol
+  - value: payg
+    when:
+      tag: LICENSE TYPE
+      values:
+      - payg
+- tag: MGMT PORT
+  values:
+  - value: 8443
+    when:
+      tag: NIC COUNT
+      values:
+      - 1
+  - value: 443
+    when:
+      tag: NIC COUNT
+      values:
+      - 2
+  - value: 443
+    when:
+      tag: NIC COUNT
+      values:
+      - 3
+- tag: NETWORK
+  values:
+  - dewpt
+- tag: NIC COUNT
+  values:
+  - 1
+- tag: REGION
+  values:
+  - asia-east1
+  - asia-northeast1
+  - asia-south1
+  - asia-southeast1
+  - australia-southeast1
+  - europe-west1
+  - europe-west2
+  - europe-west3
+  - europe-west4
+  - northamerica-northeast1
+  - southamerica-east1
+  - us-central1
+  - us-east1
+  - us-east4
+  - us-west1
+- tag: SERVICE ACCOUNT
+  values:
+  - dewpt-autoscale-service-acount@f5-7656-pdsoleng-dev.iam.gserviceaccount.com
+- tag: SET LIC KEY
+  values:
+  - value: <AUTOFILL EVAL LICENSE KEY>
+    when:
+      tag: LICENSE TYPE
+      values:
+      - byol
+  - value: Not Using for PAYG
+    when:
+      tag: LICENSE TYPE
+      values:
+      - payg
+- tag: STACK NAME
+  values:
+  - dp-as-<DEWPOINT JOB ID>
+- tag: SUBNET1 AZ1
+  values:
+  - subnet1
+- tag: EXT NETWORK
+  values:
+  - dewpt2
+- tag: EXT SUBNET
+  values:
+  - subnet2
+- tag: EXT PREFIX
+  values:
+  - 24
+- tag: INT NETWORK
+  values:
+  - dewpt3
+- tag: INT SUBNET
+  values:
+  - subnet3
+- tag: INT PREFIX
+  values:
+  - 24
+- tag: STACK
+  values:
+  - existing-stack
+- tag: SUPPORT
+  values:
+  - experimental
+- tag: TEMPLATE URL
+  values:
+  - https://raw.githubusercontent.com/F5Networks/f5-google-gdm-templates/<BRANCH>/<SUPPORT>/autoscale/waf/via-lb/<STACK>/<LICENSE FOLDER>/f5-<LICENSE TYPE>-autoscale-bigip-waf.py
+  - file://$PWD/../f5-cloud-factory/f5-google-gdm-templates/<SUPPORT>/autoscale/waf/via-lb/<STACK>/<LICENSE FOLDER>/f5-<LICENSE TYPE>-autoscale-bigip-waf.py
+- tag: DECLARATION URL
+  values:
+  - default
+  - https://cdn.f5.com/product/cloudsolutions/declarations/sample_02.json
