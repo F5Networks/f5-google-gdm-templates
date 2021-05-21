@@ -32,4 +32,4 @@ repo_metadata:
     gce:
         version: '3.12.0'
 comment_out_verify: ''
-bigip_image_version: '15-1-2-1-0-0-10'
+bigip_image_version: '16-0-1-1-0-0-6'
