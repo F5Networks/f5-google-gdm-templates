@@ -85,7 +85,7 @@ run_link_checker:
     - docker-executor
   only:
     refs:
-      # the current intent is to run only on main and release branches
+      #the current intent is to run only on main and release branches
       - main
       - /^R.*/
   except:
