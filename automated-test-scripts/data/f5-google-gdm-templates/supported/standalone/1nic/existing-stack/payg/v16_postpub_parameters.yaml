@@ -1,0 +1,35 @@
+ANALYTICS: 'no'
+APP PORT: 80
+AVAILABILITY ZONE: <REGION>-b
+AZ SHORT NAME: eu-w1
+BIGIP MODULES: ltm:nominal
+BIGIP VERSION: 16-0-1-1-0-0-6
+DECLARATION URL: https://f5-cft.s3.amazonaws.com/QA/sample_02.json
+IMAGE NAME: f5-bigip-<BIGIP VERSION>-payg-<IMAGE TYPE>-<IMAGE SUFFIX>
+IMAGE SUFFIX: '210129040615'
+IMAGE TYPE: best-25mbps
+INSTANCE TYPE: n1-standard-4
+LICENSE FOLDER: payg
+LICENSE PARAM: ''
+LICENSE TYPE: payg
+LOG LEVEL: silly
+MGMT PORT: 8443
+MGMT NETWORK SHARED VPC: None
+NETWORK: dewpt
+NETWORK PARAM: ',mgmtNetwork:''<NETWORK>'',mgmtSharedVpc:''<MGMT NETWORK SHARED VPC>'',mgmtSubnet:''<SUBNET1 AZ1>'',mgmtSubnetAddress:''MGMT_SUBNET_ADDRESS'''
+NIC COUNT: 1
+NTP SERVER: '169.254.169.254'
+PHONEHOME: 'no'
+PRIVATE IP TYPE: DYNAMIC
+PUBLIC IP: 'False'
+REGION: europe-west1
+SET LIC KEY: Not Using for PAYG
+STACK: existing-stack
+STACK NAME: dd-<DEWPOINT JOB ID>-<LICENSE TYPE>-<IMAGE TYPE>-<NIC COUNT>nic-<AZ
+  SHORT NAME>
+SUBNET1 AZ1: subnet1
+SUPPORT: supported
+TEMPLATE URL: https://raw.githubusercontent.com/F5Networks/f5-google-gdm-templates/master/<SUPPORT>/standalone/<NIC
+  COUNT>nic/<STACK>/<LICENSE FOLDER>/f5-<STACK>-<LICENSE TYPE>-<NIC COUNT>nic-bigip.py
+TIMEZONE: UTC
+USE SCHEMA: 'no'
