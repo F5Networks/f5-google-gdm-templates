@@ -124,7 +124,6 @@ As an alternative to deploying through the Azure Portal (GUI) each solution prov
 
 The following is an example configuration diagram for this solution deployment. {{ EXAMPLE_TEXT }}
 
-![Configuration Example](../images/azure-example-diagram.png)
 
 {% if nics != '1' and lb_method != 'api' -%}
 ## Post-Deployment Configuration
