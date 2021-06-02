@@ -1,13 +1,14 @@
 """ Template Generator main module """
-
+import sys
 import os
 import json
 import errno
 import base64
 import argparse
 import logging as log
+import subprocess
+from urllib.parse import quote
 import yaml
-
 from jinja2 import Environment, FileSystemLoader
 
 import master_helper  # pylint: disable=import-error
@@ -26,6 +27,14 @@ STRUCTURE_FILES = {
 }
 CLOUDS = STRUCTURE_FILES.keys()
 
+# Google Variables
+GOOGLE_PROJECT_ID = 'GOOGLE_PROJECT_ID'
+GOOGLE_PRIVATE_KEY_ID = 'GOOGLE_PRIVATE_KEY_ID'
+GOOGLE_PRIVATE_KEY = 'GOOGLE_PRIVATE_KEY'
+GOOGLE_CLIENT_EMAIL = 'GOOGLE_CLIENT_EMAIL'
+GOOGLE_CLIENT_ID = 'GOOGLE_CLIENT_ID'
+GOOGLE_LABELS = 'GOOGLE_LABELS'
+
 # load constants file
 with open(os.path.join(FACTORY_PATH, 'common/constants.yml')) as _f:
     CONST_DATA = yaml.full_load(_f.read())
@@ -35,6 +44,7 @@ F5_AZURE_CONTENT_VERSION = CONST_DATA['repo_metadata']['azure']['version']
 F5_AZURE_STACK_CONTENT_VERSION = CONST_DATA['repo_metadata']['azureStack']['version']
 F5_GOOGLE_TEMPLATE_VERSION = CONST_DATA['repo_metadata']['gce']['version']
 COMMENT_OUT = CONST_DATA['comment_out_verify']
+F5_BIGIP_IMAGE_VERSION = CONST_DATA['bigip_image_version']
 
 # dictionary contains F5 cloud libraries and paths
 REPO_DEPENDENCIES = CONST_DATA['repo_dependencies']
@@ -614,12 +624,131 @@ def process_cloud(cloud, release_prep):
         parser.parse_parameters(path=BASE_REPO_PATH, parameters=None, variables={})
 
 
+def _log_and_exit(message, err=''):
+    print(message)
+    sys.exit(err)
+
+
+def _call_subprocess(command, error_description):
+    try:
+        call_response = subprocess.call(command)
+    except Exception as err:  # pylint: disable=broad-except
+        _log_and_exit(err, error_description)
+    if call_response != 0:
+        _log_and_exit(error_description)
+
+
+def configure_google():
+    """Create doc string """
+    # Write key file
+    key_file_json = {
+        "type": "service_account",
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://accounts.google.com/o/oauth2/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+        "client_x509_cert_url":
+            "https://www.googleapis.com/robot/v1/metadata/x509/"  # + client_email suffix
+    }
+    key_file_json["project_id"] = os.environ.get(GOOGLE_PROJECT_ID)
+    key_file_json["private_key_id"] = os.environ.get(GOOGLE_PRIVATE_KEY_ID)
+    key_file_json["private_key"] = (os.environ.get(GOOGLE_PRIVATE_KEY)).replace('\\n', '\n')
+    key_file_json["client_email"] = os.environ.get(GOOGLE_CLIENT_EMAIL)
+    key_file_json["client_id"] = os.environ.get(GOOGLE_CLIENT_ID)
+    key_file_json["client_x509_cert_url"] = ''.join([key_file_json["client_x509_cert_url"],
+                                                     quote(key_file_json["client_email"])])
+
+    # Write out the google service account credentials file
+    with open('google_creds.json', 'w') as creds_file:
+        json.dump(key_file_json, creds_file)
+
+    # Configure gcloud CLI
+    _call_subprocess(["gcloud",
+                      "config",
+                      "set",
+                      "project",
+                      key_file_json["project_id"]],
+                     ('Unable to set default Google project')
+                     )
+    _call_subprocess(["gcloud",
+                      "auth",
+                      "activate-service-account",
+                      "--key-file=google_creds.json"],
+                     'Unable to login to Google'
+                     )
+
+
+def generate_constants():
+    """Create doc string """
+    results = {}
+    image_types = ['byol', 'payg']
+
+    gcloud_command = 'gcloud compute images list ' \
+                     '--project f5-7626-networks-public ' \
+                     '--format="json(name)" ' \
+                     '--filter="name ~ %IMAGE_VERSION%-%IMAGE_TYPE%" ' \
+                     '| jq -r .[].name'
+
+    for image_type in image_types:
+        response = subprocess.check_output(
+            gcloud_command.replace('%IMAGE_VERSION%',
+                                   F5_BIGIP_IMAGE_VERSION).replace('%IMAGE_TYPE%', image_type),
+            shell=True)
+        if not response:
+            raise Exception('Problem with processing image version '
+                            + F5_BIGIP_IMAGE_VERSION + ' and type ' + image_type)
+        results[image_type] = ["#" +
+                               image for image in response.decode('utf-8').strip().split('\n')
+                               ]
+
+    with open('template_generator/gce/constants.template', 'r') as f_to_read:
+        const_template = f_to_read.read()
+
+    if not const_template:
+        raise Exception('Problem with ready constants template file')
+
+    print(list(filter(lambda k: 'awf' in k, results['payg'])))
+
+    # Replacing PAYGs
+    const_template = const_template.replace(
+        '%PAYG_AWAF%',
+        '\n'.join(list(filter(lambda k: 'awf' in k, results['payg'])))
+    )
+    const_template = const_template.replace(
+        '%PAYG_BEST%',
+        '\n'.join(list(filter(lambda k: 'best' in k, results['payg'])))
+    )
+    const_template = const_template.replace(
+        '%PAYG_OTHERS%',
+        '\n'.join(list(filter(lambda k: 'best' not in k and 'awf' not in k, results['payg'])))
+    )
+
+    # Replacing BYOLs
+    const_template = const_template.replace('%BYOL%', '\n'.join(results['byol']))
+
+    # Replacing
+
+    # Replacing PAYG default image
+    const_template = const_template.replace(
+        '%PAYG_BEST_25MBPS%',
+        list(filter(lambda image: 'best' in image and '25mbps' in image, results['payg'])).pop()[1:]
+    )
+
+    # Replacing BYOL default image
+    const_template = const_template.replace(
+        '%BYOL_ALL_2LOC%',
+        list(filter(lambda image: '2boot' in image and 'all' in image, results['byol'])).pop()[1:]
+    )
+    with open('template_generator/gce/constants.jn2', 'w') as f_to_write:
+        f_to_write.write(const_template)
+
+
 def main(args):
     """ Main function - if run as a script """
     # if a specific cloud is provided, generate templates for only the clouds explicitly
     # specified.  Allows more than one for flexibility, such as --gce and --azure
     clouds_to_process = [i for i in CLOUDS if i in args.keys() and args[i]] or CLOUDS
-
+    configure_google()
+    generate_constants()
     # ok, now process clouds
     for cloud in clouds_to_process:
         if args[cloud]:

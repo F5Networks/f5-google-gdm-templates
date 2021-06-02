@@ -1,6 +1,6 @@
 google-standalone-test:
   parameters-files:
-    - automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/1nic/existing-stack/byol/v15_postpub_parameters.yaml
+    - automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/1nic/existing-stack/byol/v16_postpub_parameters.yaml
     - automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/1nic/existing-stack/byol/v14_postpub_parameters.yaml
   run: random
   random-num-of-tests: 1
