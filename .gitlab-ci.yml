@@ -178,7 +178,7 @@ scheduled_test_job:
 
 
 # This job gets triggered by the sprinkler.py script that get ran by the 'master_test_job' it ingests TEMPLATE_URL
-# and TEMPLATE_PARAMETERS which are passed down by the sprinkler.py script. Using the variables runs dewdrop with
+# And TEMPLATE_PARAMETERS which are passed down by the sprinkler.py script. Using the variables runs dewdrop with
 # the set environment variables
 dewdrop_test_run:
   image: ${ARTIFACTORY_SERVER}/ecosystems-cloudsolutions-docker-dev/dewdrop:$DEWDROP_IMAGE_ID
