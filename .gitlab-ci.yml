@@ -85,7 +85,7 @@ run_link_checker:
     - docker-executor
   only:
     refs:
-      #the current intent is to run only on main and release branches
+      # the current intent is to run only on main and release branches
       - main
       - /^R.*/
   except:
@@ -178,7 +178,7 @@ scheduled_test_job:
 
 
 # This job gets triggered by the sprinkler.py script that get ran by the 'master_test_job' it ingests TEMPLATE_URL
-# and TEMPLATE_PARAMETERS which are passed down by the sprinkler.py script. Using the variables runs dewdrop with
+# And TEMPLATE_PARAMETERS which are passed down by the sprinkler.py script. Using the variables runs dewdrop with
 # the set environment variables
 dewdrop_test_run:
   image: ${ARTIFACTORY_SERVER}/ecosystems-cloudsolutions-docker-dev/dewdrop:$DEWDROP_IMAGE_ID
@@ -206,11 +206,14 @@ dewdrop_test_run:
     - python /dewdrop/dewdrop-docker.py
 
 publish_to_github:
+  image: ${ARTIFACTORY_SERVER}/dockerhub-remote/node:8
   stage: release
   only:
-    - /(^publish-(\d+\.){1,2}(\d)-(\d+)?$)/
+    - /(^publish-(v\d*[1-9]*\.)(\d*[1-9]*\.)(\d))/
   script:
-    - apk add --no-cache jq
+    # install jq
+    - apt-get update
+    - apt-get install -y jq
     # Execute Release script to push source to github repo
     - ./cloud-tools/release-tool/publish_github.sh "$ALLOWED_DIRS" "$ALLOWED_FILES"
   variables:
