@@ -209,7 +209,7 @@ publish_to_github:
   image: ${ARTIFACTORY_SERVER}/dockerhub-remote/node:8
   stage: release
   only:
-    - /(^publish-v(\d+\.){1,2}(\d)?$)/
+    - /(^publish-(v\d*[1-9]*\.)(\d*[1-9]*\.)(\d))/
   script:
     # install jq
     - apt-get update
