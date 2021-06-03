@@ -206,16 +206,19 @@ dewdrop_test_run:
     - python /dewdrop/dewdrop-docker.py
 
 publish_to_github:
+  image: ${ARTIFACTORY_SERVER}/dockerhub-remote/node:8
   stage: release
   only:
-    - /(^publish-(\d+\.){1,2}(\d)-(\d+)?$)/
+    - /(^publish-(v\d*[1-9]*\.)(\d).(\d))/
   script:
-    - apk add --no-cache jq
+    # install jq
+    - apt-get update
+    - apt-get install -y jq
     # Execute Release script to push source to github repo
     - ./cloud-tools/release-tool/publish_github.sh "$ALLOWED_DIRS" "$ALLOWED_FILES"
   variables:
     ALLOWED_DIRS: "experimental supported .github"
-    ALLOWED_FILES: ".gitignore .gitattributes README.md google-bigip-version-matrix.md iapp-migration.md"
+    ALLOWED_FILES: ".gitignore .gitattributes README.md google-bigip-version-matrix.md iapp-migration.md slack-channel-statement.md"
     GITLAB_API_URL: "$GOOGLE_URL"
     GIT_HUB_API_TOKEN: "$GOOGLE_GITHUB_API_TOKEN"
     GITLAB_PRIVATE_TOKEN: "$GOOGLE_GITLAB_API_TOKEN"
