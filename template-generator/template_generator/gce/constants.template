@@ -1,5 +1,5 @@
 {% set version = latest_content_version %}
-{% set copyright = "2019" %}
+{% set copyright = "2021" %}
 {%- set images_list %}
   {%- if license_type == "payg" -%}
       %PAYG_BEST%
