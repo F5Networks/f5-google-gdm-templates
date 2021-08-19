@@ -26,7 +26,7 @@ On the Slack channel, you should **NEVER**:
 
 ## Copyright
 
-Copyright2014-2019 F5 Networks Inc.
+Copyright 2014-2021 F5 Networks Inc.
 
 
 ## License

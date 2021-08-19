@@ -471,7 +471,7 @@ parameter_list:
   sslPswd: "The SSL certificate .pfx password corresponding to the certificate you entered."
   tagValues: "Default key/value resource tags will be added to the resources in this deployment, if you would like the values to be unique adjust them as needed for each key."
   tenantId: "Your Azure service principal application tenant ID."
-  timeZone: "If you would like to change the time zone the BIG-IP uses, enter the time zone you want to use. This is based on the tz database found in /usr/share/zoneinfo (see the full list [here](https://github.com/F5Networks/f5-azure-arm-templates/blob/master/azure-timezone-list.md)). Example values: UTC, US/Pacific, US/Eastern, Europe/London or Asia/Singapore."
+  timeZone: "If you would like to change the time zone the BIG-IP uses, enter the time zone you want to use. This is based on the tz database found in /usr/share/zoneinfo (see the full list [here](https://github.com/F5Networks/f5-azure-arm-templates/blob/main/azure-timezone-list.md)). Example values: UTC, US/Pacific, US/Eastern, Europe/London or Asia/Singapore."
   uniqueLabel: "Unique Name for the deployment to be used when creating resources."
   vmScaleSetMinCount: "The minimum (and default) number of BIG-IP VEs that will be deployed into the VM Scale Set."
   vmScaleSetMaxCount: "The maximum number of BIG-IP VEs that can be deployed into the VM Scale Set."

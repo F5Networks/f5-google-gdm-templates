@@ -1,6 +1,6 @@
-# Copyright 2019 F5 Networks All rights reserved.
+# Copyright 2021 F5 Networks All rights reserved.
 #
-# Version 3.12.0
+# Version 3.13.0
 
 """Creates BIG-IP"""
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
@@ -298,7 +298,7 @@ def Metadata(context,group, storageName, licenseType):
   ALLOWUSAGEANALYTICS = str(context.properties['allowUsageAnalytics']).lower()
   if ALLOWUSAGEANALYTICS in ['yes', 'true']:
       CUSTHASH = 'CUSTOMERID=`/usr/bin/curl -s "http://metadata.google.internal/computeMetadata/v1/project/numeric-project-id" -H "Metadata-Flavor: Google" |sha512sum|cut -d " " -f 1`;\nDEPLOYMENTID=`/usr/bin/curl -s "http://metadata.google.internal/computeMetadata/v1/instance/id" -H "Metadata-Flavor: Google"|sha512sum|cut -d " " -f 1`;'
-      SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-existing-stack-same-net-cluster-payg-3nic-bigip.py,templateVersion:3.12.0,licenseType:payg"'
+      SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-existing-stack-same-net-cluster-payg-3nic-bigip.py,templateVersion:3.13.0,licenseType:payg"'
   else:
       CUSTHASH = '# No template analytics'
       SENDANALYTICS = ''
@@ -340,6 +340,7 @@ def Metadata(context,group, storageName, licenseType):
                         "--host localhost",
                         "--wait-for CUSTOM_CONFIG_DONE",
                         "--signal CLUSTER_DONE",
+                        "--port " + str(context.properties['mgmtGuiPort']),
                         "--delete-remote-primary-creds",
                         "--user srv_user",
                         "--delete-local-creds",
@@ -367,6 +368,7 @@ def Metadata(context,group, storageName, licenseType):
                         "--log-level " + str(context.properties['logLevel']),
                         "--host localhost",
                         "--wait-for CUSTOM_CONFIG_DONE",
+                        "--port " + str(context.properties['mgmtGuiPort']),
                         "--delete-remote-primary-creds",
                         "--signal CLUSTER_DONE",
                         "--user srv_user",

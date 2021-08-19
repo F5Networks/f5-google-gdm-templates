@@ -48,7 +48,7 @@ The following are prerequisites for the F5 failover-api 2 NIC GDM template:
 - All F5 Google templates include Application Services 3 Extension (AS3) v3.20.0 on the BIG-IP VE.  As of release 4.1.2, all supported templates give the option of including the URL of an AS3 declaration, which you can use to specify the BIG-IP configuration you want on your newly created BIG-IP VE(s).  In templates such as autoscale, where an F5-recommended configuration is deployed by default, specifying an AS3 declaration URL will override the default configuration with your declaration.   See the [AS3 documentation](https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/) for details on how to use AS3.
 - This template supports service discovery.  See the [Service Discovery section](#service-discovery) for details.
 - This template supports disabling the auto-phonehome system setting via the allowPhoneHome parameter. See [Overview of the Automatic Update Check and Automatic Phone Home features](https://support.f5.com/csp/article/K15000) for more information.
-- F5 has created a matrix that contains all of the tagged releases of the F5 Google GDM templates, and the corresponding BIG-IP versions, license types and throughput levels available for a specific tagged release. See the matrix [here](https://github.com/F5Networks/f5-google-gdm-templates/blob/master/google-bigip-version-matrix.md).
+- F5 has created a matrix that contains all of the tagged releases of the F5 Google GDM templates, and the corresponding BIG-IP versions, license types and throughput levels available for a specific tagged release. See the matrix [here](https://github.com/F5Networks/f5-google-gdm-templates/blob/main/google-bigip-version-matrix.md).
 - If you would like to view all available images, run the following command from the **gcloud** command line: ```$ gcloud compute images list --project f5-7626-networks-public | grep f5```
 - This directory now contains a schema file which helps manage the required fields and set defaults to optional fields.  For example, if you omit the property for NTP servers in your configuration file,  we set the default server to time.google.com.
 - Note that when configuring GCP failover, if no external public IPs are provisioned, a GCP alias IP range is required.
@@ -75,8 +75,9 @@ The following table lists the versions of BIG-IP that have been tested and valid
 
 | BIG-IP Version | Build | Solution | Status | Notes |
 | --- | --- | --- | --- | --- |
+| 16.0.1.1 | 0.0.6 | Standalone, Failover, Autoscale | |
 | 15.1.2.1 | 0.0.10 | Standalone, Failover, Autoscale | |
-| 14.1.4 | 0.0.11 | Standalone, Failover, Autoscale | |
+| 14.1.4.2 | 0.0.5 | Standalone, Failover, Autoscale | |
 | 13.1.3 | 0.0.6 | Standalone, Failover, Autoscale | F5 CFE requires BIG-IP 14.1 or later |
 | 12.1.5 | 0.0.2 | Standalone, Failover, Autoscale | Not Validated | F5 CFE requires BIG-IP 14.1 or later |
 
@@ -85,9 +86,6 @@ The following table lists the versions of BIG-IP that have been tested and valid
 
 **F5 Support** <br>
 Because this template has been created and fully tested by F5 Networks, it is fully supported by F5. This means you can get assistance if necessary from [F5 Technical Support](https://support.f5.com/csp/article/K44842449). You can modify the template itself if necessary, but if you modify any of the code outside of the lines ### START CUSTOM TMSH CONFIGURATION and ### END CUSTOM TMSH CONFIGURATION the template is no longer supported by F5.
-
-**Community Support** <br>
-We encourage you to use our [Slack channel](https://f5cloudsolutions.herokuapp.com) for discussion and assistance on F5 Google GDM templates. There are F5 employees who are members of this community who typically monitor the channel Monday-Friday 9-5 PST and will offer best-effort assistance. This slack channel community support should **not** be considered a substitute for F5 Technical Support. See the [Slack Channel Statement](https://github.com/F5Networks/f5-google-gdm-templates/blob/master/slack-channel-statement.md) for guidelines on using this channel.
 
 ## Deploying the template
 
@@ -210,7 +208,7 @@ This template supports associating GCP resources with up to two BIG-IP traffic g
 
 ## Service Discovery
 
-This template previously supported configuring service discovery using the f5.service_discovery iApp template.  That iApp has been deprecated and removed from this template.  You can now configure service discovery using the F5 AS3 extension, which is installed by all ARM templates by default.  See the official AS3 [documentation](https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/userguide/service-discovery.html) and the iApp migration [guide](https://github.com/F5Networks/f5-google-gdm-templates/blob/master/iapp-migration.md) for more information and examples.
+This template previously supported configuring service discovery using the f5.service_discovery iApp template.  That iApp has been deprecated and removed from this template.  You can now configure service discovery using the F5 AS3 extension, which is installed by all ARM templates by default.  See the official AS3 [documentation](https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/userguide/service-discovery.html) and the iApp migration [guide](https://github.com/F5Networks/f5-google-gdm-templates/blob/main/iapp-migration.md) for more information and examples.
 
 
 ### Documentation
@@ -290,7 +288,7 @@ You have a choice when it comes to filing issues:
 
 ## Copyright
 
-Copyright 2014-2019 F5 Networks Inc.
+Copyright 2014-2021 F5 Networks Inc.
 
 
 ## License
