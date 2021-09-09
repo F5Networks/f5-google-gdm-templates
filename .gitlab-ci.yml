@@ -12,6 +12,7 @@ stages:
   - sprinkle-tests
   - droplets
   - release
+  - post-release-tests
 
 # lint
 lint_generator:
@@ -30,8 +31,6 @@ lint_generator:
     - cd template-generator
     - pip install -r requirements.txt
     - make lint
-
-
 
 # validate the template generator 'source' file(s) are always in sync with the
 # generated content - i.e. running 'make all' after checking out a stable branch
@@ -78,6 +77,8 @@ run_smoke_tests:
     - make run_smoke_tests
 
 # validate README file(s) only contain links that respond with 200 OK
+# this pre-release job only checks internal links to avoid failures
+# when tag version is unpublished
 run_link_checker:
   image: ${ARTIFACTORY_SERVER}/dockerhub-remote/node:10
   stage: smoke-tests
@@ -85,9 +86,9 @@ run_link_checker:
     - docker-executor
   only:
     refs:
-      # the current intent is to run only on main and release branches
-      - main
+      # run only on release branch and develop
       - /^R.*/
+      - develop
   except:
     refs:
       - schedules
@@ -97,8 +98,6 @@ run_link_checker:
       - $RELEASE_RUNTIME_INIT_TESTS == "true"
   script:
     - make link_check
-  allow_failure: true
-
 
 pre_release_test_job:
   stage: sprinkle-tests
@@ -223,3 +222,22 @@ publish_to_github:
     GITLAB_API_URL: "$GOOGLE_URL"
     GIT_HUB_API_TOKEN: "$GOOGLE_GITHUB_API_TOKEN"
     GITLAB_PRIVATE_TOKEN: "$GOOGLE_GITLAB_API_TOKEN"
+
+# validate README file(s) only contain links that respond with 200 OK
+run_link_checker_release:
+  image: ${ARTIFACTORY_SERVER}/dockerhub-remote/node:10
+  stage: post-release-tests
+  tags:
+    - docker-executor
+  only:
+    # run only after release has been published
+    - /(^publish-(v\d*[1-9]*\.)(\d*[1-9]*\.)(\d))/
+  except:
+    refs:
+      - schedules
+      - triggers
+      - pipelines
+    variables:
+      - $RELEASE_RUNTIME_INIT_TESTS == "true"
+  script:
+    - make link_check_release
