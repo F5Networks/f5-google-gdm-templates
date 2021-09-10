@@ -220,7 +220,7 @@ publish_to_github:
     ALLOWED_DIRS: "experimental supported .github"
     ALLOWED_FILES: ".gitignore .gitattributes README.md google-bigip-version-matrix.md iapp-migration.md"
     GITLAB_API_URL: "$GOOGLE_URL"
-    GIT_HUB_API_TOKEN: "$GOOGLE_GITHUB_API_TOKEN"
+    GITHUB_API_TOKEN: "$GOOGLE_GITHUB_API_TOKEN"
     GITLAB_PRIVATE_TOKEN: "$GOOGLE_GITLAB_API_TOKEN"
 
 # validate README file(s) only contain links that respond with 200 OK
