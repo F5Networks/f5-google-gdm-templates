@@ -75,7 +75,7 @@ resources:
    provisionPublicIP: yes
    ### If you would like to view all available images, run the following command from the **gcloud** command line: ```$ gcloud compute images list --project f5-7626-networks-public | grep f5```
    ### (OPTIONAL) BIG-IP image, valid choices include:
-   {{ constants.images_list }}
+{{ constants.images_list }}
    imageName: {{ constants.images_list_default}}
    ### (OPTIONAL) Instance type assigned to BIG-IP, for example 'n1-standard-4'.
    instanceType: n1-standard-4
