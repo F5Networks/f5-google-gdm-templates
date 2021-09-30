@@ -29,12 +29,12 @@ def Instance(context, network1SharedVpc):
             'networkInterfaces': [
                 {
                     'network': ''.join([COMPUTE_URL_BASE, 'projects/',
-                                        network1SharedVpc, '/global/networks/',
-                                        context.properties['network1']]),
+                                        context.env['project'], '/global/networks/',
+                                        context.properties['mgmtNetwork']]),
                     'subnetwork': ''.join([COMPUTE_URL_BASE, 'projects/',
-                                           network1SharedVpc, '/regions/',
+                                           context.env['project'], '/regions/',
                                            context.properties['region'], '/subnetworks/',
-                                           context.properties['subnet1']]),
+                                           context.properties['mgmtSubnet']]),
                     'accessConfigs': [
                         {
                             'name': 'External NAT',
@@ -44,12 +44,12 @@ def Instance(context, network1SharedVpc):
                 },
                 {
                     'network': ''.join([COMPUTE_URL_BASE, 'projects/',
-                                        context.env['project'], '/global/networks/',
-                                        context.properties['mgmtNetwork']]),
+                                        network1SharedVpc, '/global/networks/',
+                                        context.properties['network1']]),
                     'subnetwork': ''.join([COMPUTE_URL_BASE, 'projects/',
-                                           context.env['project'], '/regions/',
+                                           network1SharedVpc, '/regions/',
                                            context.properties['region'], '/subnetworks/',
-                                           context.properties['mgmtSubnet']]),
+                                           context.properties['subnet1']]),
                     'accessConfigs': []
                 }
             ]

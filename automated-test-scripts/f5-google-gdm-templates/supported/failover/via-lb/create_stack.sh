@@ -41,9 +41,19 @@ if [[ "<PUBLIC IP>" == "True" ]]; then
 else
     extra_params+=",provisionPublicIP:'no'"
 fi
-
+# setup shared vpc
+if [[ "<EXT NETWORK SHARED VPC>" == "None" ]]; then
+    network1='<EXT NETWORK>'
+    subnet1='<EXT SUBNET>'
+else
+    network1='dewpt2'
+    subnet1='subnet2'
+fi
+map_to_use="NETWORK_1:${network1}, SUBNET_1:${subnet1}"
+network_param=$(map "<NETWORK PARAM>" "$map_to_use")
+echo "Network Parm: $network_param"
 # setup Required parameters - note, not able to handle spaces in <app port> and <ntp server>, spaces in syntax work fine when not using dewpoint.
-properties="region:'<REGION>',availabilityZone1:'<AVAILABILITY ZONE>',imageName:'<IMAGE NAME>',instanceType:'<INSTANCE TYPE>',logLevel:'<LOG LEVEL>',numberOfForwardingRules:<NUM FORWARDING RULES>,numberOfIntForwardingRules:<NUM INTERNAL FORWARDING RULES>,applicationPort:'<APP PORT>',restrictedSrcAddress:${source_cidr},restrictedSrcAddressApp:${source_cidr},bigIpModules:'<BIGIP MODULES>',serviceAccount:'<SERVICE ACCOUNT>',declarationUrl:'<DECLARATION URL>',allowUsageAnalytics:<ANALYTICS>,allowPhoneHome:<PHONEHOME><LICENSE PARAM><NETWORK PARAM>${optional_parm}${extra_params}"
+properties="region:'<REGION>',availabilityZone1:'<AVAILABILITY ZONE>',imageName:'<IMAGE NAME>',instanceType:'<INSTANCE TYPE>',logLevel:'<LOG LEVEL>',numberOfForwardingRules:<NUM FORWARDING RULES>,numberOfIntForwardingRules:<NUM INTERNAL FORWARDING RULES>,applicationPort:'<APP PORT>',restrictedSrcAddress:${source_cidr},restrictedSrcAddressApp:${source_cidr},bigIpModules:'<BIGIP MODULES>',serviceAccount:'<SERVICE ACCOUNT>',declarationUrl:'<DECLARATION URL>',allowUsageAnalytics:<ANALYTICS>,allowPhoneHome:<PHONEHOME><LICENSE PARAM>${network_param}${optional_parm}${extra_params}"
 labels="delete=true"
 gcloud="gcloud deployment-manager deployments create <STACK NAME> --template $tmpl_file --labels $labels --properties $properties"
 echo $gcloud
