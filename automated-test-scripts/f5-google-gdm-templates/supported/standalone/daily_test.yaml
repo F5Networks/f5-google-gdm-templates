@@ -2,6 +2,8 @@
 name: Google standalone <IMAGE NAME> <NIC COUNT>-nic <LICENSE TYPE> <AVAILABILITY ZONE>
 onStart:
 - ../../common/helper_init.sh
+- ../../common/create_network_stack.sh
+- ../../common/verify_create_network.sh
 - ../../common/create_bastion.sh
 - ./create_stack.sh
 - ../../common/verify_create.sh
@@ -25,8 +27,12 @@ onStart:
 - ../../common/traffic_test.sh
 - ../../common/delete_stack.sh
 - ../../common/verify_delete.sh
+- ../../common/delete_network_stack.sh
+- ../../common/verify_delete_network.sh
 onFail:
 - ../../common/capture_logs.sh
 - ../../common/run_failure_tests.sh
 - ../../common/delete_stack.sh
 - ../../common/verify_delete.sh
+- ../../common/delete_network_stack.sh
+- ../../common/verify_delete_network.sh

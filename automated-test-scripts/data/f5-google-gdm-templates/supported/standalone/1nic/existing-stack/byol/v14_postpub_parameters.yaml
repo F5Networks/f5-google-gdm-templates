@@ -16,9 +16,10 @@ LICENSE TYPE: byol
 LOG LEVEL: silly
 MGMT PORT: 8443
 MGMT NETWORK SHARED VPC: None
-NETWORK: dewpt
-NETWORK PARAM: ',mgmtNetwork:''<NETWORK>'',mgmtSharedVpc:''<MGMT NETWORK SHARED VPC>'',mgmtSubnet:''<SUBNET1 AZ1>'',mgmtSubnetAddress:''MGMT_SUBNET_ADDRESS'''
+NETWORK: dd-<DEWPOINT JOB ID>-network0-network
+NETWORK PARAM: ',mgmtNetwork:''MGMT_NET'',mgmtSharedVpc:''<MGMT NETWORK SHARED VPC>'',mgmtSubnet:''MGMT_SUBNET'',mgmtSubnetAddress:''MGMT_SUBNET_ADDRESS'''
 NIC COUNT: 1
+NUMBER NETWORKS: 2
 NTP SERVER: '169.254.169.254'
 PHONEHOME: 'no'
 PRIVATE IP TYPE: STATIC
@@ -28,7 +29,7 @@ SET LIC KEY: <AUTOFILL EVAL LICENSE KEY>
 STACK: existing-stack
 STACK NAME: dd-<DEWPOINT JOB ID>-<LICENSE TYPE>-<IMAGE TYPE>-<NIC COUNT>nic-<AZ SHORT
   NAME>
-SUBNET1 AZ1: subnet1
+SUBNET1 AZ1: dd-<DEWPOINT JOB ID>-subnet0-subnet
 SUPPORT: supported
 TEMPLATE URL: https://raw.githubusercontent.com/F5Networks/f5-google-gdm-templates/master/<SUPPORT>/standalone/<NIC
   COUNT>nic/<STACK>/<LICENSE FOLDER>/f5-<STACK>-<LICENSE TYPE>-<NIC COUNT>nic-bigip.py

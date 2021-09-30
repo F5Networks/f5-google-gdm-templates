@@ -8,9 +8,9 @@ AZ SHORT NAME: us-w1
 BIGIP MODULES: ltm:nominal
 BIGIP VERSION: 14-1-4-4-0-0-4
 DECLARATION URL: https://cdn.f5.com/product/cloudsolutions/declarations/sample_02.json
-EXT NETWORK: dewpt2
+EXT NETWORK: dd-<DEWPOINT JOB ID>-network1-network
 EXT PREFIX: 24
-EXT SUBNET: subnet2
+EXT SUBNET: dd-<DEWPOINT JOB ID>-subnet1-subnet
 IMAGE NAME: f5-bigip-<BIGIP VERSION>-payg-<IMAGE TYPE>-<IMAGE SUFFIX>
 IMAGE SUFFIX: '210813022117'
 IMAGE TYPE: good-200mbps
@@ -19,8 +19,9 @@ LICENSE FOLDER: payg
 LICENSE PARAM: ''
 LICENSE TYPE: payg
 MGMT PORT: 443
-NETWORK: dewpt
+NETWORK: dd-<DEWPOINT JOB ID>-network0-network
 NIC COUNT: 2
+NUMBER NETWORKS: 3
 NTP SERVER: 0.us.pool.ntp.org
 NUM FORWARDING RULES: 3
 PHONEHOME: 'no'
@@ -29,7 +30,7 @@ REGION: us-west1
 SERVICE ACCOUNT: dewpt-ha-service-account@f5-7656-pdsoleng-dev.iam.gserviceaccount.com
 STACK: existing-stack
 STACK NAME: dewdrop-<DEWPOINT JOB ID>
-SUBNET1 AZ1: subnet1
+SUBNET1 AZ1: dd-<DEWPOINT JOB ID>-subnet0-subnet
 SUPPORT: supported
 TEMPLATE PREFIX: existing-stack
 TEMPLATE URL: file://$PWD/<SUPPORT>/failover/same-net/via-api/<NIC

@@ -10,23 +10,24 @@ AZ SHORT NAME: na-ne1
 BIGIP MODULES: ltm:nominal
 BIGIP VERSION: 16-1-0-0-0-19
 DECLARATION URL: https://cdn.f5.com/product/cloudsolutions/declarations/sample_02.json
-EXT NETWORK: dewpt2
+EXT NETWORK: dd-<DEWPOINT JOB ID>-network1-network
 EXT PREFIX: 24
-EXT SUBNET: subnet2
+EXT SUBNET: dd-<DEWPOINT JOB ID>-subnet1-subnet
 IMAGE NAME: f5-bigip-<BIGIP VERSION>-byol-<IMAGE TYPE>-<IMAGE SUFFIX>
 IMAGE SUFFIX: '210623021026'
 IMAGE TYPE: all-modules-1boot-loc
 INSTANCE TYPE: n1-standard-8
-INT NETWORK: dewpt3
+INT NETWORK: dd-<DEWPOINT JOB ID>-network2-network
 INT PREFIX: 24
-INT SUBNET: subnet3
+INT SUBNET: dd-<DEWPOINT JOB ID>-subnet2-subnet
 LICENSE FOLDER: byol
 LICENSE PARAM: ',licenseKey1:''<AUTOFILL EVAL LICENSE KEY>'',licenseKey2:''<AUTOFILL
   EVAL LICENSE KEY 2>'''
 LICENSE TYPE: byol
 MGMT PORT: 443
-NETWORK: dewpt
+NETWORK: dd-<DEWPOINT JOB ID>-network0-network
 NIC COUNT: 3
+NUMBER NETWORKS: 4
 NTP SERVER: 0.us.pool.ntp.org
 NUM FORWARDING RULES: 3
 PHONEHOME: 'no'
@@ -35,7 +36,7 @@ REGION: northamerica-northeast1
 SERVICE ACCOUNT: dewpt-ha-service-account@f5-7656-pdsoleng-dev.iam.gserviceaccount.com
 STACK: existing-stack
 STACK NAME: dewdrop-<DEWPOINT JOB ID>
-SUBNET1 AZ1: subnet1
+SUBNET1 AZ1: dd-<DEWPOINT JOB ID>-subnet0-subnet
 SUPPORT: supported
 TEMPLATE PREFIX: existing-stack
 TEMPLATE URL: https://raw.githubusercontent.com/F5Networks/f5-google-gdm-templates/master/<SUPPORT>/failover/same-net/via-api/<NIC
