@@ -6,12 +6,12 @@ AUTOFILL PASSWORD: hqxDg3pHNdas
 AVAILABILITY ZONE: <REGION>-b
 AZ SHORT NAME: us-e4
 BIGIP MODULES: ltm:nominal-afm:nominal
-BIGIP VERSION: 15-1-2-1-0-0-10
+BIGIP VERSION: 15-1-4-0-0-47
 DECLARATION URL: https://cdn.f5.com/product/cloudsolutions/declarations/sample_02.json
 EXT NETWORK: dd-<DEWPOINT JOB ID>-network1-network
 EXT SUBNET: dd-<DEWPOINT JOB ID>-subnet1-subnet
 IMAGE NAME: f5-bigip-<BIGIP VERSION>-payg-<IMAGE TYPE>-<IMAGE SUFFIX>
-IMAGE SUFFIX: '200618231635'
+IMAGE SUFFIX: '210819150239'
 IMAGE TYPE: best-1gbps
 INSTANCE TYPE: n1-standard-4
 INT NETWORK: dd-<DEWPOINT JOB ID>-network2-network
