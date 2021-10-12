@@ -17,11 +17,18 @@ help:
 link_check:
 	echo "Running link checker against all markdown files";
 	cd ${LINK_CHECK_DIR} && npm install && cd ${CUR_DIR};
-	${LINK_CHECK_DIR}/link_checker.sh ${PROJECT_DIR} "cloud-tools node_modules archived"
+	${LINK_CHECK_DIR}/link_checker.sh ${PROJECT_DIR} "cloud-tools node_modules archived template-generator" link_checker_config.json
+
+link_check_release:
+	echo "Running link checker against all markdown files";
+	cd ${LINK_CHECK_DIR} && npm install && cd ${CUR_DIR};
+	${LINK_CHECK_DIR}/link_checker.sh ${PROJECT_DIR} "cloud-tools node_modules archived template-generator" link_checker_config_release.json
+
 gdm_lint:
 	echo "Running linter (any error will result in non-zero exit code)";
 	pip install -r cloud-tools/linters/requirements.txt;
 	cd f5-google-gdm-templates-v2 && pylint -j 0 examples && yamllint -s .;
+
 run_crawler:
 	echo "Running crawler against cloud factory artifacts";
 	cd ${CRAWLER_DIR} && bash ./run_crawler.sh && cd ${CUR_DIR};

@@ -3,6 +3,8 @@ name: Google failover via-api <IMAGE NAME> <NIC COUNT>nic <LICENSE TYPE> <AVAILA
 # Since production-stack only for now, just check GDM template create happens and then delete
 onStart:
 - ../../../common/helper_init.sh
+- ../../../common/create_network_stack.sh
+- ../../../common/verify_create_network.sh
 - ../../../common/create_bastion.sh
 - ./create_stack.sh
 - ../../../common/verify_create.sh
@@ -34,6 +36,8 @@ onStart:
 - ../../../common/delete_stack.sh
 - ../../../common/delete_route_table.sh
 - ../../../common/verify_delete.sh
+- ../../../common/delete_network_stack.sh
+- ../../../common/verify_delete_network.sh
 onFail:
 - ../../../common/capture_logs.sh
 - ../../../common/run_failure_tests.sh
@@ -41,3 +45,5 @@ onFail:
 - ../../../common/delete_stack.sh
 - ../../../common/delete_route_table.sh
 - ../../../common/verify_delete.sh
+- ../../../common/delete_network_stack.sh
+- ../../../common/verify_delete_network.sh

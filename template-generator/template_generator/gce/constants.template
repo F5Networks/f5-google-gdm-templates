@@ -2,14 +2,14 @@
 {% set copyright = "2021" %}
 {%- set images_list %}
   {%- if license_type == "payg" -%}
-      %PAYG_BEST%
+%PAYG_BEST%
      {%- if type == "autoscale" and solution == "waf" %}
-      %PAYG_AWAF%
+%PAYG_AWAF%
      {%- else %}
-      %PAYG_OTHERS%
+%PAYG_OTHERS%
      {%- endif %}
    {%- else %}
-      %BYOL%
+%BYOL%
    {%- endif %}
 {%- endset %}
 {%- set images_list_default %}

@@ -44,11 +44,19 @@ else
 fi
 echo "Extra parameters: ${extra_params}"
 
+# setup shared vpc
+if [[ "<EXT NETWORK SHARED VPC>" == "None" ]]; then
+    network1='<EXT NETWORK>'
+    subnet1='<EXT SUBNET>'
+else
+    network1='dewpt2'
+    subnet1='subnet2'
+fi
 # Run GDM template
 if [[ "<NIC COUNT>" == "3" ]]; then
-    gcloud deployment-manager deployments create <STACK NAME> --template $tmpl_file --labels "delete=true" --properties "region:'<REGION>',availabilityZone1:'<AVAILABILITY ZONE>',availabilityZone2:'<AVAILABILITY ZONE2>',mgmtNetwork:'<NETWORK>',mgmtSubnet:'<SUBNET1 AZ1>',network1:'<EXT NETWORK>',network1SharedVpc:'<EXT NETWORK SHARED VPC>',subnet1:'<EXT SUBNET>',mask1:'<EXT PREFIX>',network2:'<INT NETWORK>',subnet2:'<INT SUBNET>',mask2:'<INT PREFIX>',imageName:'<IMAGE NAME>',instanceType:'<INSTANCE TYPE>',logLevel:'silly',mgmtGuiPort:'<MGMT PORT>',bigIpModules:'<BIGIP MODULES>',serviceAccount:'<SERVICE ACCOUNT>',allowUsageAnalytics:'<ANALYTICS>',allowPhoneHome:<PHONEHOME>,declarationUrl:'<DECLARATION URL>',numberOfForwardingRules:'<NUM FORWARDING RULES>',ntpServer:'<NTP SERVER>',timezone:'<TIMEZONE>'<LICENSE PARAM>${extra_params}"
+    gcloud deployment-manager deployments create <STACK NAME> --template $tmpl_file --labels "delete=true" --properties "region:'<REGION>',availabilityZone1:'<AVAILABILITY ZONE>',availabilityZone2:'<AVAILABILITY ZONE2>',mgmtNetwork:'<NETWORK>',mgmtSubnet:'<SUBNET1 AZ1>',network1:${network1},network1SharedVpc:'<EXT NETWORK SHARED VPC>',subnet1:${subnet1},mask1:'<EXT PREFIX>',network2:'<INT NETWORK>',subnet2:'<INT SUBNET>',mask2:'<INT PREFIX>',imageName:'<IMAGE NAME>',instanceType:'<INSTANCE TYPE>',logLevel:'silly',mgmtGuiPort:'<MGMT PORT>',bigIpModules:'<BIGIP MODULES>',serviceAccount:'<SERVICE ACCOUNT>',allowUsageAnalytics:'<ANALYTICS>',allowPhoneHome:<PHONEHOME>,declarationUrl:'<DECLARATION URL>',numberOfForwardingRules:'<NUM FORWARDING RULES>',ntpServer:'<NTP SERVER>',timezone:'<TIMEZONE>'<LICENSE PARAM>${extra_params}"
 elif [[ "<NIC COUNT>" == "2"  ]]; then
-    gcloud deployment-manager deployments create <STACK NAME> --template $tmpl_file --labels "delete=true" --properties "region:'<REGION>',availabilityZone1:'<AVAILABILITY ZONE>',availabilityZone2:'<AVAILABILITY ZONE2>',mgmtNetwork:'<NETWORK>',mgmtSubnet:'<SUBNET1 AZ1>',network1:'<EXT NETWORK>',network1SharedVpc:'<EXT NETWORK SHARED VPC>',subnet1:'<EXT SUBNET>',mask1:'<EXT PREFIX>',imageName:'<IMAGE NAME>',instanceType:'<INSTANCE TYPE>',logLevel:'silly',mgmtGuiPort:'<MGMT PORT>',bigIpModules:'<BIGIP MODULES>',serviceAccount:'<SERVICE ACCOUNT>',allowUsageAnalytics:'<ANALYTICS>',allowPhoneHome:<PHONEHOME>,declarationUrl:'<DECLARATION URL>',numberOfForwardingRules:'<NUM FORWARDING RULES>',ntpServer:'<NTP SERVER>',timezone:'<TIMEZONE>'<LICENSE PARAM>${extra_params}"
+    gcloud deployment-manager deployments create <STACK NAME> --template $tmpl_file --labels "delete=true" --properties "region:'<REGION>',availabilityZone1:'<AVAILABILITY ZONE>',availabilityZone2:'<AVAILABILITY ZONE2>',mgmtNetwork:'<NETWORK>',mgmtSubnet:'<SUBNET1 AZ1>',network1:${network1},network1SharedVpc:'<EXT NETWORK SHARED VPC>',subnet1:${subnet1},mask1:'<EXT PREFIX>',imageName:'<IMAGE NAME>',instanceType:'<INSTANCE TYPE>',logLevel:'silly',mgmtGuiPort:'<MGMT PORT>',bigIpModules:'<BIGIP MODULES>',serviceAccount:'<SERVICE ACCOUNT>',allowUsageAnalytics:'<ANALYTICS>',allowPhoneHome:<PHONEHOME>,declarationUrl:'<DECLARATION URL>',numberOfForwardingRules:'<NUM FORWARDING RULES>',ntpServer:'<NTP SERVER>',timezone:'<TIMEZONE>'<LICENSE PARAM>${extra_params}"
 fi
 # clean up file on disk
 rm -f $tmpl_file

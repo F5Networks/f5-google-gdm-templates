@@ -16,6 +16,8 @@ BASTION_IP=$(cat ${STATE_FILE} | jq -r '.proxyAddress')
 
 # Check if a bastion host/deployment was created. If so, check whether it's provisioned
 if [[ "<PUBLIC IP>" == "False" ]]; then
+# add fw tag
+    gcloud compute instances add-tags bastion-<DEWPOINT JOB ID> --tags=mgmtfw-<STACK NAME> --zone=<AVAILABILITY ZONE>
     # Have Dewdrop implicitly check GDM for 'failure case' (where response is expectFailValue)
     # Not using an explicit succcess check here; success check is preformed by checking 'verify_response'
     gcloud deployment-manager deployments describe bastion-<DEWPOINT JOB ID>
