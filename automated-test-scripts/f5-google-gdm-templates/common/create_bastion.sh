@@ -42,7 +42,7 @@ if [[ "<PUBLIC IP>" == "False" ]]; then
             subnet1='subnet2'
         fi
     fi
-    properties="region:'<REGION>',zone:'<AVAILABILITY ZONE>',instanceType:'n1-standard-1',osImage:'projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts',mgmtNetwork:'${mgmt_net}',mgmtSubnet:'${mgmt_subnet}',network1:'${network1}',subnet1:'${subnet1}'${shared_vpcs}"
+    properties="region:'<REGION>',zone:'<AVAILABILITY ZONE>',instanceType:'n1-standard-1',osImage:'projects/ubuntu-os-cloud/global/images/family/ubuntu-1804-lts',mgmtNetwork:'${mgmt_net}',mgmtSubnet:'${mgmt_subnet}',network1:'${network1}',subnet1:'${subnet1}'${shared_vpcs}"
     echo $properties
     gcloud deployment-manager deployments create bastion-<DEWPOINT JOB ID>  --labels "delete=true" --template ${TMP_DIR}/f5-bastion-template.py --properties $properties
 else
