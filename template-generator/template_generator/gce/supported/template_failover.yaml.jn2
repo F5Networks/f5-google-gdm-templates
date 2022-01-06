@@ -48,7 +48,7 @@ resources:
    network1SharedVpc: None
    ### (REQUIRED) Specify the subnet of the Network that the BIG-IP should use for application traffic, for example 'my-application-subnetwork'.
    subnet1:
-   ### (OPTIONAL) Enter None if alias IP failover is not required. Enter the alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'. A list of alias IPs can be provided, separated by a space. For example, 'IE 10.x.x.16/28 10.x.x.32/28'.
+   ### (OPTIONAL) Enter None if alias IP failover is not required. Enter the alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'. A list of alias IPs can be provided, separated by a semicolon. For example, 'IE 10.x.x.16/28;10.x.x.32/28'.
    aliasIp: None
  {%- if stack == "existing-stack" %}
    ### (OPTIONAL) Enter the number of forwarding rules to create, for example '1'.  All integers from 1 to the max quota for the forwarding rules resource type are allowed.
