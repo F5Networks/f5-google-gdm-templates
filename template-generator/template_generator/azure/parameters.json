@@ -509,9 +509,9 @@
             "metadata": {
             "description":
             {%- if type == 'failover'%}
-                "This parameter specifies where the additional NICs go, use the default value of **OPTIONAL** if **0** was selected for the parameter **numberOfAdditionalNics**.  Otherwise this value must be a semi-colon delimited string of subnets, equal to the number of additional NICs being deployed.  For example, for 2 additional NICs you would use: **subnet01;subnet02**. **Note**: Ensure there are no spaces and the correct number of subnets are provided based on the value selected in **numberOfAdditionalNics**. **Important**: The subnet you provide for each additional NIC **must** be unique."
+                "This parameter specifies where the additional NICs go, use the default value of **OPTIONAL** if **0** was selected for the parameter **numberOfAdditionalNics**.  Otherwise this value must be a semicolon delimited string of subnets, equal to the number of additional NICs being deployed.  For example, for 2 additional NICs you would use: **subnet01;subnet02**. **Note**: Ensure there are no spaces and the correct number of subnets are provided based on the value selected in **numberOfAdditionalNics**. **Important**: The subnet you provide for each additional NIC **must** be unique."
             {%- else -%}
-                "This parameter specifies where the additional NICs go.  This value must be a semi-colon delimited string of subnets, equal to the number of additional NICs being deployed.  For example, for 2 additional NICs you would use: **subnet01;subnet02**. **Note**: Ensure there are no spaces and the correct number of subnets are provided based on the value selected in **numberOfAdditionalNics**. **Important**: The subnet you provide for each additional NIC **must** be unique."
+                "This parameter specifies where the additional NICs go.  This value must be a semicolon delimited string of subnets, equal to the number of additional NICs being deployed.  For example, for 2 additional NICs you would use: **subnet01;subnet02**. **Note**: Ensure there are no spaces and the correct number of subnets are provided based on the value selected in **numberOfAdditionalNics**. **Important**: The subnet you provide for each additional NIC **must** be unique."
             {% endif %}
             },
             "type": "string"
@@ -630,7 +630,7 @@
         "notificationEmail": {
             "defaultValue": "OPTIONAL",
             "metadata": {
-                "description": "If you want email notifications on scale events, specify an email address, otherwise leave the parameter as **OPTIONAL**. Note: You can specify multiple emails by separating them with a semi-colon, such as *email@domain.com;email2@domain.com*."
+                "description": "If you want email notifications on scale events, specify an email address, otherwise leave the parameter as **OPTIONAL**. Note: You can specify multiple emails by separating them with a semicolon, such as *email@domain.com;email2@domain.com*."
             },
             "type": "string"
         },

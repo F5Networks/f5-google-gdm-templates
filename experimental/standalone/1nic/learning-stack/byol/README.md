@@ -105,7 +105,7 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | imageName | Yes | Enter the BIG-IP image name |
 | instanceType | Yes | Instance type assigned to the BIG-IP, for example 'n1-standard-4'. |
 | manGuiPort | Yes | Enter the BIG-IP Management Port, the default is '8443'. |
-| bigIpModules | Yes | Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'. |
+| bigIpModules | Yes | Enter a hyphen-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal-asm:nominal'. |
 | allowUsageAnalytics | Yes | This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent. |
 | logLevel | No | Log setting, used to set log level on scripts used during deployment. Acceptable values are - error, warn, info, verbose, debug, silly. The default is 'info'. |
 | declarationUrl | Yes | URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration. For example, ' https://cdn.f5.com/product/cloudsolutions/declarations/sample_01.json ' |

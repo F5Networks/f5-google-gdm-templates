@@ -121,7 +121,7 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | licenseKey1 | Yes | Enter the BIG-IP license key. For example, 'CTASW-GVZHE-FYVIM-XMOUP-SJSTBXX'. |
 | ntpServer | No | (Optional) List NTP servers separated by a space, for example 'pool.ntp.org'. The default is 'time.google.com'. |
 | timezone | No | (Optional) Enter the Olson timezone string from /usr/share/zoneinfo. The default is 'UTC'. See the TZ column here (https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) for legal values. For example, 'US/Eastern'. |
-| bigIpModules | No | Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'. |
+| bigIpModules | No | Enter a hyphen-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal-asm:nominal'. |
 | allowUsageAnalytics | Yes | This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent. |
 | allowPhoneHome | No | This deployment can provide F5 with high-level device use information to optimize development resources. If you select **no** the information is not sent. |
 | logLevel | No | (Optional) Log setting, used to set log level on scripts used during deployment. Acceptable values are - error, warn, info, verbose, debug, silly. The default is 'info'. |
