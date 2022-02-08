@@ -113,7 +113,7 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | mgmtSubnet | Yes | Specify the name of the subnet to use for management traffic, for example 'my-management-subnetwork'. |
 | imageName | Yes | BIG-IP image name. |
 | instanceType | Yes | Instance type assigned to BIG-IP, for example 'n1-standard-4'. |
-| bigIpModules | No | Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'. |
+| bigIpModules | No | Enter a hyphen-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal-asm:nominal'. |
 | serviceAccount | Yes | Enter the Google service account to use for autoscale API calls, for example 'username@projectname.iam.serviceaccount.com'. Please note that this service account is necessary for one BIG-IP to communicate with the other, so the permissions should include access to the storage bucket. Refer [here](https://clouddocs.f5.com/products/extensions/f5-cloud-failover/latest/userguide/gcp.html#create-and-assign-an-iam-role) for instructions on how to create the IAM service account with sufficient access. |
 | targetSize | Yes | Enter the number of instances to start. |
 | minReplicas | Yes | Enter the minimum number of instances autoscale policy will scale down to. |

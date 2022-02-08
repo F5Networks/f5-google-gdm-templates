@@ -121,7 +121,7 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | subnet2 | Yes | Specify the name of the Subnet of the Network that BIG-IP should use for internal application traffic, for example 'my-internal-subnetwork'. |
 | licenseKey1 | Yes | Enter the BIG-IP license key, for example 'CTASW-GVZHE-FYVIM-XMOUP-SJSTBXX'. |
 | licenseKey2 | Yes | Enter the second BIG-IP license key. |
-| aliasIp | No | Enter None if alias IP failover is not required. Enter the alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'. A list of alias IPs can be provided, separated by a space. For example, 'IE 10.x.x.16/28 10.x.x.32/28'. |
+| aliasIp | No | Enter None if alias IP failover is not required. Enter the alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'. A list of alias IPs can be provided, separated by a semicolon. For example, 'IE 10.x.x.16/28;10.x.x.32/28'. |
 | numberOfForwardingRules | No | Enter the number of forwarding rules to create, for example '1'.  All integers from 1 to the max quota for the forwarding rules resource type are allowed. |
 | provisionPublicIP | Yes | Provision Public IP addresses for BIG-IP Network Interfaces. By default it is set to provision public IPs. |
 | imageName | Yes | BIG-IP image name |
@@ -129,7 +129,7 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | mgmtGuiPort | No | (Optional) Enter the BIG-IP Management Port, the default is '443'. |
 | ntpServer | No | (Optional) List NTP servers separated by a space, for example 'pool.ntp.org'. The default is 'time.google.com'. |
 | timezone | No | (Optional) Enter the Olson timezone string from /usr/share/zoneinfo. The default is 'UTC'. See the TZ column here (https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) for legal values. For example, 'US/Eastern'. |
-| bigIpModules | No | Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'. |
+| bigIpModules | No | Enter a hyphen-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal-asm:nominal'. |
 | serviceAccount | Yes | Enter the Google service account to use for autoscale API calls, for example 'username@projectname.iam.serviceaccount.com'. Please note that this service account is necessary for one BIG-IP to communicate with the other, so the permissions should include access to the storage bucket. Refer [here](https://clouddocs.f5.com/products/extensions/f5-cloud-failover/latest/userguide/gcp.html#create-and-assign-an-iam-role) for instructions on how to create the IAM service account with sufficient access. |
 | allowUsageAnalytics | Yes | This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent. |
 | allowPhoneHome | No | This deployment can provide F5 with high-level device use information to optimize development resources. If you select **no** the information is not sent. |

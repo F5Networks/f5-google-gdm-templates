@@ -70,7 +70,7 @@ resources:
    ntpServer: time.google.com
    ## (OPTIONAL) Enter the Olson timezone string from /usr/share/zoneinfo. The default is 'UTC'. See the TZ column here (https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) for legal values. For example, 'US/Eastern'.
    timezone: UTC
-   ## (OPTIONAL) Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'.
+   ## (OPTIONAL) Enter a hyphen-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal-asm:nominal'.
    bigIpModules: ltm:nominal
    ### (OPTIONAL) This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent.
    allowUsageAnalytics: yes
