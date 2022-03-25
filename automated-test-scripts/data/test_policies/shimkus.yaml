@@ -8,7 +8,7 @@ google-failover-api-test:
     - automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-api/2nic/existing-stack/payg/v16_prepub_parameters.yaml
     - automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-api/2nic/existing-stack/byol/v14_prepub_parameters.yaml
     - automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-api/2nic/existing-stack/payg/v14_prepub_parameters.yaml
-  random-num-of-tests: 2
+  random-num-of-tests: 1
   run: random
   test-url: 'file://automated-test-scripts/f5-google-gdm-templates/supported/failover/via-api/daily_test.yaml'
 
@@ -18,7 +18,7 @@ google-failover-lb-test:
     - automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-lb/3nic/existing-stack/payg/v16_prepub_parameters.yaml
     - automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-lb/3nic/existing-stack/byol/v14_prepub_parameters.yaml
     - automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-lb/3nic/existing-stack/payg/v14_prepub_parameters.yaml
-  random-num-of-tests: 2
+  random-num-of-tests: 1
   run: random
   test-url: 'file://automated-test-scripts/f5-google-gdm-templates/supported/failover/via-lb/daily_test.yaml'
 
@@ -36,6 +36,6 @@ google-standalone-test:
     - automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/2nic/existing-stack/payg/v14_prepub_parameters.yaml
     - automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/3nic/existing-stack/byol/v14_prepub_parameters.yaml
     - automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/3nic/existing-stack/payg/v14_prepub_parameters.yaml
-  random-num-of-tests: 4
+  random-num-of-tests: 2
   run: random
   test-url: 'file://automated-test-scripts/f5-google-gdm-templates/supported/standalone/daily_test.yaml'
