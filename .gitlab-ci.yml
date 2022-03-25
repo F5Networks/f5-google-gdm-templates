@@ -28,7 +28,7 @@ lint_generator:
       - $RELEASE_RUNTIME_INIT_TESTS == "true"
   script:
     - apk add --no-cache build-base gcc musl-dev python3-dev libffi-dev
-    - cd template-generator
+    - cd cloud-tools/template-generator
     - pip install -r requirements.txt
     - make lint
 
@@ -54,7 +54,7 @@ run_generator_and_validate_no_diff:
     - curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz > /tmp/google-cloud-sdk.tar.gz
     - mkdir -p /usr/local/gcloud && tar -C /usr/local/gcloud -xvf /tmp/google-cloud-sdk.tar.gz && /usr/local/gcloud/google-cloud-sdk/install.sh --quiet && rm /tmp/google-cloud-sdk.tar.gz
     - PATH="$PATH:/usr/local/gcloud/google-cloud-sdk/bin"
-    - cd template-generator
+    - cd cloud-tools/template-generator
     - pip install -r requirements.txt
     - python template_generator/main.py --gce
     - if git diff | grep 'diff --git'; then exit 1; else exit 0; fi

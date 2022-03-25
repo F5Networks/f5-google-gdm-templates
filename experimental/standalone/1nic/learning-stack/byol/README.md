@@ -60,7 +60,7 @@ This GDM template downloads helper code to configure the BIG-IP system. If you w
 - In the */config/verifyHash* section: **script-signature** and then a hashed signature
 - In the */config/installCloudLibs.sh* section **"tmsh load sys config merge file /config/verifyHash"**
 
-Additionally, F5 provides checksums for all of our supported Google Deployment Manager templates. For instructions and the checksums to compare against, see this [link](https://devcentral.f5.com/codeshare/checksums-for-f5-supported-cft-and-arm-templates-on-github-1014).
+Additionally, F5 provides checksums for all of our supported Google Deployment Manager templates. For instructions and the checksums to compare against, see this [link](https://community.f5.com/t5/crowdsrc/checksums-for-f5-supported-cloud-templates-on-github/ta-p/284471).
 
 ## Tested BIG-IP versions
 
