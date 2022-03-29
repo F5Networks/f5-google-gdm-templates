@@ -65,7 +65,7 @@ This GDM template downloads helper code to configure the BIG-IP system. If you w
 - In the *installCloudLibs* variable: **tmsh load sys config merge file /config/verifyHash**.
 - In the *installCloudLibs* variable: ensure this includes **tmsh run cli script verifyHash /config/cloud/f5-cloud-libs.tar.gz**.
 
-Additionally, F5 provides checksums for all of our supported Google Deployment Manager templates. For instructions and the checksums to compare against, see this [link](https://devcentral.f5.com/codeshare/checksums-for-f5-supported-cft-and-arm-templates-on-github-1014).
+Additionally, F5 provides checksums for all of our supported Google Deployment Manager templates. For instructions and the checksums to compare against, see this [link](https://community.f5.com/t5/crowdsrc/checksums-for-f5-supported-cloud-templates-on-github/ta-p/284471).
 
 ## Tested BIG-IP versions
 
@@ -73,7 +73,7 @@ The following table lists the versions of BIG-IP that have been tested and valid
 
 | BIG-IP Version | Build | Solution | Status | Notes |
 | --- | --- | --- | --- | --- |
-| 16.1.0 | 0.0.0 | Standalone, Failover, Autoscale | Validated | |
+| 16.1.2.1 | 0.0.10 | Standalone, Failover, Autoscale | Validated | |
 | 15.1.4 | 0.0.47 | Standalone, Failover, Autoscale | Validated | |
 | 14.1.4.4 | 0.0.1 | Standalone, Failover, Autoscale | Validated | |
 | 13.1.4.1 | 0.0.3 | Standalone, Failover, Autoscale | Not Validated | F5 CFE requires BIG-IP 14.1 or later |
@@ -113,7 +113,7 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | mgmtSubnet | Yes | Specify the name of the subnet to use for management traffic, for example 'my-management-subnetwork'. |
 | imageName | Yes | BIG-IP image name. |
 | instanceType | Yes | Instance type assigned to BIG-IP, for example 'n1-standard-4'. |
-| bigIpModules | No | Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'. |
+| bigIpModules | No | Enter a hyphen-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal-asm:nominal'. |
 | serviceAccount | Yes | Enter the Google service account to use for autoscale API calls, for example 'username@projectname.iam.serviceaccount.com'. Please note that this service account is necessary for one BIG-IP to communicate with the other, so the permissions should include access to the storage bucket. Refer [here](https://clouddocs.f5.com/products/extensions/f5-cloud-failover/latest/userguide/gcp.html#create-and-assign-an-iam-role) for instructions on how to create the IAM service account with sufficient access. |
 | targetSize | Yes | Enter the number of instances to start. |
 | minReplicas | Yes | Enter the minimum number of instances autoscale policy will scale down to. |
@@ -176,6 +176,7 @@ gcloud deployment-manager deployments create <your-deployment-name>       \
 ## Service Discovery
 
 This template previously supported configuring service discovery using the f5.service_discovery iApp template.  That iApp has been deprecated and removed from this template.  You can now configure service discovery using the F5 AS3 extension, which is installed by all ARM templates by default.  See the official AS3 [documentation](https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/userguide/service-discovery.html) and the iApp migration [guide](https://github.com/F5Networks/f5-google-gdm-templates/blob/main/iapp-migration.md) for more information and examples.
+
 
 
 

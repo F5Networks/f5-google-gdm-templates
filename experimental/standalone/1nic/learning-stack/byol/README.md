@@ -60,7 +60,7 @@ This GDM template downloads helper code to configure the BIG-IP system. If you w
 - In the */config/verifyHash* section: **script-signature** and then a hashed signature
 - In the */config/installCloudLibs.sh* section **"tmsh load sys config merge file /config/verifyHash"**
 
-Additionally, F5 provides checksums for all of our supported Google Deployment Manager templates. For instructions and the checksums to compare against, see this [link](https://devcentral.f5.com/codeshare/checksums-for-f5-supported-cft-and-arm-templates-on-github-1014).
+Additionally, F5 provides checksums for all of our supported Google Deployment Manager templates. For instructions and the checksums to compare against, see this [link](https://community.f5.com/t5/crowdsrc/checksums-for-f5-supported-cloud-templates-on-github/ta-p/284471).
 
 ## Tested BIG-IP versions
 
@@ -68,7 +68,7 @@ The following table lists the versions of BIG-IP that have been tested and valid
 
 | BIG-IP Version | Build | Solution | Status | Notes |
 | --- | --- | --- | --- | --- |
-| 16.1.0 | 0.0.0 | Standalone, Failover, Autoscale | Validated | |
+| 16.1.2.1 | 0.0.10 | Standalone, Failover, Autoscale | Validated | |
 | 15.1.4 | 0.0.47 | Standalone, Failover, Autoscale | Validated | |
 | 14.1.4.4 | 0.0.1 | Standalone, Failover, Autoscale | Validated | |
 | 13.1.4.1 | 0.0.3 | Standalone, Failover, Autoscale | Not Validated | F5 CFE requires BIG-IP 14.1 or later |
@@ -105,7 +105,7 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | imageName | Yes | Enter the BIG-IP image name |
 | instanceType | Yes | Instance type assigned to the BIG-IP, for example 'n1-standard-4'. |
 | manGuiPort | Yes | Enter the BIG-IP Management Port, the default is '8443'. |
-| bigIpModules | Yes | Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'. |
+| bigIpModules | Yes | Enter a hyphen-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal-asm:nominal'. |
 | allowUsageAnalytics | Yes | This deployment can send anonymous statistics to F5 to help us determine how to improve our solutions. If you enter **no** statistics are not sent. |
 | logLevel | No | Log setting, used to set log level on scripts used during deployment. Acceptable values are - error, warn, info, verbose, debug, silly. The default is 'info'. |
 | declarationUrl | Yes | URL for the AS3 declaration JSON file to be deployed. If left at **default**, the recommended F5 WAF configuration will be applied. Enter **none** to deploy without a service configuration. For example, ' https://cdn.f5.com/product/cloudsolutions/declarations/sample_01.json ' |
@@ -157,9 +157,10 @@ The following is a simple configuration diagram for this single NIC deployment. 
 This template previously supported configuring service discovery using the f5.service_discovery iApp template.  That iApp has been deprecated and removed from this template.  You can now configure service discovery using the F5 AS3 extension, which is installed by all ARM templates by default.  See the official AS3 [documentation](https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/userguide/service-discovery.html) and the iApp migration [guide](https://github.com/F5Networks/f5-google-gdm-templates/blob/main/iapp-migration.md) for more information and examples.
 
 
+
+
 ### Documentation
 The ***BIG-IP Virtual Edition and Google Cloud Platform: Setup*** guide (https://clouddocs.f5.com/cloud/public/v1/google/Google_singleNIC.html) details how to create the configuration manually without using the template.  This document also describes the configuration in more detail.
-
 
 ## Security Details <a name="securitydetail"></a>
 

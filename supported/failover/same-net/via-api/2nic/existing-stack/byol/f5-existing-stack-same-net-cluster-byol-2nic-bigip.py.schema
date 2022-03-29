@@ -1,10 +1,10 @@
-# Copyright 2021 F5 Networks All rights reserved.
+# Copyright 2022 F5 Networks All rights reserved.
 
 info:
   title: F5 BIG-IP 2NIC HA with Google API
   author: F5 Networks
   description: Creates HA pair of BIG-IP's with 3 network interfaces and supporting Google resources.
-  version: 3.14.0
+  version: 3.15.0
 imports:
   - path: f5-existing-stack-same-net-cluster-byol-2nic-bigip.py
 required:
@@ -60,7 +60,7 @@ properties:
     description: Enter the second BIG-IP license key.
     type: string
   aliasIp:
-    description: Enter None if alias IP failover is not required. Enter the alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'. A list of alias IPs can be provided, separated by a space. For example, 'IE 10.x.x.16/28 10.x.x.32/28'.
+    description: Enter None if alias IP failover is not required. Enter the alias IP address(es) to be used for application traffic, including CIDR suffix. This address must belong to the subnet noted above in key 'subnet1'. A list of alias IPs can be provided, separated by a semicolon. For example, 'IE 10.x.x.16/28;10.x.x.32/28'.
     type: string
     default: 'None'
   numberOfForwardingRules:
@@ -90,7 +90,7 @@ properties:
     type: string
     default: UTC
   bigIpModules:
-    description: Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'.
+    description: Enter a hyphen-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal-asm:nominal'.
     type: string
     default: ltm:nominal
   serviceAccount:

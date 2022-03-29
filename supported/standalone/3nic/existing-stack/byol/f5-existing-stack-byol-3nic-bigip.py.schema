@@ -1,10 +1,10 @@
-# Copyright 2021 F5 Networks All rights reserved.
+# Copyright 2022 F5 Networks All rights reserved.
 
 info:
   title: F5 BIG-IP 3NIC
   author: F5 Networks
   description: Creates a BIG-IP with 3 network interface(s).
-  version: 3.14.0
+  version: 3.15.0
 imports:
   - path: f5-existing-stack-byol-3nic-bigip.py
 required:
@@ -100,7 +100,7 @@ properties:
     type: string
     default: UTC
   bigIpModules:
-    description: Enter a comma-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal,asm:nominal'.
+    description: Enter a hyphen-separated list of modules and provisioning level, for example 'ltm:nominal' or 'ltm:nominal-asm:nominal'.
     type: string
     default: ltm:nominal
   allowUsageAnalytics:

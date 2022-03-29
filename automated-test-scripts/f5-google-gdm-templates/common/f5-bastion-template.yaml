@@ -9,4 +9,4 @@ resources:
     instanceType: n1-standard-1
     subnet: subnet1
     region: us-west1
-    osImage: projects/ubuntu-os-cloud/global/images/family/ubuntu-1604-lts
+    osImage: projects/ubuntu-os-cloud/global/images/family/ubuntu-1804-lts

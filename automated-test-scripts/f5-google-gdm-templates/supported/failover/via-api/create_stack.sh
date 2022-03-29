@@ -34,9 +34,18 @@ if [[ "<ALIAS IP>" == "True" ]]; then
         number=$RANDOM
         let "number %= 250"  # Scales $number down within 10-250.
     done
-    alias_ip="$(get_ip ${network} ${number})/32"
-    set_state "aliasIP" "$alias_ip" # save alias IP in state file, for use by later tests
-    extra_params+=",aliasIp:'${alias_ip}'"
+    alias_ip_01="$(get_ip ${network} ${number})/32"
+
+    number=0   #initialize
+    while [ "$number" -le 10 ]
+    do
+        number=$RANDOM
+        let "number %= 250"  # Scales $number down within 10-250.
+    done
+    alias_ip_02="$(get_ip ${network} ${number})/32"
+    set_state "aliasIP" "$alias_ip_01" # save alias IP in state file, for use by later tests
+
+    extra_params+=",aliasIp:'${alias_ip_01};${alias_ip_02}'"
 else
     alias_ip='None'
     set_state "aliasIP" "$alias_ip"
