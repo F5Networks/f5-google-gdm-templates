@@ -1,6 +1,6 @@
 # Copyright 2022 F5 Networks All rights reserved.
 #
-# Version 3.14.1
+# Version 3.15.0
 
 """Creates BIG-IP"""
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
@@ -298,7 +298,7 @@ def Metadata(context,group, storageName, licenseType):
   ALLOWUSAGEANALYTICS = str(context.properties['allowUsageAnalytics']).lower()
   if ALLOWUSAGEANALYTICS in ['yes', 'true']:
       CUSTHASH = 'CUSTOMERID=`/usr/bin/curl -s "http://metadata.google.internal/computeMetadata/v1/project/numeric-project-id" -H "Metadata-Flavor: Google" |sha512sum|cut -d " " -f 1`;\nDEPLOYMENTID=`/usr/bin/curl -s "http://metadata.google.internal/computeMetadata/v1/instance/id" -H "Metadata-Flavor: Google"|sha512sum|cut -d " " -f 1`;'
-      SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-existing-stack-same-net-cluster-byol-3nic-bigip.py,templateVersion:3.14.1,licenseType:byol"'
+      SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-existing-stack-same-net-cluster-byol-3nic-bigip.py,templateVersion:3.15.0,licenseType:byol"'
   else:
       CUSTHASH = '# No template analytics'
       SENDANALYTICS = ''
