@@ -206,9 +206,10 @@ This template supports associating GCP resources with up to two BIG-IP traffic g
 This template previously supported configuring service discovery using the f5.service_discovery iApp template.  That iApp has been deprecated and removed from this template.  You can now configure service discovery using the F5 AS3 extension, which is installed by all ARM templates by default.  See the official AS3 [documentation](https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/userguide/service-discovery.html) and the iApp migration [guide](https://github.com/F5Networks/f5-google-gdm-templates/blob/main/iapp-migration.md) for more information and examples.
 
 
+
+
 ### Documentation
 The ***BIG-IP Virtual Edition and Google Cloud Platform: Setup*** [guide](https://support.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/bigip-ve-setup-google-cloud-platform-13-0-0.html) details how to create the configuration manually without using the template.  This document also describes the configuration in more detail.
-
 
 ## Security Details <a name="securitydetail"></a>
 

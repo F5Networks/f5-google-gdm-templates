@@ -1,6 +1,6 @@
 # Copyright 2022 F5 Networks All rights reserved.
 #
-# Version 3.14.1
+# Version 3.15.0
 
 """Creates BIG-IP"""
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
