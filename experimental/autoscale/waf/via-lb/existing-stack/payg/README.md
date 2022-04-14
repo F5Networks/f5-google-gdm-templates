@@ -56,6 +56,7 @@ The following are prerequisites for the F5 autoscale 1 NIC GDM template:
 - Scaling Thresholds: 
    - The scaling process gets triggered based on CPU usage 
    - The control CPU usage value is defined using a float number in a range of 0 to 1 ( i.e. 0.8 )
+- This template uses [F5 BIG-IP Runtime Init](https://github.com/F5Networks/f5-bigip-runtime-init) to install F5 Automation Toolchain packages (AS3, DO, CFE, FAST, and TS). You can update the version of one or more packages by editing the template metadata startup-script. For example: To update the AS3 package to the latest version, click on the [Github release page](https://github.com/F5Networks/f5-appsvcs-extension/releases) for the f5-appsvcs-extension. In the template startup-script, in the install_operations section, update the AS3 extensionVersion value to the desired version and the extensionHash value to contents of the RPM sha256 file located in the release assets for that version. You can also add more packages to be installed using the same procedure.
 
 ### Security
 
