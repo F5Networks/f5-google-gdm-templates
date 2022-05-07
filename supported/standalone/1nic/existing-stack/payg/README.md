@@ -110,7 +110,7 @@ After completing the prerequisites, edit the YAML file.  You must replace the fo
 | mgmtSharedVpc | No | If using a shared VPC, specify the name of the host project to use for management traffic. Leave default value of None when not using shared VPC. **Note** template does not create firewall policy for shared VPC. Create policy on shared VPC within in host project to allow appropriate traffic. |
 | mgmtSubnet | Yes | Specify the name of the subnet to use for management traffic, for example 'my-management-subnetwork'. |
 | mgmtSubnetAddress | No | (Optional) Enter the static IP address to use. Note - For dynamic address provisioning use the default value of 'DYNAMIC'. For example, '10.0.1.100'. |
-| restrictedSrcAddress | Yes | This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space. For example, '10.0.11.0/24'. |
+| restrictedSrcAddress | Yes | This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation. Please do NOT use '0.0.0.0/0'. Instead, restrict the IP address range to your client or trusted network, for example '55.55.55.55/32'. Production should never expose the BIG-IP Management interface to the Internet. |
 | restrictedSrcAddressApp | Yes | This field restricts web application access (ports 80 and 443) to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space. For example, '10.0.11.0/24'. |
 | provisionPublicIP | Yes | Provision Public IP addresses for BIG-IP Network Interfaces. By default it is set to provision public IPs. |
 | imageName | Yes | Enter the BIG-IP image name. |
