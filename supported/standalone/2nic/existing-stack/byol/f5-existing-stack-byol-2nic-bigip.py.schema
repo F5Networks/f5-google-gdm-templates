@@ -4,7 +4,7 @@ info:
   title: F5 BIG-IP 2NIC
   author: F5 Networks
   description: Creates a BIG-IP with 2 network interface(s).
-  version: 3.15.0
+  version: 3.16.0
 imports:
   - path: f5-existing-stack-byol-2nic-bigip.py
 required:
@@ -40,7 +40,7 @@ properties:
     type: string
     default: DYNAMIC
   restrictedSrcAddress:
-    description: This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space. For example, '10.0.11.0/24'.
+    description: This field restricts management access to a specific network or address. Enter an IP address or address range in CIDR notation. Please do NOT use '0.0.0.0/0'. Instead, restrict the IP address range to your client or trusted network, for example '55.55.55.55/32'. Production should never expose the BIG-IP Management interface to the Internet.
     type: string
   restrictedSrcAddressApp:
     description: This field restricts web application access (ports 80 and 443) to a specific network or address. Enter an IP address or address range in CIDR notation separated by a space. For example, '10.0.11.0/24'.

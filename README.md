@@ -7,6 +7,12 @@
 [![Issues](https://img.shields.io/github/issues/f5networks/f5-google-gdm-templates.svg)](https://github.com/f5networks/f5-google-gdm-templates/issues)
 ## Introduction
 
+| :eyes:    | ***Notice***: These legacy templates are now in maintenance mode and are being replaced by our next-generation templates available in the [Cloud Templates 2.0 GitHub repo](https://github.com/F5Networks/f5-google-gdm-templates-v2). We recommend you adopt the next-generation templates as soon as is feasible. |
+|---------------|:------------------------|  
+
+| :warning: | ***Warning***: Due to vulnerabilities related to [CVE-2022-1388](https://support.f5.com/csp/article/K23605346), do not use templates unless using a custom image (template parameter = imageName). Updated images are pending publication to Marketplace. For existing deployments, F5 recommends [upgrading to a patched software version](https://support.f5.com/csp/article/K84205182). Production should never expose the BIG-IP Management interface to the Internet. Always ensure `restrictedSrcAddress` has been set to a trusted source network. Please see [K23605346: BIG-IP iControl REST vulnerability CVE-2022-1388](https://support.f5.com/csp/article/K23605346) for more information and latest updates.|
+|---------------|:------------------------|
+
 Welcome to the GitHub repository for F5's Google Cloud Deployment Manager (GDM) templates for deploying F5 instances
 in the Google cloud.  All of the templates in this repository have been developed by F5 Networks engineers. Across
 all branches in this repository, there are two directories: *supported* and *experimental*
