@@ -8,7 +8,7 @@ AVAILABILITY ZONE: <REGION>-b
 AVAILABILITY ZONE2: <REGION>-c
 AZ SHORT NAME: a-s1
 BIGIP MODULES: ltm:nominal
-BIGIP VERSION: 14-1-4-4-0-0-4
+BIGIP VERSION: 14-1-4-6-0-0-8
 BRANCH: R19-5
 DECLARATION URL: https://cdn.f5.com/product/cloudsolutions/declarations/sample_02.json
 EXT NETWORK: dd-<DEWPOINT JOB ID>-network1-network
