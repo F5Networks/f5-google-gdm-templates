@@ -9,7 +9,11 @@ TMP_DIR="/tmp/<DEWPOINT JOB ID>"
 source ${TMP_DIR}/test_functions.sh
 
 # determine test environment public ip address
-source_cidr=$(get_env_public_ip)
+if [[ "<PUBLIC IP>" == "True" ]]; then
+  source_cidr=$(curl ifconfig.me)/32
+else
+  source_cidr='0.0.0.0/0'
+fi
 echo "source_cidr=$source_cidr"
 
 # TODO: Could test the yaml parameter file itself by downloading from template repo, using yaml
@@ -86,7 +90,7 @@ else
 fi
 
 # setup Required parameters - note, not able to handle spaces in <app port> and <ntp server>, spaces in syntax work fine when not using dewpoint.
-properties="region:'<REGION>',availabilityZone1:'<AVAILABILITY ZONE>',imageName:'<IMAGE NAME>',instanceType:'<INSTANCE TYPE>',logLevel:'<LOG LEVEL>',restrictedSrcAddress:${source_cidr},restrictedSrcAddressApp:${source_cidr},declarationUrl:<DECLARATION URL>,allowUsageAnalytics:<ANALYTICS>,allowPhoneHome:<PHONEHOME><LICENSE PARAM>${network_param}${optional_params}${extra_params}"
+properties="region:'<REGION>',availabilityZone1:'<AVAILABILITY ZONE>',imageName:'<IMAGE NAME>',instanceType:'<INSTANCE TYPE>',logLevel:'<LOG LEVEL>',restrictedSrcAddress:${source_cidr},restrictedSrcAddressApp:'0.0.0.0/0',declarationUrl:<DECLARATION URL>,allowUsageAnalytics:<ANALYTICS>,allowPhoneHome:<PHONEHOME><LICENSE PARAM>${network_param}${optional_params}${extra_params}"
 labels="delete=true"
 gcloud="gcloud deployment-manager deployments create <STACK NAME> --template $tmpl_file --labels $labels --properties $properties"
 echo $gcloud
