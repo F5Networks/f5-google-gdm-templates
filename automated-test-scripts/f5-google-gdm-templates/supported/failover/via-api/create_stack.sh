@@ -8,6 +8,12 @@ TMP_DIR="/tmp/<DEWPOINT JOB ID>"
 # source test functions
 source ${TMP_DIR}/test_functions.sh
 
+tmpl_file='/tmp/deployment-<DEWPOINT JOB ID>.py'
+rm -f $tmpl_file
+curl -k <TEMPLATE URL> -o $tmpl_file
+
+# yaml input parameter files ideally should be simple key:value pairs and the create task builds parameters
+# based on that, so this is working towards that goal
 # determine test environment public ip address
 if [[ "<PUBLIC IP>" == "True" ]]; then
   source_ip=$(curl ifconfig.me)/32
@@ -17,19 +23,13 @@ else
 fi
 echo "source_cidr=$source_cidr"
 
-tmpl_file='/tmp/deployment-<DEWPOINT JOB ID>.py'
-rm -f $tmpl_file
-
-curl -k <TEMPLATE URL> -o $tmpl_file
-
-# yaml input parameter files ideally should be simple key:value pairs and the create task builds parameters
-# based on that, so this is working towards that goal
 extra_params=",restrictedSrcAddress:${source_cidr}"
 if [[ "<PUBLIC IP>" == "True" ]]; then
     extra_params+=",provisionPublicIP:'yes'"
 else
     extra_params+=",provisionPublicIP:'no'"
 fi
+
 if [[ "<ALIAS IP>" == "True" ]]; then
     network=$(gcloud compute networks subnets describe <EXT SUBNET> --region=<REGION> --format json | jq .ipCidrRange -r)
     number=0   #initialize
