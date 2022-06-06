@@ -222,7 +222,7 @@ publish_to_github:
     # Execute Release script to push source to github repo
     - ./cloud-tools/release-tool/publish_github.sh "$ALLOWED_DIRS" "$ALLOWED_FILES"
   variables:
-    ALLOWED_DIRS: "experimental supported .github"
+    ALLOWED_DIRS: "supported .github"
     ALLOWED_FILES: ".gitignore .gitattributes README.md google-bigip-version-matrix.md iapp-migration.md"
     GITLAB_API_URL: "$GOOGLE_URL"
     GITHUB_API_TOKEN: "$GOOGLE_GITHUB_API_TOKEN"

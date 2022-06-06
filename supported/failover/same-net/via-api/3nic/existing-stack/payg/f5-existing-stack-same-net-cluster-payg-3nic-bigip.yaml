@@ -1,6 +1,6 @@
 # Copyright 2022 F5 Networks All rights reserved.
 #
-# Version 3.17.0
+# Version 3.18.0
 
 # NOTE: When filling out the parameter values for this deployment:
 # Deployments leverage .schema files to help enforce requirements/parameter typing and defaults.
@@ -50,11 +50,6 @@ resources:
    provisionPublicIP: yes
    ### If you would like to view all available images, run the following command from the **gcloud** command line: ```$ gcloud compute images list --project f5-7626-networks-public | grep f5```
    ### (OPTIONAL) BIG-IP image, valid choices include:
-#f5-bigip-16-1-2-2-0-0-28-payg-best-10gbps-220505075542
-#f5-bigip-16-1-2-2-0-0-28-payg-best-1gbps-220505075144
-#f5-bigip-16-1-2-2-0-0-28-payg-best-200mbps-220505074944
-#f5-bigip-16-1-2-2-0-0-28-payg-best-25mbps-220505074742
-#f5-bigip-16-1-2-2-0-0-28-payg-best-5gbps-220505075341
 #f5-bigip-16-1-2-2-0-0-28-payg-best-plus-10gbps-220505081535
 #f5-bigip-16-1-2-2-0-0-28-payg-best-plus-1gbps-220505081153
 #f5-bigip-16-1-2-2-0-0-28-payg-best-plus-200mbps-220505081010
