@@ -1,7 +1,0 @@
-title: F5 Google Deployment Manager Templates
-data:
-  path: test/path
-  name: example name
-  value: some value
-page:
-  description: some page description
