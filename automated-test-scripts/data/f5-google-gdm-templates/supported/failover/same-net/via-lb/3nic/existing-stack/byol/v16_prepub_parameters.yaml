@@ -12,7 +12,7 @@ BIGIP VERSION: 16-1-2-2-0-0-28
 DECLARATION URL: https://cdn.f5.com/product/cloudsolutions/declarations/sample_02.json
 EXT NETWORK: dd-<DEWPOINT JOB ID>-network1-network
 EXT SUBNET: dd-<DEWPOINT JOB ID>-subnet1-subnet
-IMAGE NAME: f5-bigip-<BIGIP VERSION>-byol-<IMAGE TYPE>-<IMAGE SUFFIX>
+IMAGE NAME: f5-bigip-16-1-3-1-0-0-11-byol-all-modules-2boot-loc-0721055536
 IMAGE SUFFIX: '0505081937'
 IMAGE TYPE: all-modules-2boot-loc
 INSTANCE TYPE: n1-standard-4
