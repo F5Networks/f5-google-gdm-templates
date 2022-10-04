@@ -1,10 +1,10 @@
 google-failover-api-test:
   parameters-files:
-    - automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-api/3nic/existing-stack/byol/v16_prepub_parameters.yaml
+    # - automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-api/3nic/existing-stack/byol/v16_prepub_parameters.yaml
     - automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-api/3nic/existing-stack/payg/v16_prepub_parameters.yaml
     # - automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-api/3nic/existing-stack/byol/v14_prepub_parameters.yaml
     # - automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-api/3nic/existing-stack/payg/v14_prepub_parameters.yaml
-    - automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-api/2nic/existing-stack/byol/v16_prepub_parameters.yaml
+    # - automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-api/2nic/existing-stack/byol/v16_prepub_parameters.yaml
     - automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-api/2nic/existing-stack/payg/v16_prepub_parameters.yaml
     # - automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-api/2nic/existing-stack/byol/v14_prepub_parameters.yaml
     # - automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-api/2nic/existing-stack/payg/v14_prepub_parameters.yaml
@@ -14,7 +14,7 @@ google-failover-api-test:
 
 google-failover-lb-test:
   parameters-files:
-    - automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-lb/3nic/existing-stack/byol/v16_prepub_parameters.yaml
+    # - automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-lb/3nic/existing-stack/byol/v16_prepub_parameters.yaml
     - automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-lb/3nic/existing-stack/payg/v16_prepub_parameters.yaml
     # - automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-lb/3nic/existing-stack/byol/v14_prepub_parameters.yaml
     # - automated-test-scripts/data/f5-google-gdm-templates/supported/failover/same-net/via-lb/3nic/existing-stack/payg/v14_prepub_parameters.yaml
@@ -24,11 +24,11 @@ google-failover-lb-test:
 
 google-standalone-test:
   parameters-files:
-    - automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/1nic/existing-stack/byol/v16_prepub_parameters.yaml
+    # - automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/1nic/existing-stack/byol/v16_prepub_parameters.yaml
     - automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/1nic/existing-stack/payg/v16_prepub_parameters.yaml
-    - automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/2nic/existing-stack/byol/v16_prepub_parameters.yaml
+    # - automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/2nic/existing-stack/byol/v16_prepub_parameters.yaml
     - automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/2nic/existing-stack/payg/v16_prepub_parameters.yaml
-    - automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/3nic/existing-stack/byol/v16_prepub_parameters.yaml
+    # - automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/3nic/existing-stack/byol/v16_prepub_parameters.yaml
     - automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/3nic/existing-stack/payg/v16_prepub_parameters.yaml
     # - automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/1nic/existing-stack/byol/v14_prepub_parameters.yaml
     # - automated-test-scripts/data/f5-google-gdm-templates/supported/standalone/1nic/existing-stack/payg/v14_prepub_parameters.yaml
