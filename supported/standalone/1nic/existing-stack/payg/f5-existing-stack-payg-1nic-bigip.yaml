@@ -1,6 +1,6 @@
 # Copyright 2022 F5 Networks All rights reserved.
 #
-# Version 4.1.0
+# Version 4.2.0
 
 # NOTE: When filling out the parameter values for this deployment:
 # Deployments leverage .schema files to help enforce requirements/parameter typing and defaults.
@@ -40,25 +40,25 @@ resources:
    provisionPublicIP: yes
    ### If you would like to view all available images, run the following command from the **gcloud** command line: ```$ gcloud compute images list --project f5-7626-networks-public | grep f5```
    ### (OPTIONAL) BIG-IP image, valid choices include:
-#f5-bigip-16-1-3-1-0-0-11-payg-best-plus-10gbps-220721055127
-#f5-bigip-16-1-3-1-0-0-11-payg-best-plus-1gbps-220721054710
-#f5-bigip-16-1-3-1-0-0-11-payg-best-plus-200mbps-220721054505
-#f5-bigip-16-1-3-1-0-0-11-payg-best-plus-25mbps-220721054250
-#f5-bigip-16-1-3-1-0-0-11-payg-best-plus-5gbps-220721054914
-#f5-bigip-16-1-3-1-0-0-11-payg-better-10gbps-220721052038
-#f5-bigip-16-1-3-1-0-0-11-payg-better-1gbps-220721051649
-#f5-bigip-16-1-3-1-0-0-11-payg-better-200mbps-220721051454
-#f5-bigip-16-1-3-1-0-0-11-payg-better-25mbps-220721051233
-#f5-bigip-16-1-3-1-0-0-11-payg-better-5gbps-220721051844
-#f5-bigip-16-1-3-1-0-0-11-payg-good-10gbps-220721051822
-#f5-bigip-16-1-3-1-0-0-11-payg-good-1gbps-220721051418
-#f5-bigip-16-1-3-1-0-0-11-payg-good-200mbps-220721051219
-#f5-bigip-16-1-3-1-0-0-11-payg-good-25mbps-220721051009
-#f5-bigip-16-1-3-1-0-0-11-payg-good-5gbps-220721051617
-#f5-bigip-16-1-3-1-0-0-11-payg-hp-ltm-16vcpu-220721052021
-#f5-bigip-16-1-3-1-0-0-11-payg-pve-ltm-200mbps-220721052431
-#f5-bigip-16-1-3-1-0-0-11-payg-pve-ltm-25mbps-220721052231
-   imageName: f5-bigip-16-1-3-1-0-0-11-payg-best-plus-25mbps-220721054250
+#f5-bigip-16-1-3-2-0-0-4-payg-best-plus-10gbps-220914234953
+#f5-bigip-16-1-3-2-0-0-4-payg-best-plus-1gbps-220914234533
+#f5-bigip-16-1-3-2-0-0-4-payg-best-plus-200mbps-220914234309
+#f5-bigip-16-1-3-2-0-0-4-payg-best-plus-25mbps-220914234054
+#f5-bigip-16-1-3-2-0-0-4-payg-best-plus-5gbps-220914234743
+#f5-bigip-16-1-3-2-0-0-4-payg-better-10gbps-220914231659
+#f5-bigip-16-1-3-2-0-0-4-payg-better-1gbps-220914231250
+#f5-bigip-16-1-3-2-0-0-4-payg-better-200mbps-220914231040
+#f5-bigip-16-1-3-2-0-0-4-payg-better-25mbps-220914230812
+#f5-bigip-16-1-3-2-0-0-4-payg-better-5gbps-220914231450
+#f5-bigip-16-1-3-2-0-0-4-payg-good-10gbps-220914230938
+#f5-bigip-16-1-3-2-0-0-4-payg-good-1gbps-220914230529
+#f5-bigip-16-1-3-2-0-0-4-payg-good-200mbps-220914230329
+#f5-bigip-16-1-3-2-0-0-4-payg-good-25mbps-220914230100
+#f5-bigip-16-1-3-2-0-0-4-payg-good-5gbps-220914230738
+#f5-bigip-16-1-3-2-0-0-4-payg-hp-ltm-16vcpu-220914231153
+#f5-bigip-16-1-3-2-0-0-4-payg-pve-ltm-200mbps-220914231613
+#f5-bigip-16-1-3-2-0-0-4-payg-pve-ltm-25mbps-220914231408
+   imageName: f5-bigip-16-1-3-2-0-0-4-payg-best-plus-25mbps-220914234054
    ### (OPTIONAL) Instance type assigned to BIG-IP, for example 'n1-standard-4'.
    instanceType: n1-standard-4
    ### (OPTIONAL) Enter the BIG-IP Management Port, the default is '443'.
