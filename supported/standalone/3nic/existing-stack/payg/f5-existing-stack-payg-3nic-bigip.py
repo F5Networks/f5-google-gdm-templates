@@ -1,6 +1,6 @@
 # Copyright 2022 F5 Networks All rights reserved.
 #
-# Version 4.1.0
+# Version 4.2.0
 
 """ Creates Deployment """
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
@@ -148,7 +148,7 @@ def Metadata(context):
     ALLOWUSAGEANALYTICS = str(context.properties['allowUsageAnalytics']).lower()
     if ALLOWUSAGEANALYTICS == 'yes':
         CUSTHASH = 'CUSTOMERID=`/usr/bin/curl -s "http://metadata.google.internal/computeMetadata/v1/project/numeric-project-id" -H "Metadata-Flavor: Google" |sha512sum|cut -d " " -f 1`;\nDEPLOYMENTID=`/usr/bin/curl -s "http://metadata.google.internal/computeMetadata/v1/instance/id" -H "Metadata-Flavor: Google"|sha512sum|cut -d " " -f 1`;'
-        SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-existing-stack-payg-3nic-bigip.py,templateVersion:4.1.0,licenseType:payg"'
+        SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-existing-stack-payg-3nic-bigip.py,templateVersion:4.2.0,licenseType:payg"'
     else:
         CUSTHASH = 'echo "No analytics."'
         SENDANALYTICS = ''
@@ -189,8 +189,8 @@ def Metadata(context):
                                     'extension_packages:',
                                     '  install_operations:',
                                     '    - extensionType: as3',
-                                    '      extensionVersion: 3.36.1',
-                                    '      extensionHash: 48876a92d3d8fe7da70310882dc9fd1499d209579d798394715e18c12138daf3',
+                                    '      extensionVersion: 3.40.0',
+                                    '      extensionHash: 708533815cb8e608b4d28fbb730f0ed34617ce5def53c5462c0ab98bd54730fc',
                                     'EOF',
                                     '### END CUSTOM PACKAGE CONFIGURATION',
                                     'cat <<\'EOF\' > /config/installCloudLibs.sh',
