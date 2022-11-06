@@ -106,8 +106,11 @@ def Instance(context, mgmtSharedVpc):
               ]
             },
             'zone': context.properties['availabilityZone1'],
-            'metadata': Metadata(context)
-
+            'metadata': Metadata(context),
+            # adding scheduling section in order to optionally create Spot VM
+            'scheduling': {
+                'provisioningModel': context.properties['provisioningModel']
+            }
         }
     }
 

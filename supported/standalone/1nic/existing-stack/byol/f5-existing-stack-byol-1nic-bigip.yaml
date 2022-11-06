@@ -38,6 +38,8 @@ resources:
    restrictedSrcAddressApp:
    ### (OPTIONAL) Provision Public IP addresses for BIG-IP Network Interfaces. By default it is set to provision public IPs.
    provisionPublicIP: yes
+   ### (REQUIRED) Change the default 'STANDARD' to 'SPOT', if you want to provision Spot VM (https://cloud.google.com/compute/docs/instances/spot)
+   provisioningModel: STANDARD
    ### If you would like to view all available images, run the following command from the **gcloud** command line: ```$ gcloud compute images list --project f5-7626-networks-public | grep f5```
    ### (OPTIONAL) BIG-IP image, valid choices include:
 
