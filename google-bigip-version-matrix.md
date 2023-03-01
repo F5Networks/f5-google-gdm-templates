@@ -6,6 +6,7 @@ The following table contains all of the tagged releases of the F5 Google Deploym
 
 | Release Tag | Template Family | BIG-IP Versions | PAYG License Bundles and Throughput | BYOL Image options (v13.1.1 and later) |
 | --- | --- | --- | --- | --- |
+| [v4.3.0](https://github.com/F5Networks/f5-google-gdm-templates/releases/tag/v4.3.0) | Standalone, Failover | BIG-IP v16.1.3.3, BIG-IP v15.1.8.1, BIG-IP v14.1.5.3 | Good/Better/Best Plus: 5Gbps, 1Gbps, 200Mbps, 25Mbps | AllTwoBootLocations, LTMTwoBootLocations |
 | [v4.2.0](https://github.com/F5Networks/f5-google-gdm-templates/releases/tag/v4.2.0) | Standalone, Failover | BIG-IP v16.1.3.2, BIG-IP v15.1.7, BIG-IP v14.1.5.2 | Good/Better/Best Plus: 5Gbps, 1Gbps, 200Mbps, 25Mbps | AllTwoBootLocations, LTMTwoBootLocations |
 | [v4.1.0](https://github.com/F5Networks/f5-google-gdm-templates/releases/tag/v4.1.0) | Standalone, Failover | BIG-IP v16.1.3.1, BIG-IP v15.1.5.1, BIG-IP v14.1.4.6 | Good/Better/Best Plus: 5Gbps, 1Gbps, 200Mbps, 25Mbps | AllTwoBootLocations, LTMTwoBootLocations |
 | [v4.0.0](https://github.com/F5Networks/f5-google-gdm-templates/releases/tag/v4.0.0) | Standalone, Failover | BIG-IP v16.1.2.2, BIG-IP v15.1.5.1, BIG-IP v14.1.4.6 | Good/Better/Best Plus: 5Gbps, 1Gbps, 200Mbps, 25Mbps | AllTwoBootLocations, LTMTwoBootLocations |
