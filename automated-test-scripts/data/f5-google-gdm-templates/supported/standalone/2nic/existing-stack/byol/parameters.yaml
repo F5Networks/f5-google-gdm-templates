@@ -4,7 +4,7 @@ AUTOFILL EVAL LICENSE KEY: null
 AVAILABILITY ZONE: <REGION>-b
 AZ SHORT NAME: us-e4
 BIGIP MODULES: ltm:nominal-afm:nominal
-BIGIP VERSION: 15-1-5-1-0-0-14
+BIGIP VERSION: 15-1-8-1-0-0-3
 DECLARATION URL: https://f5-cft.s3.amazonaws.com/QA/sample_02.json
 EXT NETWORK: dd-<DEWPOINT JOB ID>-network1-network
 EXT NETWORK SHARED VPC: None
@@ -12,7 +12,7 @@ EXT SUBNET: dd-<DEWPOINT JOB ID>-subnet1-subnet
 IMAGE NAME: f5-bigip-<BIGIP VERSION>-byol-<IMAGE TYPE>-<IMAGE SUFFIX>
 IMAGE SUFFIX: '0328022444'
 IMAGE TYPE: all-modules-2boot-loc
-INSTANCE TYPE: n1-standard-4
+INSTANCE TYPE: n1-standard-8
 INT NETWORK: dd-<DEWPOINT JOB ID>-network2-network
 INT SUBNET: dd-<DEWPOINT JOB ID>-subnet2-subnet
 LICENSE FOLDER: byol
