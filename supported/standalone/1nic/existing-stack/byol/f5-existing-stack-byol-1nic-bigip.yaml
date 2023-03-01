@@ -1,6 +1,6 @@
 # Copyright 2022 F5 Networks All rights reserved.
 #
-# Version 4.2.0
+# Version 4.3.0
 
 # NOTE: When filling out the parameter values for this deployment:
 # Deployments leverage .schema files to help enforce requirements/parameter typing and defaults.
@@ -41,11 +41,11 @@ resources:
    ### If you would like to view all available images, run the following command from the **gcloud** command line: ```$ gcloud compute images list --project f5-7626-networks-public | grep f5```
    ### (OPTIONAL) BIG-IP image, valid choices include:
 
-#f5-bigip-16-1-3-2-0-0-4-byol-all-modules-1boot-loc-20914230725
-#f5-bigip-16-1-3-2-0-0-4-byol-all-modules-2boot-loc-20914235403
-#f5-bigip-16-1-3-2-0-0-4-byol-ltm-1boot-loc-220914225827
-#f5-bigip-16-1-3-2-0-0-4-byol-ltm-2boot-loc-220914231813
-   imageName: f5-bigip-16-1-3-2-0-0-4-byol-all-modules-2boot-loc-20914235403
+#f5-bigip-16-1-3-3-0-0-3-byol-all-modules-1boot-loc-21222231809
+#f5-bigip-16-1-3-3-0-0-3-byol-all-modules-2boot-loc-21222235920
+#f5-bigip-16-1-3-3-0-0-3-byol-ltm-1boot-loc-221222231809
+#f5-bigip-16-1-3-3-0-0-3-byol-ltm-2boot-loc-221222233435
+   imageName: f5-bigip-16-1-3-3-0-0-3-byol-all-modules-2boot-loc-21222235920
    ### (OPTIONAL) Instance type assigned to BIG-IP, for example 'n1-standard-4'.
    instanceType: n1-standard-4
    ### (OPTIONAL) Enter the BIG-IP Management Port, the default is '443'.

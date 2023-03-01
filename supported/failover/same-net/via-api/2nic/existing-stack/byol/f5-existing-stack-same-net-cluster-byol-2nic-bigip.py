@@ -1,6 +1,6 @@
 # Copyright 2022 F5 Networks All rights reserved.
 #
-# Version 4.2.0
+# Version 4.3.0
 
 """Creates BIG-IP"""
 COMPUTE_URL_BASE = 'https://www.googleapis.com/compute/v1/'
@@ -35,7 +35,7 @@ def Metadata(context,group, storageName, licenseType):
   ALLOWUSAGEANALYTICS = str(context.properties['allowUsageAnalytics']).lower()
   if ALLOWUSAGEANALYTICS in ['yes', 'true']:
       CUSTHASH = 'CUSTOMERID=`/usr/bin/curl -s "http://metadata.google.internal/computeMetadata/v1/project/numeric-project-id" -H "Metadata-Flavor: Google" |sha512sum|cut -d " " -f 1`;\nDEPLOYMENTID=`/usr/bin/curl -s "http://metadata.google.internal/computeMetadata/v1/instance/id" -H "Metadata-Flavor: Google"|sha512sum|cut -d " " -f 1`;'
-      SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-existing-stack-same-net-cluster-byol-2nic-bigip.py,templateVersion:4.2.0,licenseType:byol"'
+      SENDANALYTICS = ' --metrics "cloudName:google,region:' + context.properties['region'] + ',bigipVersion:' + context.properties['imageName'] + ',customerId:${CUSTOMERID},deploymentId:${DEPLOYMENTID},templateName:f5-existing-stack-same-net-cluster-byol-2nic-bigip.py,templateVersion:4.3.0,licenseType:byol"'
   else:
       CUSTHASH = '# No template analytics'
       SENDANALYTICS = ''
@@ -318,11 +318,11 @@ def Metadata(context,group, storageName, licenseType):
                                     'extension_packages:',
                                     '  install_operations:',
                                     '    - extensionType: as3',
-                                    '      extensionVersion: 3.40.0',
-                                    '      extensionHash: 708533815cb8e608b4d28fbb730f0ed34617ce5def53c5462c0ab98bd54730fc',
+                                    '      extensionVersion: 3.43.0',
+                                    '      extensionHash: 6e50f828292c3e9417136693b7fba232ca4c004187ae1499e83e39210b500e7a',
                                     '    - extensionType: cf',
-                                    '      extensionVersion: 1.13.0',
-                                    '      extensionHash: 93be496d250838697d8a9aca8bd0e6fe7480549ecd43280279f0a63fc741ab50',
+                                    '      extensionVersion: 1.14.0',
+                                    '      extensionHash: 22b262f3f354a1a29ff6aa3e706708e2d0b0abf5585c1db62a04682a9bcfe9bd',
                                     'EOF',
                                     '### END CUSTOM PACKAGE CONFIGURATION',
                                     'cat <<\'EOF\' > /config/installCloudLibs.sh',
@@ -535,7 +535,7 @@ def Metadata(context,group, storageName, licenseType):
                                     'fi',
                                     '/usr/bin/curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs/v4.27.1/f5-cloud-libs.tar.gz',
                                     '/usr/bin/curl -s -f --retry 20 -o /config/cloud/f5-cloud-libs-gce.tar.gz https://cdn.f5.com/product/cloudsolutions/f5-cloud-libs-gce/v2.9.2/f5-cloud-libs-gce.tar.gz',
-                                    '/usr/bin/curl -s -f --retry 20 -o /config/cloud/f5-bigip-runtime-init-1.5.0-1.gz.run -L http://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.5.0/dist/f5-bigip-runtime-init-1.5.0-1.gz.run',
+                                    '/usr/bin/curl -s -f --retry 20 -o /config/cloud/f5-bigip-runtime-init-1.6.0-1.gz.run -L http://cdn.f5.com/product/cloudsolutions/f5-bigip-runtime-init/v1.6.0/dist/f5-bigip-runtime-init-1.6.0-1.gz.run',
                                     'chmod 755 /config/verifyHash',
                                     'chmod 755 /config/installCloudLibs.sh',
                                     'chmod 755 /config/waitThenRun.sh',
@@ -561,7 +561,7 @@ def Metadata(context,group, storageName, licenseType):
                                     'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/onboard.js --db provision.managementeth:eth1 --host localhost ' + LICENSE + ' -o /var/log/cloud/google/mgmt-swap.log --log-level ' + str(context.properties['logLevel']) + ' --wait-for CREATE_USER_DONE --signal MGMT_SWAP_DONE >> /var/log/cloud/google/install.log < /dev/null &',
                                     'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/collect-interface.sh --cwd /config/cloud/gce -o /var/log/cloud/google/interface-config.log --wait-for MGMT_SWAP_DONE --log-level ' + str(context.properties['logLevel']) + ' >> /var/log/cloud/google/install.log < /dev/null &',
                                     'elif [ ! -f /config/cloud/gce/SECOND_BOOT_COMPLETE ]; then',
-                                    'nohup bash /config/cloud/f5-bigip-runtime-init-1.5.0-1.gz.run -- \'--cloud gcp\' && /usr/local/bin/f5-bigip-runtime-init --config-file /config/cloud/runtime-init-config.yaml --skip-telemetry >> /var/log/cloud/google/install.log < /dev/null &',
+                                    'nohup bash /config/cloud/f5-bigip-runtime-init-1.6.0-1.gz.run -- \'--cloud gcp\' && /usr/local/bin/f5-bigip-runtime-init --config-file /config/cloud/runtime-init-config.yaml --skip-telemetry >> /var/log/cloud/google/install.log < /dev/null &',
                                     'source /config/cloud/gce/interface.config',
                                     'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/onboard.js -o /var/log/cloud/google/onboard.log --log-level ' + str(context.properties['logLevel']) + ' --signal ONBOARD_DONE --host localhost --no-reboot --user srv_user --password-url file:///config/cloud/gce/.srvUserPassword --password-encrypted --port 443 --ssl-port ' + str(context.properties['mgmtGuiPort']) + ' --hostname $HOSTNAME ' + ntp_list + timezone + ' --modules ' + PROVISIONING_MODULES + SENDANALYTICS + ' 2>&1 >> /var/log/cloud/google/install.log < /dev/null &',
                                     'nohup /config/waitThenRun.sh f5-rest-node /config/cloud/gce/node_modules/@f5devcentral/f5-cloud-libs/scripts/runScript.js --file /config/cloud/gce/custom-config.sh --cwd /config/cloud/gce --wait-for ONBOARD_DONE --signal CUSTOM_CONFIG_DONE --log-level ' + str(context.properties['logLevel']) + ' -o /var/log/cloud/google/custom-config.log 2>&1 >> /var/log/cloud/google/install.log < /dev/null &',

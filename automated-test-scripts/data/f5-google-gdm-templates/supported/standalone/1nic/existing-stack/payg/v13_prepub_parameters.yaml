@@ -8,7 +8,7 @@ DECLARATION URL: https://f5-cft.s3.amazonaws.com/QA/sample_02.json
 IMAGE NAME: f5-bigip-<BIGIP VERSION>-payg-<IMAGE TYPE>-<IMAGE SUFFIX>
 IMAGE SUFFIX: '220412011311'
 IMAGE TYPE: better-200mbps
-INSTANCE TYPE: n1-standard-4
+INSTANCE TYPE: n1-standard-8
 LICENSE FOLDER: payg
 LICENSE PARAM: ''
 LICENSE TYPE: payg

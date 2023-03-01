@@ -39,7 +39,7 @@ The following are prerequisites for the F5 failover-lb 3 NIC GDM template:
 
 ## Important configuration notes
 
-- All F5 Google templates include Application Services 3 Extension (AS3) v3.20.0 on the BIG-IP VE.  As of release 4.1.2, all supported templates give the option of including the URL of an AS3 declaration, which you can use to specify the BIG-IP configuration you want on your newly created BIG-IP VE(s).  In templates such as autoscale, where an F5-recommended configuration is deployed by default, specifying an AS3 declaration URL will override the default configuration with your declaration.   See the [AS3 documentation](https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/) for details on how to use AS3.
+- All F5 Google templates include Application Services 3 Extension (AS3) v3.43.0 on the BIG-IP VE.  As of release 4.1.2, all supported templates give the option of including the URL of an AS3 declaration, which you can use to specify the BIG-IP configuration you want on your newly created BIG-IP VE(s).  In templates such as autoscale, where an F5-recommended configuration is deployed by default, specifying an AS3 declaration URL will override the default configuration with your declaration.   See the [AS3 documentation](https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/) for details on how to use AS3.
 - This template supports service discovery.  See the [Service Discovery section](#service-discovery) for details.
 - This template supports disabling the auto-phonehome system setting via the allowPhoneHome parameter. See [Overview of the Automatic Update Check and Automatic Phone Home features](https://support.f5.com/csp/article/K15000) for more information.
 - F5 has created a matrix that contains all of the tagged releases of the F5 Google GDM templates, and the corresponding BIG-IP versions, license types and throughput levels available for a specific tagged release. See the matrix [here](https://github.com/F5Networks/f5-google-gdm-templates/blob/main/google-bigip-version-matrix.md).
@@ -70,9 +70,9 @@ The following table lists the versions of BIG-IP that have been tested and valid
 
 | BIG-IP Version | Build | Solution | Status | Notes |
 | --- | --- | --- | --- | --- |
-| 16.1.2.3 | 0.0.4 | Standalone, Failover, Autoscale | Validated | |
-| 15.1.7 | 0.0.6 | Standalone, Failover, Autoscale | Validated | |
-| 14.1.5.2 | 0.0.3 | Standalone, Failover, Autoscale | Validated | |
+| 16.1.3.3 | 0.0.3 | Standalone, Failover, Autoscale | Validated | |
+| 15.1.8.1 | 0.0.3 | Standalone, Failover, Autoscale | Validated | |
+| 14.1.5.3 | 0.0.5 | Standalone, Failover, Autoscale | Validated | |
 | 13.1.5.1 | 0.0.2 | Standalone, Failover, Autoscale | Not Validated | F5 CFE requires BIG-IP 14.1 or later |
 | 12.1.6 | 0.0.0 | Standalone, Failover, Autoscale | Not Validated | F5 CFE requires BIG-IP 14.1 or later |
 
