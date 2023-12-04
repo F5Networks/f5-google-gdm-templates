@@ -7,7 +7,7 @@
 [![Issues](https://img.shields.io/github/issues/f5networks/f5-google-gdm-templates.svg)](https://github.com/f5networks/f5-google-gdm-templates/issues)
 ## Introduction
 
-| :eyes:    | ***Notice***: These legacy templates are now in maintenance mode and are being replaced by our next-generation templates available in the [Cloud Templates 2.0 GitHub repo](https://github.com/F5Networks/f5-google-gdm-templates-v2). We recommend you adopt the next-generation templates as soon as is feasible. |
+| :eyes: | ***Notice***: F5 BIG-IP Cloud Solution Templates v1 (CSTv1) have reached their End of Life (EoL) and have been replaced by our next-generation templates available in the [Cloud Templates 2.0 GitHub repo](https://github.com/F5Networks/f5-google-gdm-templates-v2). We recommend you adopt the next-generation templates as soon as is feasible. |
 |---------------|:------------------------|  
 
 Welcome to the GitHub repository for F5's Google Cloud Deployment Manager (GDM) templates for deploying F5 instances
